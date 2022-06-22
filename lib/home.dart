@@ -16,9 +16,10 @@ class _HomeState extends State<HomePage>{
         title: Text(" Name Proj "),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type:BottomNavigationBarType.fixed,
         items:[
-           BottomNavigationBarItem(icon: Icon(Icons.home),title:Text("Home")),
-           BottomNavigationBarItem(icon: Icon(Icons.book),title:Text("book")),
+           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+           BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Book'),
 
 
      ]
