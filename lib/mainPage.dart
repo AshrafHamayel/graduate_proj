@@ -15,7 +15,7 @@ class _mainState extends State<mainPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Name Proj "),
+        title: Text("Name Proj"),
       ),
 
       backgroundColor: Color(0xFFF0F0F0),

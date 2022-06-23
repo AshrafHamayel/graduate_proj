@@ -5,31 +5,42 @@ var services = [
   "hi"
 ];
 
+var images = [
+  "images/gg.png",
+  "images/bulder.jpg"
+];
+
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return Padding(
+      padding: EdgeInsets.all(2),
+      child: GridView.builder(
+      itemCount: services.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3
+        crossAxisCount: 2,
+        childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height/2.5)
+
         ), 
       
-      itemBuilder:(BuildContext context , int index){
+      itemBuilder:(BuildContext context , int index ){
         return Card(
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 30,
+                height: 20,
               ),
-            Image.asset("images/gg.png",height: 50,width:50,),
+            Image.asset(images[index],height: 50,width:50,),
               Padding(
                 padding: EdgeInsets.all(20),
-                child: Text("123",style:TextStyle(fontSize: 16,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
+                child: Text(services[index],style:TextStyle(fontSize: 18,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
                 )
-              
+               
             ],
           ),
         );
       } 
+      ),
       );
   }
 
