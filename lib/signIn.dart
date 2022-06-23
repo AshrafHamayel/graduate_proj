@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
- 
+ import 'signup.dart';
+
 void main() => runApp(const SignIn());
  
 class SignIn extends StatelessWidget {
@@ -31,9 +32,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController passwordController = TextEditingController();
  
   @override
+  
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10),
+        
         child: ListView(
           children: <Widget>[
             Container(
@@ -46,7 +49,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 padding: const EdgeInsets.all(10),
                 
                 child: const Text(
-                        textDirection: TextDirection.rtl,
+                      //  textDirection: TextDirection.rtl,
 
                   'تسجيل الدخول',
                   style: TextStyle(fontSize: 20),
@@ -99,8 +102,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     style: TextStyle(fontSize: 20),
                   ),
                   onPressed: () {
-                    //signup screen
-                  },
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> SignupPage()));
+                           },
                 )
               ],
               mainAxisAlignment: MainAxisAlignment.center,
