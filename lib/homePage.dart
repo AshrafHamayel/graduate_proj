@@ -10,7 +10,7 @@ var services = [
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2
+        crossAxisCount: 1
         ), 
       
       itemBuilder:(BuildContext context , int index){
@@ -20,10 +20,10 @@ var services = [
               SizedBox(
                 height: 20,
               ),
-            Image.asset("imgs/clen.jpg",height: 50,width: 50,),
+            Image.asset("imgs/clen.jpg",height: 900,width:100,),
               Padding(
                 padding: EdgeInsets.all(20),
-                child: Text("Clenerr",style:TextStyle(fontSize: 16,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
+                child: Text("cgvxcg",style:TextStyle(fontSize: 16,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
                 )
               
             ],
