@@ -19,16 +19,12 @@ var services = [
             children: <Widget>[
               SizedBox(
                 height: 20,
-          
               ),
-              Image.asset("imgs\ALU - Datapath.png",height: 40,width: 40,),
-              
+              Image.asset("imgs/clen.jpg",height: 50,width: 50,),
               Padding(
                 padding: EdgeInsets.all(20),
-              child: Text(services[index],style: TextStyle(fontSize: 16,height: 1.2,fontWeight: FontWeight.bold ),
-              textAlign: TextAlign.center,
-              ),
-              ),
+                child: Text("Clener",style:TextStyle(fontSize: 16,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
+                )
               
             ],
           ),
