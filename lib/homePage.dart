@@ -13,35 +13,91 @@ var images = [
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(2),
-      child: GridView.builder(
-      itemCount: services.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height/2.5)
-
-        ), 
+    return Column(
       
-      itemBuilder:(BuildContext context , int index ){
-        return Card(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
+     mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+          
+      children: [
+        Row(
+          mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+        
+          children: [
+          
+               Container(
+                
+                height: 150,
+                width: 380,           
+                decoration:BoxDecoration(
+                  color: Color.fromARGB(221, 59, 57, 80),          
+                  borderRadius: BorderRadius.circular(15)
+                ),
               ),
-            Image.asset(images[index],height: 50,width:50,),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(services[index],style:TextStyle(fontSize: 18,height: 1.2,fontWeight: FontWeight.bold),textAlign:TextAlign.center ,),
-                )
+               ],
+        ),
+              Row(
+                mainAxisAlignment:MainAxisAlignment.spaceEvenly ,
+         
+                children: [
+                  Column(
+                     
+          
+                    children: [
+                      Container(
+                        
+                        height: 180,
+                        width: 180,           
+                        decoration:BoxDecoration(
+                          color: Color.fromARGB(221, 59, 57, 80),          
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        
+                      
+                      ),
+                      Container(
+                    
+                    height: 250,
+                    width: 180,           
+                    decoration:BoxDecoration(
+                      color: Color.fromARGB(221, 59, 57, 80),          
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  )
+                    ],
+                  ),
+                 Column(
                
-            ],
-          ),
-        );
-      } 
-      ),
-      );
+                 
+                    children: [
+                      Container(
+                        
+                        height: 250,
+                        width: 180,           
+                        decoration:BoxDecoration(
+                          color: Color.fromARGB(221, 59, 57, 80),          
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        
+                      
+                      ),
+                      Container(
+                    
+                     
+                    height: 180,
+                    width: 180,           
+                    decoration:BoxDecoration(
+                      color: Color.fromARGB(221, 59, 57, 80),          
+                      borderRadius: BorderRadius.circular(15)
+                    ),
+                  )
+                    ],
+                  ),
+                ],
+              )
+              
+              
+         
+      ],
+    );
   }
 
 }
