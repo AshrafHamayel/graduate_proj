@@ -15,7 +15,10 @@ class SignIn extends StatelessWidget {
       home: Scaffold(
         //appBar: AppBar(title: const Text(_title)),
         body: const MyStatefulWidget(),
+              backgroundColor: Color.fromARGB(255, 37, 35, 36),
+
       ),
+      
     );
   }
 }
@@ -52,16 +55,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       //  textDirection: TextDirection.rtl,
 
                   'تسجيل الدخول',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 30 ,color: Color.fromARGB(255, 255, 255, 255)),
                 )),
+                
             Container(
+              
+              
               padding: const EdgeInsets.all(10),
+              
               child: TextField(
+
                 controller: nameController,
                 decoration: const InputDecoration(
+                  
                   border: OutlineInputBorder(),
+                  
                   labelText: 'الايميل',
+                  
+                  
+                  filled: true, //<-- SEE HERE
+                fillColor: Color.fromARGB(255, 244, 244, 247),
                 ),
+
               ),
             ),
             Container(
@@ -72,6 +87,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'كلمة السر',
+                  filled: true, //<-- SEE HERE
+                fillColor: Color.fromARGB(255, 244, 244, 247),
                 ),
               ),
             ),
@@ -86,6 +103,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
                   child: const Text('تسجيل الدخول'),
+                  
                   onPressed: () {
                     print(nameController.text);
                     print(passwordController.text);
@@ -93,9 +111,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 )
             ),
             Row(
+                    textDirection: TextDirection.rtl,
+
               children: <Widget>[
                 
-                const Text('ليس لديك حساب ؟'),
+                const Text('ليس لديك حساب ؟' , 
+                style: TextStyle(color: Color.fromARGB(255, 247, 247, 247)),
+),
                 TextButton(
                   child: const Text(
                     'اشترك الان',
