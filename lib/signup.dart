@@ -36,10 +36,11 @@ class SignupPage extends StatelessWidget {
               Column(
 
                 children: <Widget>[
-                  inputFile(label: "الاسم"),
+                  inputFile(label: "الاسم", ),
                   inputFile(label: "الايميل"),
                   inputFile(label: "كلمة السر", obscureText: true),
                   inputFile(label: "تأكيد كلمة السر ", obscureText: true),
+                   inputFile(label: "dfsfsd",),
                 ],
               ),
               Container(
