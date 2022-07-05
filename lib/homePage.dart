@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
 
 class HomePage extends StatelessWidget {
   var services = ["hello", "hi"];
@@ -14,69 +13,127 @@ class HomePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              height: 150,
-              width: 370,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(221, 59, 57, 80),
-                  borderRadius: BorderRadius.circular(15)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: 370,
+                  height: 150,
+                  image: const AssetImage('images/workers.png'),
+                  child: InkWell(
+                    onTap: () {/* ... */},
+                    child: const Align(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                        child: Text(
+                          '',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white70,
+                              fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
               children: [
-                Container(
-                  height: 180,
-                  width: 180,
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(221, 59, 57, 80),
-                      borderRadius: BorderRadius.circular(15)),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Material(
+                    child: Ink.image(
+                      fit: BoxFit.fill,
+                      width: 180,
+                      height: 180,
+                      image: const AssetImage('images/search.png'),
+                      child: InkWell(
+                        onTap: () {/* ... */},
+                        child: const Align(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                            child: Text(
+                              '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white70,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   height: 250,
                   width: 180,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(221, 59, 57, 80),
+                      color: const Color.fromARGB(221, 59, 57, 80),
                       borderRadius: BorderRadius.circular(15)),
                 )
               ],
             ),
             Column(
               children: [
-                Container(
-                  height: 250,
-                  width: 180,
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(221, 59, 57, 80),
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-                SizedBox(height: 10),
-                InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  onTap: () {},
-                  child: Container(
-                    height: 180,
-                    width: 180,
-                    decoration: BoxDecoration(
-                        image: const DecorationImage(
-                          image: AssetImage('images/about.png'),
-                          opacity: 145,
-                          fit: BoxFit.cover,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Material(
+                    child: Ink.image(
+                      fit: BoxFit.fill,
+                      width: 180,
+                      height: 250,
+                      image: const AssetImage('images/account.png'),
+                      child: InkWell(
+                        onTap: () {/* ... */},
+                        child: const Align(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                            child: Text(
+                              '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white70,
+                                  fontSize: 20),
+                            ),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Center(
-                      child: Text(
-                        'معلومات عنا',
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.greenAccent,
-                            fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Material(
+                    child: Ink.image(
+                      fit: BoxFit.fill,
+                      width: 180,
+                      height: 180,
+                      image: const AssetImage('images/callUS.png'),
+                      child: InkWell(
+                        onTap: () {/* ... */},
+                        child: const Align(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                            child: Text(
+                              '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white70,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

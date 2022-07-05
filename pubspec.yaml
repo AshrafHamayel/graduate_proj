@@ -62,8 +62,11 @@ flutter:
    - images/gg.png
    - images/bulder.jpg
    - images/clen.jpg
-   - images/aboutUS.jpg
-   - images/about.png
+   - images/search.png
+   - images/about_us.png
+   - images/account.png
+   - images/callUS.png
+   - images/workers.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
