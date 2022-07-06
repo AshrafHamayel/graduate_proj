@@ -10,7 +10,6 @@ class HomePage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
