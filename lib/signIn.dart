@@ -11,9 +11,7 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //title: _title,
       home: Scaffold(
-        //appBar: AppBar(title: const Text(_title)),
         body: const MyStatefulWidget(),
         backgroundColor: Color.fromARGB(255, 37, 35, 36),
       ),

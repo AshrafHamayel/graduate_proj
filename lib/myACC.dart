@@ -1,17 +1,17 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
-//import 'package:settings_ui/pages/settings.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() => runApp(MYACC());
 
 class MYACC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Setting UI",
-      home: EditProfilePage(),
+    return
+        // debugShowCheckedModeBanner: false,
+        Scaffold(
+      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
+      body: EditProfilePage(),
     );
   }
 }
@@ -23,6 +23,15 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool showPassword = false;
+  late File iimage;
+  uploadImage() async {
+    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      iimage = File(pickedImage.path);
+    } else {}
+  }
+
+  final imagepicker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,9 +115,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             color: Colors.green,
                           ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                          child: IconButton(
+                            padding: EdgeInsets.all(3),
+                            onPressed: () {
+                              uploadImage();
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
                         )),
                   ],
@@ -165,29 +180,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget buildTextField(
       String labelText, String placeholder, bool isPasswordTextField) {
-    Alignment.centerRight;
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
+        textAlign: TextAlign.end,
         obscureText: isPasswordTextField ? showPassword : false,
         decoration: InputDecoration(
-            alignLabelWithHint: true,
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
-            border: const UnderlineInputBorder(),
-            labelText: labelText,
-            floatingLabelAlignment: FloatingLabelAlignment.center),
+          // contentPadding: EdgeInsets.all(),
+          alignLabelWithHint: true,
+          prefixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  ),
+                )
+              : null,
+          border: const UnderlineInputBorder(),
+          hintText: labelText,
+        ),
       ),
     );
   }
