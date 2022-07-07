@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'homePage.dart';
 import 'signIn.dart';
+import 'myACC.dart';
 
 class mainPage extends StatefulWidget {
   @override
@@ -14,9 +15,6 @@ class _mainState extends State<mainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text("LEO MESSI G.O.A.T"),
-          backgroundColor: Color.fromARGB(255, 66, 64, 64)),
       backgroundColor: Color.fromARGB(255, 37, 35, 36),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Color.fromARGB(255, 66, 64, 64),
@@ -50,7 +48,7 @@ class _mainState extends State<mainPage> {
     if (_currentIndex == 2)
       return HomePage();
     else if (_currentIndex == 4)
-      return SignIn();
+      return MYACC();
     else
       return Container();
   }

@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
                 child: Ink.image(
                   fit: BoxFit.fill,
                   width: 370,
-                  height: 150,
+                  height: 170,
                   image: const AssetImage('images/workers.png'),
                   child: InkWell(
                     onTap: () {/* ... */},
@@ -41,7 +42,6 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
