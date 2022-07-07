@@ -49,6 +49,8 @@ class _mainState extends State<mainPage> {
       return HomePage();
     else if (_currentIndex == 4)
       return MYACC();
+      else if (_currentIndex == 3)
+      return SignIn();
     else
       return Container();
   }

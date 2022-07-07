@@ -1,155 +1,140 @@
+  
+
 import 'package:flutter/material.dart';
 
+
+void main() => runApp(const SignupPage());
+
 class SignupPage extends StatelessWidget {
+  const SignupPage({Key? key}) : super(key: key);
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Color.fromARGB(255, 37, 35, 36),
-    
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          height: MediaQuery.of(context).size.height - 50,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Text("اشتراك",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 238, 232, 235)
-
-                  ),),
-                  SizedBox(height: 20,),
-                  Text("انشاء حساب جديد  ",
-                    style: TextStyle(
-                        fontSize: 15,
-                        color:Color.fromARGB(255, 241, 237, 237)),)
-
-
-                ],
-              ),
-              Column(
-
-                children: <Widget>[
-                  inputFile(label: "الاسم", ),
-                  inputFile(label: "الايميل"),
-                  inputFile(label: "كلمة السر", obscureText: true),
-                  inputFile(label: "تأكيد كلمة السر ", obscureText: true),
-                   inputFile(label: "dfsfsd",),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 3, left: 3),
-                decoration:
-                BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border(
-                      bottom: BorderSide(color: Colors.black),
-                      top: BorderSide(color: Colors.black),
-                      left: BorderSide(color: Colors.black),
-                      right: BorderSide(color: Colors.black),
-
-
-
-                    )
-
-                ),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {},
-                  color: Colors.amberAccent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-
-                  ),
-                  child: Text(
-                    "اشترك الان", style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: Colors.white,
-
-                  ),
-                  ),
-
-                ),
-
-
-
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text("؟ لديك حساب بالفعل ",style:TextStyle(color: Colors.white),),
-                  
-                  Text(" سجل الدخول", style:TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                     color: Colors.white,
-
-                  ),
-                  )
-                ],
-              )
-
-
-
-            ],
-
-          ),
-
-
-        ),
-
+    return MaterialApp(
+      //title: _title,
+      home: Scaffold(
+        //appBar: AppBar(title: const Text(_title)),
+        body: const MyStatefulWidget(),
+        backgroundColor: Color.fromARGB(255, 37, 35, 36),
       ),
-
     );
   }
 }
 
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
 
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
 
-// we will be creating a widget for text field
-Widget inputFile({label, obscureText = false})
-{
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color:Colors.black87
-        ),
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
-      ),
-      SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0,
-                horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.grey
-              ),
-
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
             ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)
-            )
-        ),
-      ),
-      SizedBox(height: 10,)
-    ],
-  );
+            Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: const Text(
+                  //  textDirection: TextDirection.rtl,
+
+                  'اشتراك',
+                  style: TextStyle(
+                      fontSize: 30, color: Color.fromARGB(255, 255, 255, 255)),
+                )),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+
+                  labelText: 'الاسم',
+
+                  filled: true, //<-- SEE HERE
+                  fillColor: Color.fromARGB(255, 244, 244, 247),
+                ),
+              ),
+            ),
+            Container(
+
+             padding: const EdgeInsets.all(10),
+              child: TextField(
+
+
+                //controller: nameController,
+                decoration: const InputDecoration(
+                  
+                  border: OutlineInputBorder(),
+                  labelText: 'الايميل',
+
+                  filled: true, //<-- SEE HERE
+                  fillColor: Color.fromARGB(255, 244, 244, 247),
+                ),
+              ),
+            ),
+            Container(
+             padding: const EdgeInsets.all(10),
+              child: TextField(
+                obscureText: true,
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'كلمة السر',
+                  filled: true, //<-- SEE HERE
+                  fillColor: Color.fromARGB(255, 244, 244, 247),
+                ),
+              ),
+            ),
+            Container(
+            padding: const EdgeInsets.all(10),
+              child: TextField(
+                obscureText: true,
+               // controller: passwordController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  
+                  labelText: 'تأكيد كلمة السر',
+                  filled: true, //<-- SEE HERE
+                  fillColor: Color.fromARGB(255, 244, 244, 247),
+                ),
+              ),
+            ),
+            
+            Container(
+                height: 50,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: const EdgeInsets.only(top:50),
+
+                child: ElevatedButton(
+                  child: const Text('اشتراك الان ',style:TextStyle(
+      fontSize: 20.0, // insert your font size here
+ ),),
+                  
+                  onPressed: () {
+                    print(nameController.text);
+                    print(passwordController.text);
+                  },
+                 style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 217, 185, 87)),
+
+                )
+                
+                ),
+           
+           
+          
+          ],
+        ));
+  }
 }
