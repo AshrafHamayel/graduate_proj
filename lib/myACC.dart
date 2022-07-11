@@ -98,9 +98,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           image: const DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
-                                "https://scontent.fjrs2-2.fna.fbcdn.net/v/t39.30808-6/278624930_2219176781564711_7551486172235901936_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=Te69HBV9niAAX8U0BFq&tn=0KLaBkkKXoRvngO0&_nc_ht=scontent.fjrs2-2.fna&oh=00_AT-KHlPJM3-rKqRo1q84enWFA74pgCPpbbcIicU-bRja0Q&oe=62CC3CC2",
-                              ))),
-                    ),
+
+                                      "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"
+                                      ))),
+                      ),
                     Positioned(
                         bottom: 0,
                         right: 0,
