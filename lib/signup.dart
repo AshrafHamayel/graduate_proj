@@ -1,143 +1,186 @@
   
-
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'signIn.dart';
 
-
-void main() => runApp(const SignupPage());
+void main() => runApp(SignupPage());
 
 class SignupPage extends StatelessWidget {
-  const SignupPage({Key? key}) : super(key: key);
-
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //title: _title,
-      home: Scaffold(
-        //appBar: AppBar(title: const Text(_title)),
-        body: const MyStatefulWidget(),
-        backgroundColor: Color.fromARGB(255, 37, 35, 36),
+    return
+        // debugShowCheckedModeBanner: false,
+        Scaffold(
+      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
+      body: Signup_Page(),
+    );
+  }
+}
+
+class Signup_Page extends StatefulWidget {
+  @override
+  _EditProfilePageState createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<Signup_Page> {
+  bool showPassword = false;
+  late File iimage;
+  uploadImage() async {
+    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      iimage = File(pickedImage.path);
+    } else {}
+  }
+
+  final imagepicker = ImagePicker();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+                backgroundColor: Color.fromARGB(255, 248, 248, 248),
+
+      appBar: AppBar(
+        // toolbarHeight: 30,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
+          ),
+          onPressed: () {
+
+            Navigator.pop(context,
+              MaterialPageRoute(builder: (context) => SignIn()));
+          },
+        ),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(
+        //       Icons.settings,
+        //       color: Colors.green,
+        //     ),
+        //     onPressed: () {
+        //       //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsPage()));
+        //     },
+        //   ),
+        // ],
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: ListView(
+            children: [
+              const Text(
+                " انشاء حساب جديد  ",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.end,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+             
+              const SizedBox(
+                height: 35,
+              ),
+               buildTextField("الاسم", "الاسم", false),
+              buildTextField("الايميل", "ex@gmail.com", false),
+              buildTextField("كلمة السر", "********", true),
+               buildTextField("تأكيد كلمة السر", "TLV, Israel", true),
+              const SizedBox(
+                height: 35,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    onPressed: () {Navigator.pop(context,
+              MaterialPageRoute(builder: (context) => SignIn()));},
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0))),
+                    ),
+                    child: const Text("اللغاء",
+                        style: TextStyle(
+                            fontSize: 14,
+                            letterSpacing: 2.2,
+                            color: Colors.black)),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                       
+                    },
+                    color: Colors.green,
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: const Text(
+                      " اشتراك الان",
+                      style: TextStyle(
+                          fontSize: 14,
+                          letterSpacing: 2.2,
+                          color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+
+
+
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
+  
+  {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35.0),
+      child: TextField(
+
+        textAlign: TextAlign.end,
+        
+        obscureText: isPasswordTextField ? showPassword : false,
+        
+        decoration: InputDecoration(
+          
+          // contentPadding: EdgeInsets.all(),
+          alignLabelWithHint: true,
+          prefixIcon: isPasswordTextField
+              ? IconButton(
+                
+                  onPressed: () {
+                    setState(() {
+                      
+                      showPassword = !showPassword;
+                    });
+                  },
+
+                  icon: const Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  ),
+                )
+              : null,
+          border: const OutlineInputBorder(),
+
+          hintText: labelText,
+        ),
       ),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
 
-  @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
-}
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-
-      child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
-                  child:  Text(
-                    //  textDirection: TextDirection.rtl,
-    
-                    'اشتراك',
-                    style: Theme.of(context).textTheme.headline1,
-                  )),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-    
-                    labelText: 'الاسم',
-    
-                    filled: true, //<-- SEE HERE
-                    fillColor: Color.fromARGB(255, 244, 244, 247),
-                  ),
-                ),
-              ),
-              Container(
-    
-               padding: const EdgeInsets.all(10),
-                child: TextField(
-    
-    
-                  //controller: nameController,
-                  decoration: const InputDecoration(
-                    
-                    border: OutlineInputBorder(),
-                    labelText: 'الايميل',
-    
-                    filled: true, //<-- SEE HERE
-                    fillColor: Color.fromARGB(255, 244, 244, 247),
-                  ),
-                ),
-              ),
-              Container(
-               padding: const EdgeInsets.all(10),
-                child: TextField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'كلمة السر',
-                    filled: true, //<-- SEE HERE
-                    fillColor: Color.fromARGB(255, 244, 244, 247),
-                  ),
-                ),
-              ),
-              Container(
-              padding: const EdgeInsets.all(10),
-                child: TextField(
-                  obscureText: true,
-                 // controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    
-                    labelText: 'تأكيد كلمة السر',
-                    filled: true, //<-- SEE HERE
-                    fillColor: Color.fromARGB(255, 244, 244, 247),
-                  ),
-                ),
-              ),
-              
-              Container(
-                  height: 50,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  margin: const EdgeInsets.only(top:50),
-    
-                  child: ElevatedButton(
-                    child: const Text('اشتراك الان ',style:TextStyle(
-        fontSize: 20.0, // insert your font size here
-     ),),
-                    
-                    onPressed: () {
-                      print(nameController.text);
-                      print(passwordController.text);
-                    },
-                   style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 217, 185, 87)),
-    
-                  )
-                  
-                  ),
-             
-             
-            
-            ],
-          )),
-    );
-  }
-}

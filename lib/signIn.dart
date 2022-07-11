@@ -1,106 +1,164 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+ import 'signup.dart';
+import 'main.dart';
 
-void main() => runApp(const SignIn());
+void main() => runApp(SignIn());
 
 class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
-
-  //static const String _title = 'Sample App';
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: const MyStatefulWidget(),
-        backgroundColor: Color.fromARGB(255, 37, 35, 36),
-      ),
+    return
+        // debugShowCheckedModeBanner: false,
+        Scaffold(
+      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
+      body: Sign_In(),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
-
+class Sign_In extends StatefulWidget {
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  _EditProfilePageState createState() => _EditProfilePageState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class _EditProfilePageState extends State<Sign_In> {
+  bool showPassword = false;
+  late File iimage;
+  uploadImage() async {
+    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      iimage = File(pickedImage.path);
+    } else {}
+  }
 
+  final imagepicker = ImagePicker();
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-            ),
-            Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: const Text(
-                  //  textDirection: TextDirection.rtl,
+    return Scaffold(
+                backgroundColor: Color.fromARGB(255, 248, 248, 248),
 
-                  'تسجيل الدخول',
-                  style: TextStyle(
-                      fontSize: 30, color: Color.fromARGB(255, 255, 255, 255)),
-                )),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+      appBar: AppBar(
+        // toolbarHeight: 30,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
+          ),
+          onPressed: () {
+ Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MyApp()),
+  );
 
-                  labelText: 'الايميل',
-
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
+          },
+        ),
+       
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: ListView(
+            children: [
+              const Text(
+                "   رجاءً قم بتسجيل الدخول للاستمرار ",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
                 ),
+                textAlign: TextAlign.end,
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'كلمة السر',
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
-                ),
+              const SizedBox(
+                height: 15,
               ),
-            ),
-            TextButton(
+        
+              const SizedBox(
+                height: 35,
+              ),
+       
+              buildTextField("الايميل", "ex@gmail.com", false),
+              buildTextField("كلمة السر", "********", true),
+         
+              const SizedBox(
+                height: 35,
+              ),
+              Row(
+
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             textDirection: TextDirection.rtl,
+
+                children: [
+                  
+                 TextButton(
               onPressed: () {
                 //forgot password screen
-              },
-              child: const Text(
+               },
+
+
+               child: const Text(
+                
                 'نسيت كلمة السر',
-              ),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+
+                    textAlign: TextAlign.center,
+
+               ),
             ),
-            Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  child: const Text('تسجيل الدخول'),
-                  onPressed: () {
-                    print(nameController.text);
-                    print(passwordController.text);
-                  },
-                )),
-            Row(
+                ]
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  
+                  OutlinedButton(
+                    onPressed: () {
+
+                       Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MyApp()),
+  );
+
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0))),
+                    ),
+                    child: const Text("اللغاء",
+                        style: TextStyle(
+                            fontSize: 14,
+                            letterSpacing: 2.2,
+                            color: Colors.black)),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    color: Colors.green,
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: const Text(
+                      "تسجيل الدخول",
+                      style: TextStyle(
+                          fontSize: 14,
+                          letterSpacing: 2.2,
+                          color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+
+Row(
               textDirection: TextDirection.rtl,
               children: <Widget>[
                 const Text(
                   'ليس لديك حساب ؟',
-                  style: TextStyle(color: Color.fromARGB(255, 247, 247, 247)),
+                  style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                 ),
                 TextButton(
                   child: const Text(
@@ -115,7 +173,45 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ],
               mainAxisAlignment: MainAxisAlignment.center,
             ),
-          ],
-        ));
+          
+
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
+  
+  {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35.0),
+      child: TextField(
+        textAlign: TextAlign.end,
+        obscureText: isPasswordTextField ? showPassword : false,
+        decoration: InputDecoration(
+          // contentPadding: EdgeInsets.all(),
+          alignLabelWithHint: true,
+          prefixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  ),
+                )
+              : null,
+          border: const OutlineInputBorder(),
+          hintText: labelText,
+        ),
+      ),
+    );
   }
 }
+

@@ -15,7 +15,14 @@ class _MainGridState extends State<MainGrid> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> myProducts = [
       {
-        "img": "images/workers.png",
+        "img": "images/search.png",
+        "fun": () {
+          print("object 12");
+          // Navigator.of(context).pushNamed("");
+        },
+      },
+      {
+        "img": "images/gg.png",
         "fun": () {
           print("object 12");
           // Navigator.of(context).pushNamed("");
@@ -29,28 +36,21 @@ class _MainGridState extends State<MainGrid> {
         },
       },
       {
-        "img": "images/workers.png",
+        "img": "images/about_us.png",
         "fun": () {
           print("object 12");
           // Navigator.of(context).pushNamed("");
         },
       },
       {
-        "img": "images/workers.png",
+        "img": "images/sui.jpg",
         "fun": () {
           print("object 12");
           // Navigator.of(context).pushNamed("");
         },
       },
       {
-        "img": "images/workers.png",
-        "fun": () {
-          print("object 12");
-          // Navigator.of(context).pushNamed("");
-        },
-      },
-      {
-        "img": "images/workers.png",
+        "img": "images/bulder.jpg",
         "fun": () {
           print("object 12");
           // Navigator.of(context).pushNamed("");

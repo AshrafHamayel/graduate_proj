@@ -15,7 +15,7 @@ class _mainState extends State<mainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 37, 35, 36),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Color.fromARGB(255, 66, 64, 64),
           unselectedItemColor: Colors.white,
@@ -44,7 +44,7 @@ class _mainState extends State<mainPage> {
       body:Container(
        
        width: MediaQuery.of(context).size.width ,
-       height: MediaQuery.of(context).size.height-100,
+       height: MediaQuery.of(context).size.height-75,
         child: getBodyWidget(),
       ),
     );
