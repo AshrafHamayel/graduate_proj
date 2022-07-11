@@ -148,7 +148,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0))),
                     ),
-                    child: const Text("CANCEL",
+                    child: const Text("اللغاء",
                         style: TextStyle(
                             fontSize: 14,
                             letterSpacing: 2.2,
@@ -162,7 +162,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: const Text(
-                      "SAVE",
+                      "حفظ",
                       style: TextStyle(
                           fontSize: 14,
                           letterSpacing: 2.2,
@@ -178,8 +178,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
+  
+  {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
