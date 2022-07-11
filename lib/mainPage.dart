@@ -40,12 +40,19 @@ class _mainState extends State<mainPage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'حسابي'),
           ]),
-      body: getBodyWidget(),
+
+      body:Container(
+       
+       width: MediaQuery.of(context).size.width ,
+       height: MediaQuery.of(context).size.height-100,
+        child: getBodyWidget(),
+      ),
     );
   }
 
   getBodyWidget() {
     if (_currentIndex == 2)
+      // return Text("asd");
       return HomePage();
     else if (_currentIndex == 4)
       return MYACC();

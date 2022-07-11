@@ -35,106 +35,109 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-            ),
-            Container(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+
+      child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
-                child: const Text(
-                  //  textDirection: TextDirection.rtl,
-
-                  'اشتراك',
-                  style: TextStyle(
-                      fontSize: 30, color: Color.fromARGB(255, 255, 255, 255)),
-                )),
-            Container(
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(10),
+                  child:  Text(
+                    //  textDirection: TextDirection.rtl,
+    
+                    'اشتراك',
+                    style: Theme.of(context).textTheme.headline1,
+                  )),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+    
+                    labelText: 'الاسم',
+    
+                    filled: true, //<-- SEE HERE
+                    fillColor: Color.fromARGB(255, 244, 244, 247),
+                  ),
+                ),
+              ),
+              Container(
+    
+               padding: const EdgeInsets.all(10),
+                child: TextField(
+    
+    
+                  //controller: nameController,
+                  decoration: const InputDecoration(
+                    
+                    border: OutlineInputBorder(),
+                    labelText: 'الايميل',
+    
+                    filled: true, //<-- SEE HERE
+                    fillColor: Color.fromARGB(255, 244, 244, 247),
+                  ),
+                ),
+              ),
+              Container(
+               padding: const EdgeInsets.all(10),
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'كلمة السر',
+                    filled: true, //<-- SEE HERE
+                    fillColor: Color.fromARGB(255, 244, 244, 247),
+                  ),
+                ),
+              ),
+              Container(
               padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-
-                  labelText: 'الاسم',
-
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
+                child: TextField(
+                  obscureText: true,
+                 // controller: passwordController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    
+                    labelText: 'تأكيد كلمة السر',
+                    filled: true, //<-- SEE HERE
+                    fillColor: Color.fromARGB(255, 244, 244, 247),
+                  ),
                 ),
               ),
-            ),
-            Container(
-
-             padding: const EdgeInsets.all(10),
-              child: TextField(
-
-
-                //controller: nameController,
-                decoration: const InputDecoration(
+              
+              Container(
+                  height: 50,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  margin: const EdgeInsets.only(top:50),
+    
+                  child: ElevatedButton(
+                    child: const Text('اشتراك الان ',style:TextStyle(
+        fontSize: 20.0, // insert your font size here
+     ),),
+                    
+                    onPressed: () {
+                      print(nameController.text);
+                      print(passwordController.text);
+                    },
+                   style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 217, 185, 87)),
+    
+                  )
                   
-                  border: OutlineInputBorder(),
-                  labelText: 'الايميل',
-
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
-                ),
-              ),
-            ),
-            Container(
-             padding: const EdgeInsets.all(10),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'كلمة السر',
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
-                ),
-              ),
-            ),
-            Container(
-            padding: const EdgeInsets.all(10),
-              child: TextField(
-                obscureText: true,
-               // controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  
-                  labelText: 'تأكيد كلمة السر',
-                  filled: true, //<-- SEE HERE
-                  fillColor: Color.fromARGB(255, 244, 244, 247),
-                ),
-              ),
-            ),
+                  ),
+             
+             
             
-            Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.only(top:50),
-
-                child: ElevatedButton(
-                  child: const Text('اشتراك الان ',style:TextStyle(
-      fontSize: 20.0, // insert your font size here
- ),),
-                  
-                  onPressed: () {
-                    print(nameController.text);
-                    print(passwordController.text);
-                  },
-                 style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 217, 185, 87)),
-
-                )
-                
-                ),
-           
-           
-          
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
