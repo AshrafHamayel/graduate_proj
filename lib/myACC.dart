@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'myProfile.dart';
 
 void main() => runApp(MYACC());
 
@@ -48,12 +49,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.settings,
               color: Colors.green,
             ),
             onPressed: () {
-              //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsPage()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => myProfile()));
             },
           ),
         ],
@@ -98,10 +100,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           image: const DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
-
-                                      "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"
-                                      ))),
-                      ),
+                                  "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+                    ),
                     Positioned(
                         bottom: 0,
                         right: 0,
@@ -179,9 +179,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
-  
-  {
+  Widget buildTextField(
+      String labelText, String placeholder, bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
