@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'myProfile.dart';
-
 void main() => runApp(MYACC());
 
 class MYACC extends StatelessWidget {
@@ -45,7 +44,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Icons.arrow_back,
             color: Colors.green,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => myProfile()));
+          },
         ),
         actions: [
           IconButton(
@@ -54,8 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               color: Colors.green,
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => myProfile()));
+              
             },
           ),
         ],
@@ -137,6 +138,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               buildTextField("الايميل", "ex@gmail.com", false),
               buildTextField("كلمة السر", "********", true),
               buildTextField("الموقع", "TLV, Israel", false),
+              buildTextField("المهنة", "TLV, Israel", false),
+
               const SizedBox(
                 height: 35,
               ),

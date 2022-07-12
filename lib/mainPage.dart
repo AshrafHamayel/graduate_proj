@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'homePage.dart';
 import 'signIn.dart';
-import 'myACC.dart';
+import 'myProfile.dart';
 
 class mainPage extends StatefulWidget {
   @override
@@ -55,7 +55,7 @@ class _mainState extends State<mainPage> {
       // return Text("asd");
       return HomePage();
     else if (_currentIndex == 4)
-      return MYACC();
+      return myProfile();
       else if (_currentIndex == 3)
       return SignIn();
     else

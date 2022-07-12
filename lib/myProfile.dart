@@ -1,11 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'EditProfile.dart';
+import 'main.dart';
 
 class myProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: UserProfilePage(),
+      appBar: AppBar(
+        // toolbarHeight: 30,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
+          ),
+          onPressed: () {
+            Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MyApp()),
+  );
+
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MYACC()));
+            },
+          ),
+        ],
+      ),
+
     );
   }
 }
