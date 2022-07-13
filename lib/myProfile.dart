@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'EditProfile.dart';
+import 'SettingsPage.dart';
 import 'main.dart';
 
 class myProfile extends StatelessWidget {
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +22,9 @@ class myProfile extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MyApp()),
-  );
-
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
           },
         ),
         actions: [
@@ -37,12 +35,11 @@ class myProfile extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MYACC()));
+                  builder: (BuildContext context) => SettingsPage()));
             },
           ),
         ],
       ),
-
     );
   }
 }
@@ -52,8 +49,7 @@ class UserProfile_Page extends StatefulWidget {
   _UserProfilePage createState() => _UserProfilePage();
 }
 
-
-class _UserProfilePage extends State <UserProfile_Page> {
+class _UserProfilePage extends State<UserProfile_Page> {
   final String _fullName = "ياماش";
   final String _status = "طوبرجي";
   final String _bio = "\".انا ياماش ومعلم طوباار\"";
@@ -62,14 +58,14 @@ class _UserProfilePage extends State <UserProfile_Page> {
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
-      // height: screenSize.height / 3.6,
-      // decoration: const BoxDecoration(
-      //   image: DecorationImage(
-      //     image: AssetImage('images/probackgrond.jpg'),
-      //     fit: BoxFit.cover,
-      //   ),
-      // ),
-    );
+        // height: screenSize.height / 3.6,
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //     image: AssetImage('images/probackgrond.jpg'),
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
+        );
   }
 
   late File iimage;
@@ -84,57 +80,56 @@ class _UserProfilePage extends State <UserProfile_Page> {
   final imagepicker = ImagePicker();
 
   Widget _buildProfileImage(BuildContext context) {
-    return   Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: const Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Colors.green,
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.all(3),
-                            onPressed: () {
-                              uploadImage();
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )),
-                  ],
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            width: 130,
+            height: 130,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 4, color: Theme.of(context).scaffoldBackgroundColor),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(0, 10))
+                ],
+                shape: BoxShape.circle,
+                image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+          ),
+          Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 4,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                  color: Colors.green,
                 ),
-              );
+                child: IconButton(
+                  padding: EdgeInsets.all(3),
+                  onPressed: () {
+                    uploadImage();
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                ),
+              )),
+        ],
+      ),
+    );
   }
 
   Widget _buildFullName() {
@@ -304,7 +299,7 @@ class _UserProfilePage extends State <UserProfile_Page> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: screenSize.height /18.0),
+                  SizedBox(height: screenSize.height / 18.0),
                   _buildProfileImage(context),
                   _buildFullName(),
                   _buildStatus(context),
