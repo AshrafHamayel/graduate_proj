@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'EditProfile.dart';
 import 'main.dart';
 
 class myProfile extends StatelessWidget {
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,38 +57,79 @@ class UserProfilePage extends StatelessWidget {
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
-      height: screenSize.height / 3.6,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('images/probackgrond.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      // height: screenSize.height / 3.6,
+      // decoration: const BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage('images/probackgrond.jpg'),
+      //     fit: BoxFit.cover,
+      //   ),
+      // ),
     );
   }
 
+  late File iimage;
+
+  uploadImage() async {
+    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      iimage = File(pickedImage.path);
+    } else {}
+  }
+
+  final imagepicker = ImagePicker();
+  
   Widget _buildProfileImage(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 130,
-        height: 130,
-        decoration: BoxDecoration(
-            border: Border.all(
-                width: 4, color: Theme.of(context).scaffoldBackgroundColor),
-            boxShadow: [
-              BoxShadow(
-                  spreadRadius: 2,
-                  blurRadius: 10,
-                  color: Colors.black.withOpacity(0.1),
-                  offset: const Offset(0, 10))
-            ],
-            shape: BoxShape.circle,
-            image: const DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                    "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
-      ),
-    );
+    return   Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 4,
+                              color: Theme.of(context).scaffoldBackgroundColor),
+                          boxShadow: [
+                            BoxShadow(
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.1),
+                                offset: const Offset(0, 10))
+                          ],
+                          shape: BoxShape.circle,
+                          image: const DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 4,
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                            ),
+                            color: Colors.green,
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.all(3),
+                            onPressed: () {
+                              uploadImage();
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              );
   }
 
   Widget _buildFullName() {
@@ -253,7 +299,7 @@ class UserProfilePage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: screenSize.height / 6.4),
+                  SizedBox(height: screenSize.height /18.0),
                   _buildProfileImage(context),
                   _buildFullName(),
                   _buildStatus(context),

@@ -140,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               buildTextField("الموقع", "TLV, Israel", false),
               buildTextField("المهنة", "TLV, Israel", false),
 
-              const SizedBox(
+              const SizedBox( 
                 height: 35,
               ),
               Row(
