@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduate_proj/EditProfile.dart';
+import 'package:graduate_proj/myProfile.dart';
+
+import 'PasswordCH.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -9,13 +13,15 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    var _curIndex = 2;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 1,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => myProfile()));
           },
           icon: const Icon(
             Icons.arrow_back,
@@ -58,9 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(
               height: 10,
             ),
-            buildAccountOptionRow(context, "تغير كلمة السر"),
-            buildAccountOptionRow(context, "المعلومات العامة"),
-            buildAccountOptionRow(context, "اللغة"),
+            buildAccountOptionRow(context, "تغير كلمة السر", 0),
+            buildAccountOptionRow(context, "المعلومات العامة", 1),
+            buildAccountOptionRow(context, "اللغة", 2),
             const SizedBox(
               height: 40,
             ),
@@ -89,9 +95,18 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
+  GestureDetector buildAccountOptionRow(
+      BuildContext context, String title, var curindex) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (curindex == 0) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => changemypassord()));
+        } else if (curindex == 1) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (BuildContext context) => MYACC()));
+        } else if (curindex == 2) {}
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
