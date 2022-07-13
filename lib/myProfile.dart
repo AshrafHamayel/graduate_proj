@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
@@ -12,7 +11,7 @@ class myProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: UserProfilePage(),
+      body: UserProfile_Page(),
       appBar: AppBar(
         // toolbarHeight: 30,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -48,7 +47,13 @@ class myProfile extends StatelessWidget {
   }
 }
 
-class UserProfilePage extends StatelessWidget {
+class UserProfile_Page extends StatefulWidget {
+  @override
+  _UserProfilePage createState() => _UserProfilePage();
+}
+
+
+class _UserProfilePage extends State <UserProfile_Page> {
   final String _fullName = "ياماش";
   final String _status = "طوبرجي";
   final String _bio = "\".انا ياماش ومعلم طوباار\"";
@@ -77,7 +82,7 @@ class UserProfilePage extends StatelessWidget {
   }
 
   final imagepicker = ImagePicker();
-  
+
   Widget _buildProfileImage(BuildContext context) {
     return   Center(
                 child: Stack(

@@ -20,10 +20,10 @@ class SignIn extends StatelessWidget {
 
 class Sign_In extends StatefulWidget {
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _SignIn createState() => _SignIn();
 }
 
-class _EditProfilePageState extends State<Sign_In> {
+class _SignIn extends State<Sign_In> {
   bool showPassword = false;
   late File iimage;
   uploadImage() async {
