@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class MainGrid extends StatefulWidget {
@@ -55,54 +57,23 @@ class _MainGridState extends State<MainGrid> {
       },
     ];
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Material(
-                  child: Ink.image(
-                    fit: BoxFit.fill,
-                    width: MediaQuery.of(context).size.width - 20,
-                    height: MediaQuery.of(context).size.height - 580,
-                    image: const AssetImage('images/workers.png'),
-                    child: InkWell(
-                      onTap: () {/* ... */},
-                      child: const Align(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
-                          child: Text(
-                            '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white70,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
+              const SizedBox(height: 10),
+              Row(
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Material(
                       child: Ink.image(
                         fit: BoxFit.fill,
-                        width: MediaQuery.of(context).size.width - 210,
+                        width: MediaQuery.of(context).size.width - 20,
                         height: MediaQuery.of(context).size.height - 580,
-                        image: const AssetImage('images/search.png'),
+                        image: const AssetImage('images/workers.png'),
                         child: InkWell(
                           onTap: () {/* ... */},
                           child: const Align(
@@ -121,76 +92,110 @@ class _MainGridState extends State<MainGrid> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 210,
-                    height: MediaQuery.of(context).size.height - 510,
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(221, 59, 57, 80),
-                        borderRadius: BorderRadius.circular(15)),
-                  )
                 ],
               ),
-              Column(
+              Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Material(
-                      child: Ink.image(
-                        fit: BoxFit.fill,
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Material(
+                          child: Ink.image(
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width - 210,
+                            height: MediaQuery.of(context).size.height - 580,
+                            image: const AssetImage('images/search.png'),
+                            child: InkWell(
+                              onTap: () {/* ... */},
+                              child: const Align(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                                  child: Text(
+                                    '',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white70,
+                                        fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // const SizedBox(height: 10),
+                      Container(
                         width: MediaQuery.of(context).size.width - 210,
                         height: MediaQuery.of(context).size.height - 510,
-                        image: const AssetImage('images/account.png'),
-                        child: InkWell(
-                          onTap: () {/* ... */},
-                          child: const Align(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
-                              child: Text(
-                                '',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white70,
-                                    fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(221, 59, 57, 80),
+                            borderRadius: BorderRadius.circular(15)),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Material(
-                      child: Ink.image(
-                        fit: BoxFit.fill,
-                        width: MediaQuery.of(context).size.width - 210,
-                        height: MediaQuery.of(context).size.height - 580,
-                        image: const AssetImage('images/callUS.png'),
-                        child: InkWell(
-                          onTap: () {/* ... */},
-                          child: const Align(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
-                              child: Text(
-                                '',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white70,
-                                    fontSize: 20),
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Material(
+                          child: Ink.image(
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width - 210,
+                            height: MediaQuery.of(context).size.height - 510,
+                            image: const AssetImage('images/account.png'),
+                            child: InkWell(
+                              onTap: () {/* ... */},
+                              child: const Align(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                                  child: Text(
+                                    '',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white70,
+                                        fontSize: 20),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      // const SizedBox(height: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Material(
+                          child: Ink.image(
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width - 210,
+                            height: MediaQuery.of(context).size.height - 580,
+                            image: const AssetImage('images/callUS.png'),
+                            child: InkWell(
+                              onTap: () {/* ... */},
+                              child: const Align(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                                  child: Text(
+                                    '',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white70,
+                                        fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ),
+              )
             ],
-          )
-        ],
+          );
+        },
       ),
     );
   }
