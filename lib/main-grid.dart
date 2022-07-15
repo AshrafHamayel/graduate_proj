@@ -67,8 +67,8 @@ class _MainGridState extends State<MainGrid> {
                 child: Material(
                   child: Ink.image(
                     fit: BoxFit.fill,
-                    width: 370,
-                    height: 170,
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: MediaQuery.of(context).size.height - 580,
                     image: const AssetImage('images/workers.png'),
                     child: InkWell(
                       onTap: () {/* ... */},
@@ -100,8 +100,8 @@ class _MainGridState extends State<MainGrid> {
                     child: Material(
                       child: Ink.image(
                         fit: BoxFit.fill,
-                        width: 180,
-                        height: 180,
+                        width: MediaQuery.of(context).size.width - 210,
+                        height: MediaQuery.of(context).size.height - 580,
                         image: const AssetImage('images/search.png'),
                         child: InkWell(
                           onTap: () {/* ... */},
@@ -123,8 +123,8 @@ class _MainGridState extends State<MainGrid> {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    height: 250,
-                    width: 180,
+                    width: MediaQuery.of(context).size.width - 210,
+                    height: MediaQuery.of(context).size.height - 510,
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(221, 59, 57, 80),
                         borderRadius: BorderRadius.circular(15)),
@@ -138,8 +138,8 @@ class _MainGridState extends State<MainGrid> {
                     child: Material(
                       child: Ink.image(
                         fit: BoxFit.fill,
-                        width: 180,
-                        height: 250,
+                        width: MediaQuery.of(context).size.width - 210,
+                        height: MediaQuery.of(context).size.height - 510,
                         image: const AssetImage('images/account.png'),
                         child: InkWell(
                           onTap: () {/* ... */},
@@ -165,8 +165,8 @@ class _MainGridState extends State<MainGrid> {
                     child: Material(
                       child: Ink.image(
                         fit: BoxFit.fill,
-                        width: 180,
-                        height: 180,
+                        width: MediaQuery.of(context).size.width - 210,
+                        height: MediaQuery.of(context).size.height - 580,
                         image: const AssetImage('images/callUS.png'),
                         child: InkWell(
                           onTap: () {/* ... */},
