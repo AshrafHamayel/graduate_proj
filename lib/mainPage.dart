@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduate_proj/workersPage.dart';
 import 'homePage.dart';
 import 'signIn.dart';
 import 'myProfile.dart';
@@ -31,20 +32,18 @@ class _mainState extends State<mainPage> {
           },
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.notifications_active), label: 'الاشعارات'),
-            BottomNavigationBarItem(
                 icon: Icon(Icons.person_search), label: 'بحث'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.switch_account_outlined), label: 'العمال'),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.wechat), label: 'الدردشات'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'حسابي'),
           ]),
-
-      body:Container(
-       
-       width: MediaQuery.of(context).size.width ,
-       height: MediaQuery.of(context).size.height-75,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height - 75,
         child: getBodyWidget(),
       ),
     );
@@ -56,8 +55,10 @@ class _mainState extends State<mainPage> {
       return HomePage();
     else if (_currentIndex == 4)
       return myProfile();
-      else if (_currentIndex == 3)
+    else if (_currentIndex == 3)
       return SignIn();
+    else if (_currentIndex == 1)
+      return Workers();
     else
       return Container();
   }

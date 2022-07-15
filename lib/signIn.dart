@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
- import 'signup.dart';
+import 'signup.dart';
 import 'main.dart';
 
 void main() => runApp(SignIn());
@@ -37,8 +37,7 @@ class _SignIn extends State<Sign_In> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-                backgroundColor: Color.fromARGB(255, 248, 248, 248),
-
+      backgroundColor: Color.fromARGB(255, 248, 248, 248),
       appBar: AppBar(
         // toolbarHeight: 30,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -49,14 +48,12 @@ class _SignIn extends State<Sign_In> {
             color: Colors.green,
           ),
           onPressed: () {
- Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MyApp()),
-  );
-
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
           },
         ),
-       
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -77,53 +74,39 @@ class _SignIn extends State<Sign_In> {
               const SizedBox(
                 height: 15,
               ),
-        
               const SizedBox(
                 height: 35,
               ),
-       
               buildTextField("الايميل", "ex@gmail.com", false),
               buildTextField("كلمة السر", "********", true),
-         
               const SizedBox(
                 height: 35,
               ),
               Row(
-
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             textDirection: TextDirection.rtl,
-
-                children: [
-                  
-                 TextButton(
-              onPressed: () {
-                //forgot password screen
-               },
-
-
-               child: const Text(
-                
-                'نسيت كلمة السر',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
-
-                    textAlign: TextAlign.center,
-
-               ),
-            ),
-                ]
-              ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        //forgot password screen
+                      },
+                      child: const Text(
+                        'نسيت كلمة السر',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 19),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  
                   OutlinedButton(
                     onPressed: () {
-
-                       Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MyApp()),
-  );
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                      );
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -152,30 +135,28 @@ class _SignIn extends State<Sign_In> {
                   )
                 ],
               ),
-
-Row(
-              textDirection: TextDirection.rtl,
-              children: <Widget>[
-                const Text(
-                  'ليس لديك حساب ؟',
-                  style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                ),
-                TextButton(
-                  child: const Text(
-                    'اشترك الان',
-                    style: TextStyle(fontSize: 20),
+              Row(
+                textDirection: TextDirection.rtl,
+                children: <Widget>[
+                  const Text(
+                    'ليس لديك حساب ؟',
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                   ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignupPage()));
-                  },
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-          
-
-
+                  TextButton(
+                    child: const Text(
+                      'اشترك الان',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupPage()));
+                    },
+                  )
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
             ],
           ),
         ),
@@ -183,9 +164,8 @@ Row(
     );
   }
 
-  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
-  
-  {
+  Widget buildTextField(
+      String labelText, String placeholder, bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
@@ -207,11 +187,10 @@ Row(
                   ),
                 )
               : null,
-          border: const OutlineInputBorder(),
+          border: const UnderlineInputBorder(),
           hintText: labelText,
         ),
       ),
     );
   }
 }
-
