@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/workersPage.dart';
 import 'homePage.dart';
@@ -16,13 +18,14 @@ class _mainState extends State<mainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color.fromARGB(255, 66, 64, 64),
+          backgroundColor: const Color.fromARGB(255, 66, 64, 64),
           unselectedItemColor: Colors.white,
-          selectedIconTheme: IconThemeData(color: Colors.amberAccent, size: 40),
+          selectedIconTheme:
+              const IconThemeData(color: Colors.amberAccent, size: 40),
           selectedItemColor: Colors.amberAccent,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {
@@ -31,14 +34,15 @@ class _mainState extends State<mainPage> {
             });
           },
           items: [
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.person_search), label: 'بحث'),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.switch_account_outlined), label: 'العمال'),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.home), label: 'الرئيسية'),
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.wechat), label: 'الدردشات'),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'حسابي'),
           ]),
       body: Container(
@@ -50,16 +54,16 @@ class _mainState extends State<mainPage> {
   }
 
   getBodyWidget() {
-    if (_currentIndex == 2)
-      // return Text("asd");
+    if (_currentIndex == 2) {
       return HomePage();
-    else if (_currentIndex == 4)
+    } else if (_currentIndex == 4) {
       return myProfile();
-    else if (_currentIndex == 3)
+    } else if (_currentIndex == 3) {
       return SignIn();
-    else if (_currentIndex == 1)
+    } else if (_currentIndex == 1) {
       return Workers();
-    else
+    } else {
       return Container();
+    }
   }
 }
