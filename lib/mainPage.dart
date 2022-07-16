@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/workersPage.dart';
 import 'homePage.dart';
+import 'main-grid.dart';
+import 'search.dart';
 import 'signIn.dart';
 import 'myProfile.dart';
 
@@ -45,22 +47,20 @@ class _mainState extends State<mainPage> {
             const BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'حسابي'),
           ]),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 75,
-        child: getBodyWidget(),
-      ),
+      body: getBodyWidget(),
     );
   }
 
   getBodyWidget() {
     if (_currentIndex == 2) {
-      return HomePage();
+      return MainGrid();
     } else if (_currentIndex == 4) {
       return myProfile();
     } else if (_currentIndex == 3) {
       return SignIn();
     } else if (_currentIndex == 1) {
+      return Container();
+    } else if (_currentIndex == 0) {
       return Workers();
     } else {
       return Container();
