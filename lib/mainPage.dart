@@ -6,6 +6,8 @@ import 'homePage.dart';
 import 'main-grid.dart';
 import 'search.dart';
 import 'signIn.dart';
+import 'signup.dart';
+
 import 'myProfile.dart';
 
 class mainPage extends StatefulWidget {

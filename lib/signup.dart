@@ -37,12 +37,11 @@ class _SignupPage extends State<Signup_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-                backgroundColor: Color.fromARGB(255, 248, 248, 248),
 
       appBar: AppBar(
         // toolbarHeight: 30,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 1,
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+       elevation: 1,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -99,19 +98,20 @@ class _SignupPage extends State<Signup_Page> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {Navigator.pop(context,
-              MaterialPageRoute(builder: (context) => SignIn()));},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0))),
-                    ),
-                    child: const Text("اللغاء",
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.black)),
-                  ),
+                  SizedBox(width: 50,),
+              //     OutlinedButton(
+              //       onPressed: () {Navigator.pop(context,
+              // MaterialPageRoute(builder: (context) => SignIn()));},
+              //       style: ButtonStyle(
+              //         shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(30.0))),
+              //       ),
+              //       child: const Text("اللغاء",
+              //           style: TextStyle(
+              //               fontSize: 14,
+              //               letterSpacing: 2.2,
+              //               color: Colors.black)),
+              //     ),
                   RaisedButton(
                     onPressed: () {
                        

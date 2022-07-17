@@ -13,7 +13,7 @@ class myProfile extends StatelessWidget {
       body: UserProfile_Page(),
       appBar: AppBar(
         // toolbarHeight: 30,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
         elevation: 1,
         leading: IconButton(
           icon: const Icon(
@@ -39,6 +39,7 @@ class myProfile extends StatelessWidget {
             },
           ),
         ],
+        
       ),
     );
   }

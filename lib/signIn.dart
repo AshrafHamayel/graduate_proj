@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -12,7 +14,6 @@ class SignIn extends StatelessWidget {
     return
         // debugShowCheckedModeBanner: false,
         Scaffold(
-      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
       body: Sign_In(),
     );
   }
@@ -40,7 +41,7 @@ class _SignIn extends State<Sign_In> {
       backgroundColor: Color.fromARGB(255, 248, 248, 248),
       appBar: AppBar(
         // toolbarHeight: 30,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
         elevation: 1,
         leading: IconButton(
           icon: const Icon(
@@ -79,9 +80,7 @@ class _SignIn extends State<Sign_In> {
               ),
               buildTextField("الايميل", "ex@gmail.com", false),
               buildTextField("كلمة السر", "********", true),
-              const SizedBox(
-                height: 35,
-              ),
+              
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   textDirection: TextDirection.rtl,
@@ -97,27 +96,29 @@ class _SignIn extends State<Sign_In> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                  
                   ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyApp()),
-                      );
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0))),
-                    ),
-                    child: const Text("اللغاء",
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.black)),
-                  ),
+                  SizedBox(width: 50,),
+                  // OutlinedButton(
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => MyApp()),
+                  //     );
+                  //   },
+                  //   style: ButtonStyle(
+                  //     shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(30.0))),
+                  //   ),
+                  //   child: const Text("اللغاء",
+                  //       style: TextStyle(
+                  //           fontSize: 14,
+                  //           letterSpacing: 2.2,
+                  //           color: Colors.black)),
+                  // ),
                   RaisedButton(
                     onPressed: () {},
                     color: Colors.green,
