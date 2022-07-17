@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graduate_proj/workersPage.dart';
+import 'package:graduate_proj/posts.dart';
 
 class WorkersData extends StatelessWidget {
   @override

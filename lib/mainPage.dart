@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:graduate_proj/workersPage.dart';
+import 'package:graduate_proj/posts.dart';
 import 'homePage.dart';
 import 'main-grid.dart';
 import 'search.dart';
@@ -61,7 +61,7 @@ class _mainState extends State<mainPage> {
     } else if (_currentIndex == 3) {
       return SignIn();
     } else if (_currentIndex == 1) {
-      return Container();
+      return Post();
     } else if (_currentIndex == 0) {
       return Workers();
     } else {
