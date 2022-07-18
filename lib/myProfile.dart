@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -227,7 +229,78 @@ class _UserProfilePage extends State<UserProfile_Page> {
       ),
     );
   }
+Widget _buildpost(){
+  return Container(
+             
 
+    child: 
+      Card(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
+                        title: TextFormField(
+                          maxLines: 10,
+                          maxLength: 255,
+                          minLines: 1,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(right: 10),
+                              hintText: '...',
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(20))),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: uploadImage,
+                          icon: Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.grey,
+                          )),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            top: BorderSide(
+                                                color: Colors.grey
+                                                    .withOpacity(.3)))),
+                                    padding: EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.add_box,
+                                          color: Colors.grey,
+                                        ),
+                                        Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 10)),
+                                        Text(
+                                          'اضف منشور',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                  )))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+    
+  );
+}
   Widget _buildSeparator(Size screenSize) {
     return Container(
       width: screenSize.width,
@@ -291,30 +364,41 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          _buildCoverImage(screenSize),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: screenSize.height / 18.0),
-                  _buildProfileImage(context),
-                  _buildFullName(),
-                  _buildStatus(context),
-                  _buildStatContainer(),
-                  _buildBio(context),
-                  const SizedBox(height: 10.0),
-                  _buildButtons(),
-                  const SizedBox(height: 8.0),
-                  _buildSeparator(screenSize),
-                ],
+    Size screenSize = MediaQuery.of(context).size;         
+
+    return Container(
+      child: Scaffold(
+        
+        body: Container(
+          child: Stack(
+            children: <Widget>[
+              _buildCoverImage(screenSize),
+              
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      
+                      SizedBox(height: screenSize.height / 18.0),
+                      _buildProfileImage(context),
+                      _buildFullName(),
+                      _buildStatus(context),
+                      _buildStatContainer(),
+                      _buildBio(context),
+                      const SizedBox(height: 10.0),
+                      _buildButtons(),
+                      const SizedBox(height: 8.0),
+                      _buildSeparator(screenSize),
+                      SizedBox(height: 10,),
+                      _buildpost(),
+
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

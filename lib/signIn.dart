@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
