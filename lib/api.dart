@@ -13,7 +13,7 @@ class api   {
  
  static Future<http.Response> createUser(String email ,String name , String password) {
   return http.post(
-    Uri.parse('172.19.59.34:9500/signUp/signUp?email=$email&name=$name&password=$password'),
+    Uri.parse('http://172.19.59.34:9500/signUp/signUp?email=$email&name=$name&password=$password'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
