@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'signIn.dart';
+import 'api.dart'  ;
 
 void main() => runApp(SignupPage());
 
 class SignupPage extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return
@@ -25,6 +28,11 @@ class Signup_Page extends StatefulWidget {
 
 class _SignupPage extends State<Signup_Page> {
   bool showPassword = false;
+      final ControllerEmail = TextEditingController();
+      final ControllerName = TextEditingController();
+      final ControllerPass = TextEditingController();
+      final ControllerconfPass = TextEditingController();
+
   late File iimage;
   uploadImage() async {
     var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
@@ -88,10 +96,10 @@ class _SignupPage extends State<Signup_Page> {
               const SizedBox(
                 height: 35,
               ),
-               buildTextField("الاسم", "الاسم", false),
-              buildTextField("الايميل", "ex@gmail.com", false),
-              buildTextField("كلمة السر", "********", true),
-               buildTextField("تأكيد كلمة السر", "TLV, Israel", true),
+               buildTextField("الاسم", "الاسم", false ,ControllerName),
+              buildTextField("الايميل", "ex@gmail.com", false ,ControllerEmail),
+              buildTextField("كلمة السر", "********", true , ControllerPass),
+               buildTextField("تأكيد كلمة السر", "TLV, Israel", true , ControllerconfPass),
               const SizedBox(
                 height: 35,
               ),
@@ -114,7 +122,7 @@ class _SignupPage extends State<Signup_Page> {
               //     ),
                   RaisedButton(
                     onPressed: () {
-                       
+                      api.createUser(ControllerEmail.text,ControllerName.text,ControllerPass.text);
                     },
                     color: Colors.green,
                     padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -142,12 +150,13 @@ class _SignupPage extends State<Signup_Page> {
     );
   }
 
-  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) 
+  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField ,TextEditingController myController ) 
   
   {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
+        controller:    myController,
 
         textAlign: TextAlign.end,
         
