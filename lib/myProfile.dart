@@ -41,7 +41,6 @@ class myProfile extends StatelessWidget {
             },
           ),
         ],
-        
       ),
     );
   }
@@ -229,78 +228,120 @@ class _UserProfilePage extends State<UserProfile_Page> {
       ),
     );
   }
-Widget _buildpost(){
-  return Container(
-             
 
-    child: 
-      Card(
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: Icon(Icons.person),
-                        ),
-                        title: TextFormField(
-                          maxLines: 10,
-                          maxLength: 255,
-                          minLines: 1,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(right: 10),
-                              hintText: '...',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(20))),
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: uploadImage,
-                          icon: Icon(
-                            Icons.camera_alt_outlined,
-                            color: Colors.grey,
-                          )),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            top: BorderSide(
-                                                color: Colors.grey
-                                                    .withOpacity(.3)))),
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.add_box,
-                                          color: Colors.grey,
-                                        ),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 10)),
-                                        Text(
-                                          'اضف منشور',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 15),
-                                        ),
-                                      ],
-                                    ),
-                                  )))
-                        ],
-                      )
-                    ],
-                  ),
+  Widget _buildpost() {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        child: Card(
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                leading: CircleAvatar(
+                  child: Icon(Icons.person_outline),
                 ),
-    
-  );
-}
+                title: TextFormField(
+                  maxLines: 10,
+                  minLines: 1,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(right: 10),
+                      hintText: 'شاركنا عملك',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(20))),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    left: BorderSide(
+                                        color: Colors.grey.withOpacity(0.3)),
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                    onPressed: uploadImage,
+                                    icon: Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Colors.grey,
+                                    )),
+                                Padding(padding: EdgeInsets.only(right: 10)),
+                              ],
+                            ),
+                          ))),
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.add_location_alt_outlined,
+                                      color: Colors.grey,
+                                    )),
+                                Padding(padding: EdgeInsets.only(right: 10)),
+                              ],
+                            ),
+                          )))
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.add_box,
+                                  color: Colors.grey,
+                                ),
+                                Padding(padding: EdgeInsets.only(right: 10)),
+                                Text(
+                                  'اضف منشور',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          )))
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSeparator(Size screenSize) {
     return Container(
       width: screenSize.width,
@@ -364,21 +405,18 @@ Widget _buildpost(){
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;         
+    Size screenSize = MediaQuery.of(context).size;
 
     return Container(
       child: Scaffold(
-        
         body: Container(
           child: Stack(
             children: <Widget>[
               _buildCoverImage(screenSize),
-              
               SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      
                       SizedBox(height: screenSize.height / 18.0),
                       _buildProfileImage(context),
                       _buildFullName(),
@@ -389,9 +427,10 @@ Widget _buildpost(){
                       _buildButtons(),
                       const SizedBox(height: 8.0),
                       _buildSeparator(screenSize),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       _buildpost(),
-
                     ],
                   ),
                 ),
