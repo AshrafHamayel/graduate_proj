@@ -21,6 +21,21 @@ class api {
       // }),
     );
   }
+
+   static Future<http.Response> login(
+      String email,String password) {
+    return http.post(
+      Uri.parse(
+          'http://172.19.59.34:9500/login/login?email=$email&password=$password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      // body: jsonEncode(<String, String>{
+      //   'title': title,
+      // }),
+    );
+  }
+
 }
 
 Future<http.Response> createAlbum(String title) {

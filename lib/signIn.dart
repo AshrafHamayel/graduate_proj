@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'signup.dart';
 import 'main.dart';
+import 'api.dart' ;
 
 void main() => runApp(SignIn());
 
@@ -26,6 +27,11 @@ class Sign_In extends StatefulWidget {
 
 class _SignIn extends State<Sign_In> {
   bool showPassword = false;
+
+  final ControllerEmail = TextEditingController();
+      final ControllerPass = TextEditingController();
+
+
   late File iimage;
   uploadImage() async {
     var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
@@ -78,8 +84,8 @@ class _SignIn extends State<Sign_In> {
               const SizedBox(
                 height: 35,
               ),
-              buildTextField("الايميل", "ex@gmail.com", false),
-              buildTextField("كلمة السر", "********", true),
+              buildTextField("الايميل", "ex@gmail.com", false,ControllerEmail),
+              buildTextField("كلمة السر", "********", true,ControllerPass),
               
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,7 +126,11 @@ class _SignIn extends State<Sign_In> {
                   //           color: Colors.black)),
                   // ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      api.login(ControllerEmail.text,ControllerPass.text);
+
+
+                    },
                     color: Colors.green,
                     padding: const EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
@@ -165,30 +175,40 @@ class _SignIn extends State<Sign_In> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+ Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField ,TextEditingController myController ) 
+  
+  {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
+        controller:    myController,
+
         textAlign: TextAlign.end,
+        
         obscureText: isPasswordTextField ? showPassword : false,
+        
         decoration: InputDecoration(
+          
           // contentPadding: EdgeInsets.all(),
           alignLabelWithHint: true,
           prefixIcon: isPasswordTextField
               ? IconButton(
+                
                   onPressed: () {
                     setState(() {
+                      
                       showPassword = !showPassword;
                     });
                   },
+
                   icon: const Icon(
                     Icons.remove_red_eye,
                     color: Colors.grey,
                   ),
                 )
               : null,
-          border: const UnderlineInputBorder(),
+          border: const OutlineInputBorder(),
+
           hintText: labelText,
         ),
       ),
