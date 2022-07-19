@@ -14,20 +14,17 @@ class _WorkersState extends State<Workers> {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.search,
+            color: Colors.green,
+          ),
+        ),
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
-            const Text('العمال'),
-            const SizedBox(
-              width: 269,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.green,
-              ),
-            ),
+            Text('العمال'),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
