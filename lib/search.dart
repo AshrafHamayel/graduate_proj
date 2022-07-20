@@ -10,42 +10,17 @@ class Workers extends StatefulWidget {
 }
 
 class _WorkersState extends State<Workers> {
+  
+  
   @override
-  //  void showBottomSheet() => showModalBottomSheet(
-  //       enableDrag: false,
-  //       isDismissible: false,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.only(
-  //           topLeft: Radius.circular(24),
-  //           topRight: Radius.circular(24),
-  //         ),
-  //       ),
-  //       barrierColor: Colors.orange.withOpacity(0.2),
-  //       context: context,
-  //       builder: (context) => Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: <Widget>[
-  //           ListTile(
-  //             leading: Icon(Icons.share),
-  //             title: Text('Share'),
-  //             onTap: () {
-  //               Navigator.of(context).pop(context);
-  //             },
-  //           ),
-  //           ListTile(
-  //             leading: Icon(Icons.link),
-  //             title: Text('Copy link'),
-  //             onTap: () => {},
-  //           ),
-  //         ],
-  //       ),
-  //     );
+  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: (){
+          },
           icon: const Icon(
             Icons.search,
             color: Colors.green,
@@ -90,7 +65,38 @@ class _WorkersState extends State<Workers> {
                        
                             decoration: InputDecoration(
                             
-                          suffixIcon:   Icon(Icons.search, color: Colors.grey),
+                          suffixIcon:   IconButton( color: Colors.grey, onPressed: () { showModalBottomSheet(
+        enableDrag: false,
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        barrierColor: Colors.orange.withOpacity(0.2),
+        context: context,
+        builder: (context) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.share),
+              title: Text('Share'),
+              onTap: () {
+                Navigator.of(context).pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.link),
+              title: Text('Copy link'),
+              onTap: () => {},
+            ),
+          ],
+        ),
+      ); },  icon: const Icon(
+            Icons.search,
+            color: Colors.green,
+          ),),
                              
                               hintText: 'بحث',
                             
