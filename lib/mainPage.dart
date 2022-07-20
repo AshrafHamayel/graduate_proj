@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types, prefer_const_constructors, unused_import, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types, prefer_const_constructors, unused_import, use_key_in_widget_constructors, file_names
 
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/posts.dart';

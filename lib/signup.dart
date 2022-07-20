@@ -1,3 +1,5 @@
+
+  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors
   
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
