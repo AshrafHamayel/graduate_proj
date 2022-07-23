@@ -1,8 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, sized_box_for_whitespace, prefer_const_constructors, deprecated_member_use, prefer_const_literals_to_create_immutables
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, sized_box_for_whitespace, prefer_const_constructors, deprecated_member_use, prefer_const_literals_to_create_immutables, unused_import, unused_element
 
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/workersDetails.dart';
 import 'package:path/path.dart';
+
+import 'main.dart';
 
 class Workers extends StatefulWidget {
   @override
@@ -10,19 +12,50 @@ class Workers extends StatefulWidget {
 }
 
 class _WorkersState extends State<Workers> {
-  
-  
+  List<bool?> checked = [false, false, false, false, false];
+  List<String> typeOfWork = [
+    "عامل بناء",
+    "عامل دهان",
+    "عامل بلاط",
+    "منسق حدائق",
+    "عتال"
+  ];
+
+  Widget _buildcheckbox(bool? chked, String worktype, int Li) {
+    return StatefulBuilder(
+      builder: ((context, setState) {
+        return CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            worktype,
+            textDirection: TextDirection.rtl,
+          ),
+          value: chked,
+          onChanged: (v) {
+            setState(() {
+              chked = v;
+            });
+            checked[Li] = chked;
+          },
+        );
+      }),
+    );
+  }
+
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
         leading: IconButton(
-          onPressed: (){
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
           },
           icon: const Icon(
-            Icons.search,
+            Icons.arrow_back,
             color: Colors.green,
           ),
         ),
@@ -34,114 +67,200 @@ class _WorkersState extends State<Workers> {
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
-      
       body: ListView.builder(
-        
           itemCount: 1,
           shrinkWrap: true,
           itemBuilder: (BuildContext contxt, int index) => Container(
                 width: MediaQuery.of(context).size.width,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    
                 child: Column(
-                  
                   children: [
                     Directionality(
                       textDirection: TextDirection.rtl,
                       child: Container(
-                        
-                          height: 50,
-                          margin: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black26),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: TextField(
-                          
-                       
-                            decoration: InputDecoration(
-                            
-                          suffixIcon:   IconButton( color: Colors.grey, onPressed: () { showModalBottomSheet(
-        enableDrag: false,
-        isDismissible: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
-        barrierColor: Colors.orange.withOpacity(0.2),
-        context: context,
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.share),
-              title: Text('Share'),
-              onTap: () {
-                Navigator.of(context).pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.link),
-              title: Text('Copy link'),
-              onTap: () => {},
-            ),
-          ],
-        ),
-      ); },  icon: const Icon(
-            Icons.search,
-            color: Colors.green,
-          ),),
-                             
-                              hintText: 'بحث',
-                            
-                              
-                              border: InputBorder.none,
+                        height: 50,
+                        margin: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black26),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              color: Colors.grey,
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.search,
+                                color: Colors.green,
+                              ),
                             ),
-                           
+                            hintText: 'بحث',
+                            border: InputBorder.none,
                           ),
                         ),
+                      ),
                     ),
-                   
-                        Row(
-                children: <Widget>[
-                  Expanded(
-                      child: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                        color: Colors.grey.withOpacity(.3)),
-                                    top: BorderSide(
-                                        color: Colors.grey.withOpacity(.3)))),
-                            padding: EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.filter_list,
-                                  color: Colors.grey,
-                                ),
-                                Padding(padding: EdgeInsets.only(right: 10)),
-                                Text(
-                                  'الفلاتر ',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 15),
-                                ),
-                              ],
-                            ),
-                          )))
-                ],
-              ),
-              SizedBox(height:10),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    enableDrag: true,
+                                    isDismissible: true,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(24),
+                                        topRight: Radius.circular(24),
+                                      ),
+                                    ),
+                                    barrierColor: Colors.grey.withOpacity(0.2),
+                                    context: context,
+                                    builder: (context) => Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading:
+                                              Icon(Icons.location_on_outlined),
+                                          title: Text(
+                                            'الموقع',
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                        ListTile(
+                                          leading:
+                                              Icon(Icons.handyman_outlined),
+                                          title: Text(
+                                            'العمل',
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                enableDrag: true,
+                                                isDismissible: true,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(24),
+                                                    topRight:
+                                                        Radius.circular(24),
+                                                  ),
+                                                ),
+                                                barrierColor: Colors.grey
+                                                    .withOpacity(0.2),
+                                                context: context,
+                                                builder: (context) => Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  border:
+                                                                      Border(
+                                                            bottom: BorderSide(
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      .3),
+                                                            ),
+                                                          )),
+                                                          child: Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 30,
+                                                              ),
+                                                              TextButton(
+                                                                child:
+                                                                    const Text(
+                                                                  'اعادة تعيين',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black54,
+                                                                      fontSize:
+                                                                          15),
+                                                                ),
+                                                                onPressed: () {
+                                                                  for (int i =
+                                                                          0;
+                                                                      i < 5;
+                                                                      i++)
+                                                                    checked[i] =
+                                                                        false;
+                                                                },
+                                                              ),
+                                                              SizedBox(
+                                                                width: 200,
+                                                              ),
+                                                              Text(
+                                                                'نوع العمل',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10)),
+                                                        Column(
+                                                          children: [
+                                                            for (int i = 0;
+                                                                i < 5;
+                                                                i++)
+                                                              _buildcheckbox(
+                                                                  checked[i],
+                                                                  typeOfWork[i],
+                                                                  i)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ));
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color:
+                                                  Colors.grey.withOpacity(.3)),
+                                          top: BorderSide(
+                                              color: Colors.grey
+                                                  .withOpacity(.3)))),
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.filter_list,
+                                        color: Colors.grey,
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(right: 10)),
+                                      Text(
+                                        'الفلاتر ',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                )))
+                      ],
+                    ),
+                    SizedBox(height: 10),
                     Card(
                       elevation: 5,
                       shape: RoundedRectangleBorder(
@@ -218,8 +337,6 @@ class _WorkersState extends State<Workers> {
                   ],
                 ),
               )),
-              
     );
-    
   }
 }
