@@ -9,22 +9,21 @@ class api {
   static Future<http.Response> createUser(
       String email, String name, String password) {
     return http.post(
-      Uri.parse(
-          'http://172.19.59.34:9500/signUp/signUp?email=$email&name=$name&password=$password'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      Uri.parse('http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password'),
+      headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
       // body: jsonEncode(<String, String>{
       //   'title': title,
       // }),
     );
+    
+
   }
 
    static Future<http.Response> login(
       String email,String password) {
     return http.post(
       Uri.parse(
-          'http://172.19.59.34:9500/login/login?email=$email&password=$password'),
+          'http://10.0.2.2:8000/login/login?email=$email&password=$password'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
