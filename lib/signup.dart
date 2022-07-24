@@ -1,9 +1,12 @@
 
-  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors
-  
+  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'myProfile.dart';
 import 'signIn.dart';
 import 'api.dart'  ;
 
@@ -36,6 +39,18 @@ class _SignupPage extends State<Signup_Page> {
       final ControllerconfPass = TextEditingController();
 
   late File iimage;
+
+ Future getpost(String email, String name, String password )async {
+       var url = "http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password";
+       var response =await http.post(Uri.parse(url));
+      var responsebody= jsonDecode(response.body) ;
+     // var responsebody= response.body ;
+
+       //print(responsebody);
+       return responsebody;
+  }
+
+
   uploadImage() async {
     var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
     if (pickedImage != null) {
@@ -124,7 +139,13 @@ class _SignupPage extends State<Signup_Page> {
               //     ),
                   RaisedButton(
                     onPressed: () {
-                      api.createUser(ControllerEmail.text,ControllerName.text,ControllerPass.text);
+                      
+                     var resa= getpost(ControllerEmail.text,ControllerName.text,ControllerPass.text);
+
+                            print(resa);
+                            // Navigator.push( context,
+                            // MaterialPageRoute(builder: (context) => myProfile()));
+                     // api.createUser(ControllerEmail.text,ControllerName.text,ControllerPass.text);
                     },
                     color: Colors.green,
                     padding: const EdgeInsets.symmetric(horizontal: 50),
