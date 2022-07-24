@@ -5,8 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'signup.dart';
 import 'main.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'api.dart' ;
-
+import 'myProfile.dart';
 void main() => runApp(SignIn());
 
 class SignIn extends StatelessWidget {
@@ -28,11 +30,74 @@ class Sign_In extends StatefulWidget {
 class _SignIn extends State<Sign_In> {
   bool showPassword = false;
 
-  final ControllerEmail = TextEditingController();
+      final ControllerEmail = TextEditingController();
       final ControllerPass = TextEditingController();
 
 
   late File iimage;
+showAlertDialog(String textMessage) {
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+             Navigator.of(context).pop();
+
+     },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Abort"),
+    // ignore: unnecessary_string_interpolations
+    content: Text("$textMessage"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+
+ Future getpost(String email,String password )async {
+       var url = "http://10.0.2.2:8000/login/login?email=$email&password=$password";
+       var response =await http.post(Uri.parse(url));
+      var responsebody= jsonDecode(response.body) ;
+     
+
+       if (responsebody['NT']=='not found')
+       {
+      
+       showAlertDialog('Email not found !');
+            // ignore: use_build_context_synchronously
+            // Navigator.push( context,
+            // MaterialPageRoute(builder: (context) => myProfile()));
+       }
+       
+      else 
+       {
+     
+           showAlertDialog('responsebody');
+       
+       }
+
+     
+
+    
+  }
+
+
+
+
+
+
   uploadImage() async {
     var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
     if (pickedImage != null) {
@@ -127,7 +192,7 @@ class _SignIn extends State<Sign_In> {
                   // ),
                   RaisedButton(
                     onPressed: () {
-                      api.login(ControllerEmail.text,ControllerPass.text);
+                     getpost(ControllerEmail.text,ControllerPass.text);
 
 
                     },
