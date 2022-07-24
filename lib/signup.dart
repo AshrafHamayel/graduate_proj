@@ -40,14 +40,72 @@ class _SignupPage extends State<Signup_Page> {
 
   late File iimage;
 
+showAlertDialog(String textMessage) {
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+             Navigator.of(context).pop();
+
+     },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Abort"),
+    // ignore: unnecessary_string_interpolations
+    content: Text("$textMessage"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+
  Future getpost(String email, String name, String password )async {
        var url = "http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
+      // var ree;
      // var responsebody= response.body ;
 
-       //print(responsebody);
-       return responsebody;
+      // print(responsebody['NT']);
+       if (responsebody['NT']=='done')
+       {
+      
+            // ignore: use_build_context_synchronously
+            Navigator.push( context,
+            MaterialPageRoute(builder: (context) => myProfile()));
+       }
+       
+      else if (responsebody['NT']=='Email exists !')
+       {
+     
+           showAlertDialog('Email exists !');
+       
+       }
+
+      else if (responsebody['NT']=='Invalid Email !')
+       {
+      
+           showAlertDialog('Invalid Email !');
+
+       }
+      else {
+           showAlertDialog('Error');
+
+          }
+
+    
   }
 
 
@@ -139,12 +197,10 @@ class _SignupPage extends State<Signup_Page> {
               //     ),
                   RaisedButton(
                     onPressed: () {
-                      
-                     var resa= getpost(ControllerEmail.text,ControllerName.text,ControllerPass.text);
+                    
+                        getpost(ControllerEmail.text,ControllerName.text,ControllerPass.text);
 
-                            print(resa);
-                            // Navigator.push( context,
-                            // MaterialPageRoute(builder: (context) => myProfile()));
+                            
                      // api.createUser(ControllerEmail.text,ControllerName.text,ControllerPass.text);
                     },
                     color: Colors.green,
