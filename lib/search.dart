@@ -14,7 +14,7 @@ class Workers extends StatefulWidget {
 enum cities { everywhere, mycity }
 
 class _WorkersState extends State<Workers> {
-  List<bool?> checked = [false, false, false, false, false];
+  List<bool?> checked = [false, false, false, false, false, false];
   List<String> typeOfWork = [
     "عامل بناء",
     "عامل دهان",
@@ -141,8 +141,7 @@ class _WorkersState extends State<Workers> {
                     child: InkWell(
                       onTap: () {
                         showModalBottomSheet(
-                          enableDrag: true,
-                          isDismissible: true,
+                          isScrollControlled: true,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(24),
@@ -174,18 +173,23 @@ class _WorkersState extends State<Workers> {
                                     SizedBox(
                                       width: 30,
                                     ),
-                                    TextButton(
-                                      child: const Text(
-                                        'اعادة تعيين',
-                                        style: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 15),
-                                      ),
-                                      onPressed: () {
-                                        for (int i = 0; i < 5; i++) {
-                                          checked[i] = false;
-                                        }
-                                      },
+                                    StatefulBuilder(
+                                      builder: ((context, setState) {
+                                        return TextButton(
+                                          child: const Text(
+                                            'اعادة تعيين',
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 15),
+                                          ),
+                                          onPressed: () {
+                                            for (int i = 0; i < 6; i++) {
+                                              checked[i] = false;
+                                            }
+                                            _city = cities.everywhere;
+                                          },
+                                        );
+                                      }),
                                     ),
                                     SizedBox(
                                       width: 200,
@@ -319,9 +323,13 @@ class _WorkersState extends State<Workers> {
                                     builder: (context) => Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        Icon(
-                                          Icons.drag_handle_outlined,
+                                        SizedBox(
+                                          height: 8,
                                         ),
+                                        Container(
+                                            height: 3.0,
+                                            width: 40.0,
+                                            color: Color(0xFF32335C)),
                                         Container(
                                           decoration: BoxDecoration(
                                             border: Border(
@@ -360,6 +368,7 @@ class _WorkersState extends State<Workers> {
                                   );
                                 },
                               ),
+                              _buildcheckbox(checked[5], 'الاقرب الي', 5),
                             ],
                           ),
                         );
