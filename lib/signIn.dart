@@ -76,15 +76,16 @@ showAlertDialog(String textMessage) {
        {
       
        showAlertDialog('Email not found !');
-            // ignore: use_build_context_synchronously
-            // Navigator.push( context,
-            // MaterialPageRoute(builder: (context) => myProfile()));
+           
        }
        
       else 
        {
      
-           showAlertDialog('responsebody');
+          // showAlertDialog('responsebody');
+           // ignore: use_build_context_synchronously
+             Navigator.push( context,
+            MaterialPageRoute(builder: (context) => myProfile()));
        
        }
 

@@ -122,6 +122,54 @@ class _WorkersState extends State<Workers> {
                                     builder: (context) => Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
+                                          Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  border:
+                                                                      Border(
+                                                            bottom: BorderSide(
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      .3),
+                                                            ),
+                                                          )),
+                                                          child: Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 30,
+                                                              ),
+                                                              TextButton(
+                                                                child:
+                                                                    const Text(
+                                                                  'اعادة تعيين',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black54,
+                                                                      fontSize:
+                                                                          15),
+                                                                ),
+                                                                onPressed: () {
+                                                                  for (int i =
+                                                                          0;
+                                                                      i < 5;
+                                                                      i++) {
+                                                                    checked[i] =
+                                                                        false;
+                                                                  }
+                                                                },
+                                                              ),
+                                                              SizedBox(
+                                                                width: 200,
+                                                              ),
+                                                              Text(
+                                                                'الفلاتر',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
                                         ListTile(
                                           leading:
                                               Icon(Icons.location_on_outlined),
@@ -174,25 +222,7 @@ class _WorkersState extends State<Workers> {
                                                               SizedBox(
                                                                 width: 30,
                                                               ),
-                                                              TextButton(
-                                                                child:
-                                                                    const Text(
-                                                                  'اعادة تعيين',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black54,
-                                                                      fontSize:
-                                                                          15),
-                                                                ),
-                                                                onPressed: () {
-                                                                  for (int i =
-                                                                          0;
-                                                                      i < 5;
-                                                                      i++)
-                                                                    checked[i] =
-                                                                        false;
-                                                                },
-                                                              ),
+                                                            
                                                               SizedBox(
                                                                 width: 200,
                                                               ),
