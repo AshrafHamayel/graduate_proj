@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'api.dart' ;
 import 'myProfile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() => runApp(SignIn());
 
 class SignIn extends StatelessWidget {
@@ -33,7 +35,19 @@ class _SignIn extends State<Sign_In> {
       final ControllerEmail = TextEditingController();
       final ControllerPass = TextEditingController();
 
+shareEamil(String email)async
+{
+  
+  // ignore: invalid_use_of_visible_for_testing_member
+  //SharedPreferences.setMockInitialValues({});
 
+          SharedPreferences preferences =await SharedPreferences.getInstance();
+          preferences.setString("email", email);
+                  
+
+     //    print(preferences.getString("email"));
+        
+}
   late File iimage;
 showAlertDialog(String textMessage) {
 
@@ -81,6 +95,9 @@ showAlertDialog(String textMessage) {
        
       else 
        {
+                  // ignore: avoid_print
+
+        shareEamil(email);
      
           // showAlertDialog('responsebody');
            // ignore: use_build_context_synchronously

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,10 @@ import 'package:path/path.dart';
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
 import 'main.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class myProfile extends StatelessWidget {
   @override
@@ -52,32 +57,91 @@ class UserProfile_Page extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfile_Page> {
-  final String _fullName = "ياماش";
-  final String _status = "طوبرجي";
-  final String _bio = "\".انا ياماش ومعلم طوباار\"";
-  final String _followers = "00";
-  final String _Rating = "00";
 
-  Widget _buildCoverImage(Size screenSize) {
-    return Container(
-        // height: screenSize.height / 3.6,
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //     image: AssetImage('images/probackgrond.jpg'),
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
-        );
+  // Widget _buildCoverImage(Size screenSize) {
+  //   return Container(
+  //       // height: screenSize.height / 3.6,
+  //       // decoration: const BoxDecoration(
+  //       //   image: DecorationImage(
+  //       //     image: AssetImage('images/probackgrond.jpg'),
+  //       //     fit: BoxFit.cover,
+  //       //   ),
+  //       // ),
+  //       );
+  // }
+ // ignore: prefer_typing_uninitialized_variables
+  var _fullName ;
+  var _status ;
+    var _bio ;
+    var _followers ;
+    var _Rating ;
+
+  var email;
+getEamil()async
+{
+  
+  //SharedPreferences.setMockInitialValues({});
+
+          SharedPreferences preferences =await SharedPreferences.getInstance();
+             email = preferences.getString("email")!;
+
+       //  print(preferences.getString("email"));
+        
+}
+
+ Future getInfo()async {
+        getEamil();
+        print("email");
+       var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
+       var response =await http.get(Uri.parse(url));
+       var encodeFirst = json.encode(response.body);
+      var responsebody = json.decode(encodeFirst);
+if (responsebody[0]==null)
+{
+  CircularProgressIndicator();
+}
+else{
+      //var responsebody= jsonDecode(response.body) ;
+      _fullName=responsebody[0]['name'];
+      _status=responsebody[0]['work'];
+     _bio=responsebody[0]['description'];
+     _followers=responsebody[0]['followers'];
+      _Rating=responsebody[0]['evaluation'];
+     // _status=responsebody[0]['work'];
+}
   }
 
-  late File iimage;
+
+
+
+   late File _file;
 
   uploadImage() async {
-    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+   // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+      var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+
     if (pickedImage != null) {
-      iimage = File(pickedImage.path);
-    } else {}
+      _file = File(pickedImage.path);
+    }
+     else
+      {
+                        Text("Image not selected");
+      }
   }
+
+Future upload ()async{
+// ignore: unnecessary_null_comparison
+if (_file == null) {
+  return;
+}
+
+String base64=base64Encode(_file.readAsBytesSync());
+    String immName =_file.path.split("/").last;
+        // ignore: avoid_print
+         print(immName);
+
+}
+
 
   final imagepicker = ImagePicker();
 
@@ -101,8 +165,7 @@ class _UserProfilePage extends State<UserProfile_Page> {
                 shape: BoxShape.circle,
                 image: const DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(
-                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+                    image: NetworkImage( "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
           ),
           Positioned(
               bottom: 0,
@@ -122,12 +185,15 @@ class _UserProfilePage extends State<UserProfile_Page> {
                   padding: EdgeInsets.all(3),
                   onPressed: () {
                     uploadImage();
+                  
+                   // Image.file(iimage);
                   },
                   icon: const Icon(
                     Icons.edit,
                     color: Colors.white,
                   ),
                 ),
+                
               )),
         ],
       ),
@@ -271,7 +337,7 @@ class _UserProfilePage extends State<UserProfile_Page> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 IconButton(
-                                    onPressed: uploadImage,
+                                    onPressed:   upload,
                                     icon: Icon(
                                       Icons.camera_alt_outlined,
                                       color: Colors.grey,
@@ -404,15 +470,17 @@ class _UserProfilePage extends State<UserProfile_Page> {
   }
 
   @override
+  
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+   getInfo();
 
+    Size screenSize = MediaQuery.of(context).size;
     return Container(
       child: Scaffold(
         body: Container(
           child: Stack(
             children: <Widget>[
-              _buildCoverImage(screenSize),
+           //   _buildCoverImage(screenSize),
               SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
