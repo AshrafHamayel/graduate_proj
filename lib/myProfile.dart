@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print
 
 import 'dart:convert';
 import 'dart:io';
@@ -68,11 +68,11 @@ class _UserProfilePage extends State<UserProfile_Page> {
   //       );
   // }
   // ignore: prefer_typing_uninitialized_variables
-  var _fullName;
-  var _status;
-  var _bio;
-  var _followers;
-  var _Rating;
+    // late String _fullName=" ";
+    // late String _status=" ";
+    // late String _bio=" ";
+    // late String _followers=" ";
+    // late String _Rating=" ";
 
   var email;
   getEamil() async {
@@ -80,28 +80,21 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     email = preferences.getString("email")!;
-
-    //  print(preferences.getString("email"));
+  print(preferences.getString("email"));
   }
 
   Future getInfo() async {
+
     getEamil();
-    print("email");
     var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
+
     var response = await http.get(Uri.parse(url));
     var encodeFirst = json.encode(response.body);
     var responsebody = json.decode(encodeFirst);
-    if (responsebody[0] == null) {
-      CircularProgressIndicator();
-    } else {
-      //var responsebody= jsonDecode(response.body) ;
-      _fullName = responsebody[0]['name'];
-      _status = responsebody[0]['work'];
-      _bio = responsebody[0]['description'];
-      _followers = responsebody[0]['followers'];
-      _Rating = responsebody[0]['evaluation'];
-      // _status=responsebody[0]['work'];
-    }
+
+    
+    return responsebody;
+
   }
 
   late File _file;
@@ -186,20 +179,22 @@ class _UserProfilePage extends State<UserProfile_Page> {
     );
   }
 
-  Widget _buildFullName() {
+  Widget _buildFullName( String _fullName) {
     TextStyle _nameTextStyle = const TextStyle(
       color: Colors.black,
       fontSize: 28.0,
       fontWeight: FontWeight.w700,
     );
 
-    return Text(
+  
+         return Text(
       _fullName,
       style: _nameTextStyle,
     );
+    
   }
 
-  Widget _buildStatus(BuildContext context) {
+  Widget _buildStatus(BuildContext context ,String _status) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
@@ -245,7 +240,7 @@ class _UserProfilePage extends State<UserProfile_Page> {
     );
   }
 
-  Widget _buildStatContainer() {
+  Widget _buildStatContainer(String _followers ,String _Rating) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -262,7 +257,7 @@ class _UserProfilePage extends State<UserProfile_Page> {
     );
   }
 
-  Widget _buildBio(BuildContext context) {
+  Widget _buildBio(BuildContext context ,String _bio) {
     TextStyle bioTextStyle = const TextStyle(
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.italic,
@@ -457,13 +452,18 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
   @override
   Widget build(BuildContext context) {
-    getInfo();
-
     Size screenSize = MediaQuery.of(context).size;
     return Container(
+      
       child: Scaffold(
-        body: Container(
-          child: Stack(
+         body: FutureBuilder(
+                     future:getInfo() ,
+       builder: (BuildContext context, AsyncSnapshot snapshot) 
+   {   
+
+       if(snapshot.hasData)
+       {
+       return Stack(
             children: <Widget>[
               //   _buildCoverImage(screenSize),
               SafeArea(
@@ -471,11 +471,13 @@ class _UserProfilePage extends State<UserProfile_Page> {
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
-                      _buildProfileImage(context),
-                      _buildFullName(),
-                      _buildStatus(context),
-                      _buildStatContainer(),
-                      _buildBio(context),
+                     // _buildProfileImage(context,snapshot.data[0]['image']),
+                     
+                         _buildProfileImage(context),
+                     _buildFullName(snapshot.data[0]['name']),
+                      _buildStatus(context,snapshot.data[0]['work']),
+                      _buildStatContainer(snapshot.data[0]['followers'],snapshot.data[0]['evaluation']),
+                      _buildBio(context,snapshot.data[0]['description']),
                       const SizedBox(height: 10.0),
                       _buildButtons(),
                       const SizedBox(height: 8.0),
@@ -489,7 +491,10 @@ class _UserProfilePage extends State<UserProfile_Page> {
                 ),
               ),
             ],
-          ),
+          );
+            }
+          return Center(child: CircularProgressIndicator(),);
+         },
         ),
       ),
     );
