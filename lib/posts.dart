@@ -42,49 +42,53 @@ class Post extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Expanded(
-                              child: Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    left: BorderSide(
-                                        color: Colors.grey.withOpacity(0.3)))),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      left: BorderSide(
+                                          color:
+                                              Colors.grey.withOpacity(0.3)))),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
                                     child: InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(.3)))),
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.thumb_up_alt_outlined,
-                                                color: Colors.grey,
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10)),
-                                              Text(
-                                                'اعجبني',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                        )))
-                              ],
+                                      onTap: () {},
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color: Colors.grey
+                                                        .withOpacity(.3)))),
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.thumb_up_alt_outlined,
+                                              color: Colors.grey,
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
+                                            Text(
+                                              'اعجبني',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          )),
+                          ),
                           Expanded(
                             child: Row(
                               children: <Widget>[
@@ -128,7 +132,7 @@ class Post extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           )),

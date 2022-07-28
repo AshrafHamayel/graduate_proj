@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore
 
 import 'dart:convert';
 import 'dart:io';
@@ -11,7 +11,6 @@ import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class myProfile extends StatelessWidget {
   @override
@@ -57,7 +56,6 @@ class UserProfile_Page extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfile_Page> {
-
   // Widget _buildCoverImage(Size screenSize) {
   //   return Container(
   //       // height: screenSize.height / 3.6,
@@ -69,79 +67,67 @@ class _UserProfilePage extends State<UserProfile_Page> {
   //       // ),
   //       );
   // }
- // ignore: prefer_typing_uninitialized_variables
-  var _fullName ;
-  var _status ;
-    var _bio ;
-    var _followers ;
-    var _Rating ;
+  // ignore: prefer_typing_uninitialized_variables
+  var _fullName;
+  var _status;
+  var _bio;
+  var _followers;
+  var _Rating;
 
   var email;
-getEamil()async
-{
-  
-  //SharedPreferences.setMockInitialValues({});
+  getEamil() async {
+    //SharedPreferences.setMockInitialValues({});
 
-          SharedPreferences preferences =await SharedPreferences.getInstance();
-             email = preferences.getString("email")!;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    email = preferences.getString("email")!;
 
-       //  print(preferences.getString("email"));
-        
-}
-
- Future getInfo()async {
-        getEamil();
-        print("email");
-       var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
-       var response =await http.get(Uri.parse(url));
-       var encodeFirst = json.encode(response.body);
-      var responsebody = json.decode(encodeFirst);
-if (responsebody[0]==null)
-{
-  CircularProgressIndicator();
-}
-else{
-      //var responsebody= jsonDecode(response.body) ;
-      _fullName=responsebody[0]['name'];
-      _status=responsebody[0]['work'];
-     _bio=responsebody[0]['description'];
-     _followers=responsebody[0]['followers'];
-      _Rating=responsebody[0]['evaluation'];
-     // _status=responsebody[0]['work'];
-}
+    //  print(preferences.getString("email"));
   }
 
+  Future getInfo() async {
+    getEamil();
+    print("email");
+    var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
+    var response = await http.get(Uri.parse(url));
+    var encodeFirst = json.encode(response.body);
+    var responsebody = json.decode(encodeFirst);
+    if (responsebody[0] == null) {
+      CircularProgressIndicator();
+    } else {
+      //var responsebody= jsonDecode(response.body) ;
+      _fullName = responsebody[0]['name'];
+      _status = responsebody[0]['work'];
+      _bio = responsebody[0]['description'];
+      _followers = responsebody[0]['followers'];
+      _Rating = responsebody[0]['evaluation'];
+      // _status=responsebody[0]['work'];
+    }
+  }
 
-
-
-   late File _file;
+  late File _file;
 
   uploadImage() async {
-   // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
-      var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+    // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
 
     if (pickedImage != null) {
       _file = File(pickedImage.path);
+    } else {
+      Text("Image not selected");
     }
-     else
-      {
-                        Text("Image not selected");
-      }
   }
 
-Future upload ()async{
+  Future upload() async {
 // ignore: unnecessary_null_comparison
-if (_file == null) {
-  return;
-}
+    if (_file == null) {
+      return;
+    }
 
-String base64=base64Encode(_file.readAsBytesSync());
-    String immName =_file.path.split("/").last;
-        // ignore: avoid_print
-         print(immName);
-
-}
-
+    String base64 = base64Encode(_file.readAsBytesSync());
+    String immName = _file.path.split("/").last;
+    // ignore: avoid_print
+    print(immName);
+  }
 
   final imagepicker = ImagePicker();
 
@@ -165,7 +151,8 @@ String base64=base64Encode(_file.readAsBytesSync());
                 shape: BoxShape.circle,
                 image: const DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage( "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+                    image: NetworkImage(
+                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
           ),
           Positioned(
               bottom: 0,
@@ -185,15 +172,14 @@ String base64=base64Encode(_file.readAsBytesSync());
                   padding: EdgeInsets.all(3),
                   onPressed: () {
                     uploadImage();
-                  
-                   // Image.file(iimage);
+
+                    // Image.file(iimage);
                   },
                   icon: const Icon(
                     Icons.edit,
                     color: Colors.white,
                   ),
                 ),
-                
               )),
         ],
       ),
@@ -337,7 +323,7 @@ String base64=base64Encode(_file.readAsBytesSync());
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 IconButton(
-                                    onPressed:   upload,
+                                    onPressed: upload,
                                     icon: Icon(
                                       Icons.camera_alt_outlined,
                                       color: Colors.grey,
@@ -470,9 +456,8 @@ String base64=base64Encode(_file.readAsBytesSync());
   }
 
   @override
-  
   Widget build(BuildContext context) {
-   getInfo();
+    getInfo();
 
     Size screenSize = MediaQuery.of(context).size;
     return Container(
@@ -480,7 +465,7 @@ String base64=base64Encode(_file.readAsBytesSync());
         body: Container(
           child: Stack(
             children: <Widget>[
-           //   _buildCoverImage(screenSize),
+              //   _buildCoverImage(screenSize),
               SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
