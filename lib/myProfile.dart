@@ -463,6 +463,8 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
        if(snapshot.hasData)
        {
+                        print(snapshot.data);
+
        return Stack(
             children: <Widget>[
               //   _buildCoverImage(screenSize),
@@ -472,9 +474,10 @@ class _UserProfilePage extends State<UserProfile_Page> {
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
                      // _buildProfileImage(context,snapshot.data[0]['image']),
-                     
+                    
                          _buildProfileImage(context),
-                     _buildFullName(snapshot.data[0]['name'].toString()),
+                      //   snapshot.data![0].Email .toString(),
+                     _buildFullName(snapshot.data.json["name"].toString()),
                       _buildStatus(context,snapshot.data[0]['work'].toString()),
                       _buildStatContainer(snapshot.data[0]['followers'].toString(),snapshot.data[0]['evaluation'].toString()),
                       _buildBio(context,snapshot.data[0]['description'].toString()),
