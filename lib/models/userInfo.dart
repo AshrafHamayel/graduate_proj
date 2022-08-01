@@ -1,23 +1,23 @@
 class userInfo {
-  late String email;
-  late String name;
-  late String image;
-  late String work;
-   late List followers;
-   late List Ifollow;
-   late List evaluation;
-   late List description;
+   String? email;
+   String? name;
+   String? image;
+   String? work;
+    String? followers;
+    String? Ifollow;
+    String? evaluation;
+    String? description;
 
 
   userInfo({
-    required this.email,
-    required this.name,
-   required this.image,
-    required this.work,
-     required this.followers,
-       required this.Ifollow,
-      required this.evaluation,
-      required this.description,
+     this.email,
+     this.name,
+    this.image,
+     this.work,
+      this.followers,
+        this.Ifollow,
+       this.evaluation,
+       this.description,
 
 
 
@@ -51,4 +51,18 @@ class userInfo {
 
     return data;
   }
+
+    factory userInfo.fromMap(Map<String, dynamic> json) => userInfo(
+        email: json["email"],
+        name: json["name"],
+        image: json["image"],
+        work : json['work'],
+      followers: json['followers'],
+     Ifollow: json['Ifollow'],
+      evaluation: json['evaluation'],
+      description: json['description'],
+
+      );
 }
+
+

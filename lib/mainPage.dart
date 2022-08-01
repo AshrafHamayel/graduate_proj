@@ -7,10 +7,12 @@ import 'main-grid.dart';
 import 'search.dart';
 import 'signIn.dart';
 import 'signup.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'myProfile.dart';
 
 class mainPage extends StatefulWidget {
+
+  
   @override
   State<StatefulWidget> createState() {
     return _mainState();
@@ -19,6 +21,19 @@ class mainPage extends StatefulWidget {
 
 class _mainState extends State<mainPage> {
   var _currentIndex = 2;
+   var email;
+
+  getEamil() async {
+    //SharedPreferences.setMockInitialValues({});
+SharedPreferences preferences = await SharedPreferences.getInstance();
+//await preferences.clear();
+
+    email = preferences.getString("email");
+     print(email);
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,15 +71,32 @@ class _mainState extends State<mainPage> {
   getBodyWidget() {
     if (_currentIndex == 2) {
       return MainGrid();
-    } else if (_currentIndex == 4) {
-      return myProfile();
-    } else if (_currentIndex == 3) {
+    } else if (_currentIndex == 4) 
+    {
+      
+       getEamil();
+
+    if(email.toString().length<5)
       return SignIn();
-    } else if (_currentIndex == 1) {
+
+        else
+      return myProfile();
+    } 
+    
+    else if (_currentIndex == 3) 
+    {
+      return SignIn();
+    } 
+    else if (_currentIndex == 1) 
+    {
       return Post();
-    } else if (_currentIndex == 0) {
+    } 
+    else if (_currentIndex == 0) 
+    {
       return Workers();
-    } else {
+    } 
+    else
+     {
       return Container();
     }
   }

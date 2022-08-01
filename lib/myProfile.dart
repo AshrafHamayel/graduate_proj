@@ -11,6 +11,7 @@ import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/userInfo.dart';
 
 class myProfile extends StatelessWidget {
   @override
@@ -56,46 +57,46 @@ class UserProfile_Page extends StatefulWidget {
 }
 
 class _UserProfilePage extends State<UserProfile_Page> {
-  // Widget _buildCoverImage(Size screenSize) {
-  //   return Container(
-  //       // height: screenSize.height / 3.6,
-  //       // decoration: const BoxDecoration(
-  //       //   image: DecorationImage(
-  //       //     image: AssetImage('images/probackgrond.jpg'),
-  //       //     fit: BoxFit.cover,
-  //       //   ),
-  //       // ),
-  //       );
-  // }
-  // ignore: prefer_typing_uninitialized_variables
-    // late String _fullName=" ";
-    // late String _status=" ";
-    // late String _bio=" ";
-    // late String _followers=" ";
-    // late String _Rating=" ";
 
   var email;
-  getEamil() async {
-    //SharedPreferences.setMockInitialValues({});
+     
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    email = preferences.getString("email")!;
+  
+
+Widget buildd(BuildContext context) {
+  return FutureBuilder(
+    future: getEamil(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return email;
+      }
+      return CircularProgressIndicator(); // or some other widget
+    },
+  );
+}
+Future<void> getEamil() async {
+  SharedPreferences    preferences = await SharedPreferences.getInstance();
+    email = preferences.getString("email");
   print(preferences.getString("email"));
+
   }
 
   Future getInfo() async {
-
     getEamil();
     var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
 
     var response = await http.get(Uri.parse(url));
-    var encodeFirst = json.encode(response.body);
-    var responsebody = json.decode(encodeFirst);
-
-    
+    var responsebody = json.decode(response.body);
     return responsebody;
+ 
 
   }
+
+
+
+
+
+
 
   late File _file;
 
@@ -118,13 +119,23 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
     String base64 = base64Encode(_file.readAsBytesSync());
     String immName = _file.path.split("/").last;
+
+    //  هون كتابة كود ارسال اسم الصورة و كودها المشفر ل الباك اند 
     // ignore: avoid_print
     print(immName);
   }
 
+
+
+
+
+
+
+
+
   final imagepicker = ImagePicker();
 
-  Widget _buildProfileImage(BuildContext context) {
+  Widget _buildProfileImage(BuildContext context ,String imagee) {
     return Center(
       child: Stack(
         children: [
@@ -145,7 +156,8 @@ class _UserProfilePage extends State<UserProfile_Page> {
                 image: const DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"))),
+                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg")
+                        )),
           ),
           Positioned(
               bottom: 0,
@@ -240,7 +252,7 @@ class _UserProfilePage extends State<UserProfile_Page> {
     );
   }
 
-  Widget _buildStatContainer(String _followers ,String _Rating) {
+  Widget _buildStatContainer(String _followers ,String _Rating,String _Ifollow) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -250,8 +262,11 @@ class _UserProfilePage extends State<UserProfile_Page> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
+            _buildStatItem("التقيم", _Rating),
           _buildStatItem("المتابعون", _followers),
-          _buildStatItem("التقيم", _Rating),
+         _buildStatItem("أتابعه", _Ifollow),
+        
+          
         ],
       ),
     );
@@ -460,10 +475,11 @@ class _UserProfilePage extends State<UserProfile_Page> {
                      future:getInfo() ,
        builder: (BuildContext context, AsyncSnapshot snapshot) 
    {   
+       
 
        if(snapshot.hasData)
        {
-                        print(snapshot.data);
+       
 
        return Stack(
             children: <Widget>[
@@ -475,12 +491,12 @@ class _UserProfilePage extends State<UserProfile_Page> {
                       SizedBox(height: screenSize.height / 18.0),
                      // _buildProfileImage(context,snapshot.data[0]['image']),
                     
-                         _buildProfileImage(context),
+                         _buildProfileImage(context,snapshot.data["image"]),
                       //   snapshot.data![0].Email .toString(),
-                     _buildFullName(snapshot.data.json["name"].toString()),
-                      _buildStatus(context,snapshot.data[0]['work'].toString()),
-                      _buildStatContainer(snapshot.data[0]['followers'].toString(),snapshot.data[0]['evaluation'].toString()),
-                      _buildBio(context,snapshot.data[0]['description'].toString()),
+                     _buildFullName(snapshot.data["name"].toString()),
+                      _buildStatus(context,snapshot.data['work'].toString()),
+                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
+                      _buildBio(context,snapshot.data['description'].toString()),
                       const SizedBox(height: 10.0),
                       _buildButtons(),
                       const SizedBox(height: 8.0),

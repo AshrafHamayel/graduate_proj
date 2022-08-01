@@ -1,5 +1,5 @@
 
-  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable
+  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'myProfile.dart';
 import 'signIn.dart';
-import 'api.dart'  ;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(SignupPage());
 
@@ -69,19 +69,38 @@ showAlertDialog(String textMessage) {
     },
   );
 }
+shareEamil(String email)async
+{
+  
+          SharedPreferences preferences =await SharedPreferences.getInstance();
+          preferences.setString("email", email);
+           
+     //    print(preferences.getString("email"));
+        
+}
+
+ Future CreatUser(String email, String name, String password ,String confPassword )async {
+                    if(email+"--"=="--")
+                        showAlertDialog('Enter the Email!');
+                     else if(name+"--"=="--")
+                        showAlertDialog('Enter the name!');    
+                    else if(password+"--"=="--")
+                        showAlertDialog('Enter the password!');     
+                    else  if(confPassword+"--"=="--")
+                        showAlertDialog('Enter Confirm Password!');     
+                        
+else{
 
 
- Future getpost(String email, String name, String password )async {
        var url = "http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
-      // var ree;
-     // var responsebody= response.body ;
 
       // print(responsebody['NT']);
        if (responsebody['NT']=='done')
        {
       
+              shareEamil(email);
             // ignore: use_build_context_synchronously
             Navigator.push( context,
             MaterialPageRoute(builder: (context) => myProfile()));
@@ -90,20 +109,32 @@ showAlertDialog(String textMessage) {
       else if (responsebody['NT']=='Email exists !')
        {
      
-           showAlertDialog('Email exists !');
+           showAlertDialog('هذا الحساب موجود بالفعل ');
        
        }
 
       else if (responsebody['NT']=='Invalid Email !')
        {
       
-           showAlertDialog('Invalid Email !');
+           showAlertDialog('ايميل غير صالح ');
 
        }
+        else if (responsebody['NT']=='password does not match')
+       {
+      
+                    showAlertDialog('كلمة السر غير متطابقة');
+
+       }
+
+
       else {
-           showAlertDialog('Error');
+                    showAlertDialog('خطأ ');
 
           }
+
+}
+
+
 
     
   }
@@ -136,17 +167,7 @@ showAlertDialog(String textMessage) {
               MaterialPageRoute(builder: (context) => SignIn()));
           },
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(
-        //       Icons.settings,
-        //       color: Colors.green,
-        //     ),
-        //     onPressed: () {
-        //       //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsPage()));
-        //     },
-        //   ),
-        // ],
+       
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -174,7 +195,8 @@ showAlertDialog(String textMessage) {
                buildTextField("الاسم", "الاسم", false ,ControllerName),
               buildTextField("الايميل", "ex@gmail.com", false ,ControllerEmail),
               buildTextField("كلمة السر", "********", true , ControllerPass),
-               buildTextField("تأكيد كلمة السر", "TLV, Israel", true , ControllerconfPass),
+             
+               buildTextField("تأكيد كلمة السر", "********", true , ControllerconfPass),
               const SizedBox(
                 height: 35,
               ),
@@ -182,26 +204,11 @@ showAlertDialog(String textMessage) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(width: 50,),
-              //     OutlinedButton(
-              //       onPressed: () {Navigator.pop(context,
-              // MaterialPageRoute(builder: (context) => SignIn()));},
-              //       style: ButtonStyle(
-              //         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(30.0))),
-              //       ),
-              //       child: const Text("اللغاء",
-              //           style: TextStyle(
-              //               fontSize: 14,
-              //               letterSpacing: 2.2,
-              //               color: Colors.black)),
-              //     ),
                   RaisedButton(
                     onPressed: () {
                     
-                        getpost(ControllerEmail.text,ControllerName.text,ControllerPass.text);
+                        CreatUser(ControllerEmail.text,ControllerName.text,ControllerPass.text,ControllerconfPass.text);
 
-                            
-                     // api.createUser(ControllerEmail.text,ControllerName.text,ControllerPass.text);
                     },
                     color: Colors.green,
                     padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -264,6 +271,8 @@ showAlertDialog(String textMessage) {
           border: const OutlineInputBorder(),
 
           hintText: labelText,
+  
+         
         ),
       ),
     );

@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors, deprecated_member_use, use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, file_names
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, deprecated_member_use, use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, file_names, use_build_context_synchronously, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +7,6 @@ import 'signup.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'api.dart' ;
 import 'myProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,16 +37,17 @@ class _SignIn extends State<Sign_In> {
 shareEamil(String email)async
 {
   
-  // ignore: invalid_use_of_visible_for_testing_member
-  //SharedPreferences.setMockInitialValues({});
-
           SharedPreferences preferences =await SharedPreferences.getInstance();
           preferences.setString("email", email);
-                  
-
+           
      //    print(preferences.getString("email"));
         
 }
+
+
+
+
+
   late File iimage;
 showAlertDialog(String textMessage) {
 
@@ -81,30 +81,61 @@ showAlertDialog(String textMessage) {
 
 
  Future getpost(String email,String password )async {
-       var url = "http://10.0.2.2:8000/login/login?email=$email&password=$password";
-       var response =await http.post(Uri.parse(url));
-      var responsebody= jsonDecode(response.body) ;
+
+                          if(email+"--"=="--")
+                        showAlertDialog('Enter the Email!');
+                     else if(password+"--"=="--")
+                        showAlertDialog('Enter the password!');    
+
+
+                    else
+
+                    {
+
+        var url = "http://10.0.2.2:8000/login/login?email=$email&password=$password";
+        var response =await http.post(Uri.parse(url));
+          var responsebody= jsonDecode(response.body) ;
      
 
-       if (responsebody['NT']=='not found')
-       {
+          if (responsebody['NT']=='not found')
+          {
       
-       showAlertDialog('Email not found !');
+            showAlertDialog('Email not found !');
            
-       }
-       
-      else 
-       {
-                  // ignore: avoid_print
+           }
 
-        shareEamil(email);
+            else  if (responsebody['NT']=='The password is incorrect')
+          {
+      
+            showAlertDialog('The password is incorrect');
+           
+           }
+
+             else  if (responsebody['NT']=='done')
+          {
+      
+           shareEamil(email);
      
-          // showAlertDialog('responsebody');
-           // ignore: use_build_context_synchronously
              Navigator.push( context,
             MaterialPageRoute(builder: (context) => myProfile()));
+           
+           }
+
+
        
-       }
+          else 
+           {
+
+          showAlertDialog('Error');
+       
+           }
+
+
+                    }
+
+
+
+       
 
      
 
@@ -293,6 +324,7 @@ showAlertDialog(String textMessage) {
           border: const OutlineInputBorder(),
 
           hintText: labelText,
+          
         ),
       ),
     );
