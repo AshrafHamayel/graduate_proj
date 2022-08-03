@@ -18,7 +18,9 @@ class myProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: UserProfile_Page(),
+    
       appBar: AppBar(
+        
         // toolbarHeight: 30,
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
         elevation: 1,
@@ -483,16 +485,16 @@ Future<void> getEamil() async {
 
        return Stack(
             children: <Widget>[
-              //   _buildCoverImage(screenSize),
+          
               SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
-                     // _buildProfileImage(context,snapshot.data[0]['image']),
+                 
                     
                          _buildProfileImage(context,snapshot.data["image"]),
-                      //   snapshot.data![0].Email .toString(),
+                  
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildStatus(context,snapshot.data['work'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
@@ -512,18 +514,61 @@ Future<void> getEamil() async {
             ],
           );
             }
-          return Center(
-              child: Ink.image(
-                
+          return Container(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Material(
+                child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  height: MediaQuery.of(context).size.height * 0.22,
-                  image: const AssetImage('images/logo.jpg'),
-                  child: CircularProgressIndicator(),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  image: const AssetImage('images/LO.png'),
                 ),
+              ),
+            ),
+          ],
+        ),
+       
+        Row(
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Material(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+               
+              ],
+          
+        )
+      ],
+    ));
           
           
-          );
+          // Center(
+          //     child: Ink.image(
+                
+          //         fit: BoxFit.fill,
+          //         width: MediaQuery.of(context).size.width*0.95 ,
+          //         height: MediaQuery.of(context).size.height *0.22,
+          //         image: const AssetImage('images/LO.png'),
+          //         child: Center(
+          //              // padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+          //               child: CircularProgressIndicator(),
+          //             ),
+          //        // child: CircularProgressIndicator(),
+          //       ),
+          
+          
+          // );
          },
         ),
       ),
