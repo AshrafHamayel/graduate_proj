@@ -72,9 +72,11 @@ flutter:
    - images/account.png
    - images/callUS.png
    - images/workers.png
+   - images/work.png
    - images/sui.jpg
    - images/probackgrond.jpg
-  
+   - images/logo.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

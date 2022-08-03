@@ -512,7 +512,18 @@ Future<void> getEamil() async {
             ],
           );
             }
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+              child: Ink.image(
+                
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  height: MediaQuery.of(context).size.height * 0.22,
+                  image: const AssetImage('images/logo.jpg'),
+                  child: CircularProgressIndicator(),
+                ),
+          
+          
+          );
          },
         ),
       ),
