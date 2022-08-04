@@ -27,7 +27,7 @@ class _MainGridState extends State<MainGrid> {
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: MediaQuery.of(context).size.height * 0.22,
-                  image: const AssetImage('images/workers.png'),
+                  image: const AssetImage('images/LO.png'),
                   child: InkWell(
                     onTap: () {/* ... */},
                     child: const Align(
@@ -61,9 +61,9 @@ class _MainGridState extends State<MainGrid> {
                   child: Material(
                     child: Ink.image(
                       fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      width: MediaQuery.of(context).size.width * 0.50,
                       height: MediaQuery.of(context).size.height * 0.25,
-                      image: const AssetImage('images/search.png'),
+                      image: const AssetImage('images/LO1.png'),
                       child: InkWell(
                         onTap: () {/* ... */},
                         child: const Align(
@@ -100,8 +100,8 @@ class _MainGridState extends State<MainGrid> {
                     child: Ink.image(
                       fit: BoxFit.fill,
                       width: MediaQuery.of(context).size.width * 0.45,
-                      height: MediaQuery.of(context).size.height * 0.32,
-                      image: const AssetImage('images/account.png'),
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      image: const AssetImage('images/LO2.png'),
                       child: InkWell(
                         onTap: () {/* ... */},
                         child: const Align(
@@ -126,9 +126,9 @@ class _MainGridState extends State<MainGrid> {
                   child: Material(
                     child: Ink.image(
                       fit: BoxFit.fill,
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      width: MediaQuery.of(context).size.width * 0.50,
                       height: MediaQuery.of(context).size.height * 0.25,
-                      image: const AssetImage('images/callUS.png'),
+                      image: const AssetImage('images/LO3.png'),
                       child: InkWell(
                         onTap: () {/* ... */},
                         child: const Align(
