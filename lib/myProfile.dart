@@ -155,10 +155,10 @@ Future<void> getEamil() async {
                       offset: const Offset(0, 10))
                 ],
                 shape: BoxShape.circle,
-                image: const DecorationImage(
+                image:  DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg")
+                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg$imagee")
                         )),
           ),
           Positioned(
