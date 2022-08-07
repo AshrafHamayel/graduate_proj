@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations
 
 import 'dart:convert';
 import 'dart:io';
@@ -103,10 +103,10 @@ Future<void> getEamil() async {
 
 
   final Storage storage=Storage();
-
+   
 
   late File _file;
-
+   late String pathes='NOooo';
 uploadImage() async {
     // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
     var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
@@ -118,13 +118,17 @@ uploadImage() async {
 
        storage.uploadFile(path,imageName).then((value) =>
        {
+
         print('done'),
-         upload(imageName),
+
+                   
+        upload(imageName),
+
 
        }
        );
-       print(imageName);
-        print(path);
+      //  print(imageName);
+      //   print(path);
 
     } else 
     {
@@ -137,14 +141,36 @@ uploadImage() async {
   }
 
 
-Future upload(String imageName) async {
-
-      var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imageName=$imageName";
-
-    var response = await http.post(Uri.parse(url));
-    var responsebody = json.decode(response.body);
+Future upload(String imagePath) async {
+  
 
 
+                       FutureBuilder<String>(
+                        future: storage.downloadURL(imagePath),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                               print('we here >0');
+                                print(snapshot.data!.toString());
+                                pathes=snapshot.data!.toString();
+                                return Text(snapshot.data!);
+                            } 
+                            else 
+                            {
+                                print('we here >1');
+
+                              //pathes='NO';
+                                return CircularProgressIndicator();
+                            }
+                        },  
+                      );
+                             
+                      var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imagePath=$pathes";
+                       var response = await http.post(Uri.parse(url));
+                       var responsebody = json.decode(response.body);
+
+     
  // return responsebody;
 
 
@@ -195,8 +221,7 @@ Future upload(String imageName) async {
                 shape: BoxShape.circle,
                 image:  DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(
-                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg")
+                    image: NetworkImage("$imagee")
                         )),
           ),
           Positioned(
@@ -217,10 +242,11 @@ Future upload(String imageName) async {
                   padding: EdgeInsets.all(3),
                   onPressed: () {
 
-                     Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  myimage()),
-            );
+                      uploadImage();
+            //          Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) =>  myimage()),
+            // );
                   
 
                     // Image.file(iimage);
@@ -378,7 +404,7 @@ Future upload(String imageName) async {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 IconButton(
-                                    onPressed: upload,
+                                    onPressed: null ,
                                     icon: Icon(
                                       Icons.camera_alt_outlined,
                                       color: Colors.grey,
@@ -509,7 +535,7 @@ Future upload(String imageName) async {
       ),
     );
   }
-
+late String downloadURL;
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -522,7 +548,7 @@ Future upload(String imageName) async {
    {   
        
 
-       if(snapshot.hasData)
+       if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
        
 
@@ -534,10 +560,13 @@ Future upload(String imageName) async {
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
-                 
-                    
-                         _buildProfileImage(context,snapshot.data["image"]),
-                  
+
+
+
+
+                       
+                       _buildProfileImage(context,snapshot.data["image"]),
+
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildStatus(context,snapshot.data['work'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
