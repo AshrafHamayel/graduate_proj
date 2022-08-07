@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
+import 'editImage.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -89,6 +90,8 @@ Future<void> getEamil() async {
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
+  
+
     return responsebody;
  
 
@@ -112,21 +115,28 @@ Future<void> getEamil() async {
       Text("Image not selected");
     }
   }
-
-  Future upload() async {
+Future upload() async {
+  File imm;
 // ignore: unnecessary_null_comparison
-    if (_file == null) {
-      return;
-    }
-
-    String base64 = base64Encode(_file.readAsBytesSync());
-    String immName = _file.path.split("/").last;
-
-    //  هون كتابة كود ارسال اسم الصورة و كودها المشفر ل الباك اند 
-    // ignore: avoid_print
-    print(immName);
+  if (_file == null) {
+    return;
   }
 
+  String base64 = base64Encode(_file.readAsBytesSync());
+  String immName = _file.path.split("/").last;
+    imm =File(_file.path);
+
+    //print(imm);
+
+  //getEamil();
+    var url = "http://10.0.2.2:8000/myProf/saveImage?base64=$base64&ImageName=$immName&imm=$imm";
+
+   var response = await http.post(Uri.parse(url));
+  //var responsebody = json.decode(response.body);
+
+ // return responsebody;
+
+}
 
 
 
@@ -158,7 +168,7 @@ Future<void> getEamil() async {
                 image:  DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg$imagee")
+                        "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg")
                         )),
           ),
           Positioned(
@@ -178,7 +188,12 @@ Future<void> getEamil() async {
                 child: IconButton(
                   padding: EdgeInsets.all(3),
                   onPressed: () {
-                    uploadImage();
+
+                     Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  myimage()),
+            );
+                  
 
                     // Image.file(iimage);
                   },
