@@ -39,6 +39,8 @@ dependencies:
   animated_theme_switcher: ^2.0.6
   path_provider: ^2.0.11
   shared_preferences: ^2.0.15
+  # carousel_pro: ^1.0.0
+
 
 dev_dependencies:
   flutter_test:

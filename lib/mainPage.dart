@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types, prefer_const_constructors, unused_import, use_key_in_widget_constructors, file_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types, prefer_const_constructors, unused_import, use_key_in_widget_constructors, file_names, curly_braces_in_flow_control_structures
 
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/posts.dart';
+import 'finalHome.dart';
 import 'homePage.dart';
 import 'main-grid.dart';
 import 'search.dart';
@@ -11,8 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'myProfile.dart';
 
 class mainPage extends StatefulWidget {
-
-  
   @override
   State<StatefulWidget> createState() {
     return _mainState();
@@ -21,18 +20,16 @@ class mainPage extends StatefulWidget {
 
 class _mainState extends State<mainPage> {
   var _currentIndex = 2;
-   var email;
+  var email;
 
   getEamil() async {
     //SharedPreferences.setMockInitialValues({});
-SharedPreferences preferences = await SharedPreferences.getInstance();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 //await preferences.clear();
 
     email = preferences.getString("email");
-     print(email);
+    print(email);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,33 +67,21 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
   getBodyWidget() {
     if (_currentIndex == 2) {
-      return MainGrid();
-    } else if (_currentIndex == 4) 
-    {
-      
-       getEamil();
+      return home_Page();
+    } else if (_currentIndex == 4) {
+      getEamil();
 
-    if(email.toString().length<5)
+      if (email.toString().length < 5)
+        return SignIn();
+      else
+        return myProfile();
+    } else if (_currentIndex == 3) {
       return SignIn();
-
-        else
-      return myProfile();
-    } 
-    
-    else if (_currentIndex == 3) 
-    {
-      return SignIn();
-    } 
-    else if (_currentIndex == 1) 
-    {
+    } else if (_currentIndex == 1) {
       return Post();
-    } 
-    else if (_currentIndex == 0) 
-    {
+    } else if (_currentIndex == 0) {
       return Workers();
-    } 
-    else
-     {
+    } else {
       return Container();
     }
   }
