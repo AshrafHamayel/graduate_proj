@@ -81,11 +81,15 @@ showAlertDialog(String textMessage) {
 
 
  Future getpost(String email,String password )async {
+ 
 
                           if(email+"--"=="--")
-                        showAlertDialog('Enter the Email!');
+                       ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('ادخل الايميل رجاءً')) );
+
                      else if(password+"--"=="--")
-                        showAlertDialog('Enter the password!');    
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('!ادخل كلمة السر')) );
 
 
                     else
@@ -101,6 +105,7 @@ showAlertDialog(String textMessage) {
           {
       
             showAlertDialog('Email not found !');
+            
            
            }
 

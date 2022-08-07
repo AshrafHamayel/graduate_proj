@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart'as Path;
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
 import 'editImage.dart';
@@ -13,6 +13,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
+import 'storage_sercice.dart';
 
 class myProfile extends StatelessWidget {
   @override
@@ -101,40 +102,67 @@ Future<void> getEamil() async {
 
 
 
+  final Storage storage=Storage();
 
 
   late File _file;
 
-  uploadImage() async {
+uploadImage() async {
     // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
     var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
 
     if (pickedImage != null) {
       _file = File(pickedImage.path);
-    } else {
-      Text("Image not selected");
+      final imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+       storage.uploadFile(path,imageName).then((value) =>
+       {
+        print('done'),
+         upload(imageName),
+
+       }
+       );
+       print(imageName);
+        print(path);
+
+    } else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image not selected'))
+      );
+      
     }
   }
-Future upload() async {
-  File imm;
-// ignore: unnecessary_null_comparison
-  if (_file == null) {
-    return;
-  }
 
-  String base64 = base64Encode(_file.readAsBytesSync());
-  String immName = _file.path.split("/").last;
-    imm =File(_file.path);
 
-    //print(imm);
+Future upload(String imageName) async {
 
-  //getEamil();
-    var url = "http://10.0.2.2:8000/myProf/saveImage?base64=$base64&ImageName=$immName&imm=$imm";
+      var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imageName=$imageName";
 
-   var response = await http.post(Uri.parse(url));
-  //var responsebody = json.decode(response.body);
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+
 
  // return responsebody;
+
+
+
+//   File imm;
+// // ignore: unnecessary_null_comparison
+//   if (_file == null) {
+//     return;
+//   }
+
+//   //String base64 = base64Encode(_file.readAsBytesSync());
+//   String immName = _file.path.split("/").last;
+//     ///
+//     ///imm =File(_file.path);
+
+//     //print(imm);
+
+//   //getEamil();
 
 }
 
