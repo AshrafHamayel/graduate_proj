@@ -7,13 +7,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
-import 'editImage.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
 import 'storage_sercice.dart';
+import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
 
 class myProfile extends StatelessWidget {
   @override
@@ -120,10 +121,8 @@ uploadImage() async {
        {
 
         print('done'),
-
-                   
-        upload(imageName),
-
+         
+        sendToDB(imageName),
 
        }
        );
@@ -141,60 +140,13 @@ uploadImage() async {
   }
 
 
-Future upload(String imagePath) async {
-  
+Future sendToDB(String imagePath) async {
 
-
-                       FutureBuilder<String>(
-                        future: storage.downloadURL(imagePath),
-                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
-                        {
-                            if (snapshot.hasData)
-                             {
-                               print('we here >0');
-                                print(snapshot.data!.toString());
-                                pathes=snapshot.data!.toString();
-                                return Text(snapshot.data!);
-                            } 
-                            else 
-                            {
-                                print('we here >1');
-
-                              //pathes='NO';
-                                return CircularProgressIndicator();
-                            }
-                        },  
-                      );
-                             
-                      var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imagePath=$pathes";
-                       var response = await http.post(Uri.parse(url));
-                       var responsebody = json.decode(response.body);
-
-     
- // return responsebody;
-
-
-
-//   File imm;
-// // ignore: unnecessary_null_comparison
-//   if (_file == null) {
-//     return;
-//   }
-
-//   //String base64 = base64Encode(_file.readAsBytesSync());
-//   String immName = _file.path.split("/").last;
-//     ///
-//     ///imm =File(_file.path);
-
-//     //print(imm);
-
-//   //getEamil();
+             var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imagePath=$imagePath";
+            var response = await http.post(Uri.parse(url));
+            var responsebody = json.decode(response.body);
 
 }
-
-
-
-
 
 
 
@@ -243,13 +195,7 @@ Future upload(String imagePath) async {
                   onPressed: () {
 
                       uploadImage();
-            //          Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) =>  myimage()),
-            // );
-                  
-
-                    // Image.file(iimage);
+     
                   },
                   icon: const Icon(
                     Icons.edit,
@@ -561,11 +507,23 @@ late String downloadURL;
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
 
+                      
+                        FutureBuilder<String>(
+                        future: storage.downloadURL(snapshot.data["image"]),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                            
+                                return  _buildProfileImage(context,snapshot.data!);
+                            } 
+                            else 
+                            {
+                                return CircularProgressIndicator();
+                            }
+                        },  
+                      ),
 
-
-
-                       
-                       _buildProfileImage(context,snapshot.data["image"]),
 
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildStatus(context,snapshot.data['work'].toString()),
@@ -625,22 +583,6 @@ late String downloadURL;
     ));
           
           
-          // Center(
-          //     child: Ink.image(
-                
-          //         fit: BoxFit.fill,
-          //         width: MediaQuery.of(context).size.width*0.95 ,
-          //         height: MediaQuery.of(context).size.height *0.22,
-          //         image: const AssetImage('images/LO.png'),
-          //         child: Center(
-          //              // padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
-          //               child: CircularProgressIndicator(),
-          //             ),
-          //        // child: CircularProgressIndicator(),
-          //       ),
-          
-          
-          // );
          },
         ),
       ),
