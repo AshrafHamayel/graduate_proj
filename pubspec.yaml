@@ -41,7 +41,7 @@ dependencies:
   shared_preferences: ^2.0.15
   firebase_core: ^1.20.0
   firebase_storage: ^10.3.4
-  # carousel_pro: ^1.0.0
+  carousel_pro: ^1.0.0
 
 
 dev_dependencies:
@@ -80,6 +80,7 @@ flutter:
    - images/workers.png
    - images/sui.jpg
    - images/logo.jpg
+   - images/logo-removebg-preview.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
