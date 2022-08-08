@@ -5,6 +5,7 @@ import 'package:graduate_proj/workersDetails.dart';
 import 'package:path/path.dart';
 
 import 'main.dart';
+import 'workerProfile.dart';
 
 class Workers extends StatefulWidget {
   @override
@@ -464,10 +465,11 @@ class _WorkersState extends State<Workers> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: FlatButton(
                           onPressed: () {
+
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    WorkersData(),
+                                    workerProfile(),
                               ),
                             );
                           },

@@ -12,14 +12,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
+import 'mainPage.dart';
 import 'storage_sercice.dart';
 import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 
 class myProfile extends StatelessWidget {
+    out() async {
+SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
+
+
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Directionality(textDirection: TextDirection.rtl, 
+    child: Scaffold(
       body: UserProfile_Page(),
     
       appBar: AppBar(
@@ -27,31 +35,115 @@ class myProfile extends StatelessWidget {
         // toolbarHeight: 30,
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
         elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.green,
+        //   ),
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => MyApp()),
+        //     );
+        //   },
+        // ),
         actions: [
           IconButton(
             icon: Icon(
-              Icons.settings,
+              Icons.arrow_forward,
               color: Colors.green,
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SettingsPage()));
+                  builder: (BuildContext context) => MyApp()));
             },
           ),
         ],
       ),
+//Directionality
+      drawer: Drawer(
+        
+          child: ListView(
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
+
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+                 ListTile(
+                    title: Text("تغيير نوع العمل "),
+                    leading: Icon(Icons.work),
+                    subtitle: Text("change work"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+                 ListTile(
+                    title: Text(" تقديم شكوى "),
+                    leading: Icon(Icons.drafts_sharp),
+                    subtitle: Text(" Make a complaint"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+              ListTile(
+                    title: Text("  موقعي "),
+                    leading: Icon(Icons.edit_location_alt_sharp),
+                    subtitle: Text(" My location"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+               ListTile(
+                    title: Text("الاعدادات"),
+                    leading: Icon(Icons.settings),
+                    subtitle: Text("Settings"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                       Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage()));
+                    },
+                ),
+              Center(
+              child: OutlinedButton(
+                
+                onPressed: () {
+                              out();
+                              
+                                 Navigator.push( context,
+             MaterialPageRoute(builder: (context) =>  mainPage()));
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0))),
+                ),
+                child: const Text("تسجيل الخروج",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+              ),
+            )
+
+
+            ],
+
+          ),
+
+
+      ),
+    ),
+    
     );
   }
 }
@@ -230,14 +322,47 @@ Future sendToDB(String imagePath) async {
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(4.0),
       ),
-      child: Text(
-        _status,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20.0,
-          fontWeight: FontWeight.w300,
-        ),
-      ),
+       child: ListView(
+    scrollDirection: Axis.vertical,
+    shrinkWrap: true,
+            
+            children: <Widget>[
+              ListTile(
+              title: Text( _status, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
+                    leading: Icon(Icons.work),
+                    subtitle: Text(" Basic work"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+
+                 ListTile(
+              title: Text( 'الموقع', style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
+                    leading: Icon(Icons.location_pin),
+                    subtitle: Text(" Location "),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+ ListTile(
+              title: Text( '0569957891', style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
+                    leading: Icon(Icons.phone),
+                    subtitle: Text(" phone  "),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+
+            ])
+       
+       
+        
+      
+      
+      
     );
   }
 
@@ -303,7 +428,7 @@ Future sendToDB(String imagePath) async {
       child: Text(
         _bio,
         textAlign: TextAlign.center,
-        style: bioTextStyle,
+       // style: bioTextStyle,
       ),
     );
   }
@@ -430,57 +555,67 @@ Future sendToDB(String imagePath) async {
     );
   }
 
-  Widget _buildButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: InkWell(
-              onTap: () => {},
-              child: Container(
-                height: 40.0,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  color: const Color(0xFF404A5C),
-                ),
-                child: const Center(
-                  child: Text(
-                    "متابعة",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          Expanded(
-            child: InkWell(
-              onTap: () => {},
-              child: Container(
-                height: 40.0,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "مراسلة",
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+  Widget _buildSeparator2(Size screenSize)
+   {
+    return Container(
+      width: screenSize.width,
+      height: 0.5,
+      color: Color.fromARGB(136, 140, 140, 141),
+      margin: const EdgeInsets.only(top: 4.0),
     );
   }
+
+  // Widget _buildButtons() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+  //     child: Row(
+  //       children: <Widget>[
+  //         Expanded(
+  //           child: InkWell(
+  //             onTap: () => {},
+  //             child: Container(
+  //               height: 40.0,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(),
+  //                 color: const Color(0xFF404A5C),
+  //               ),
+  //               child: const Center(
+  //                 child: Text(
+  //                   "متابعة",
+  //                   style: TextStyle(
+  //                     color: Colors.white,
+  //                     fontWeight: FontWeight.w600,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         const SizedBox(width: 10.0),
+  //         Expanded(
+  //           child: InkWell(
+  //             onTap: () => {},
+  //             child: Container(
+  //               height: 40.0,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(),
+  //               ),
+  //               child: const Center(
+  //                 child: Padding(
+  //                   padding: EdgeInsets.all(10.0),
+  //                   child: Text(
+  //                     "مراسلة",
+  //                     style: TextStyle(fontWeight: FontWeight.w600),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 late String downloadURL;
   @override
   Widget build(BuildContext context) {
@@ -526,13 +661,15 @@ late String downloadURL;
 
 
                      _buildFullName(snapshot.data["name"].toString()),
+                      _buildBio(context,snapshot.data['description'].toString()),
+                      _buildSeparator2(screenSize),
+
                       _buildStatus(context,snapshot.data['work'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
-                      _buildBio(context,snapshot.data['description'].toString()),
                       const SizedBox(height: 10.0),
-                      _buildButtons(),
+                      //_buildButtons(),
                       const SizedBox(height: 8.0),
-                      _buildSeparator(screenSize),
+                      _buildSeparator2(screenSize),
                       SizedBox(
                         height: 10,
                       ),

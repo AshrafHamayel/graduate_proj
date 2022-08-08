@@ -91,23 +91,23 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             const SizedBox(
               height: 50,
             ),
-            Center(
-              child: OutlinedButton(
-                onPressed: () {
-                               out();
+            // Center(
+            //   child: OutlinedButton(
+            //     onPressed: () {
+            //                    out();
                               
-                                Navigator.push( context,
-            MaterialPageRoute(builder: (context) =>  mainPage()));
-                },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0))),
-                ),
-                child: const Text("تسجيل الخروج",
-                    style: TextStyle(
-                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
-              ),
-            )
+            //                     Navigator.push( context,
+            // MaterialPageRoute(builder: (context) =>  mainPage()));
+            //     },
+            //     style: ButtonStyle(
+            //       shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(30.0))),
+            //     ),
+            //     child: const Text("تسجيل الخروج",
+            //         style: TextStyle(
+            //             fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+            //   ),
+            // )
           ],
         ),
       ),
