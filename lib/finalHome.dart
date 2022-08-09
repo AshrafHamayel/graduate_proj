@@ -46,6 +46,7 @@ class home_Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        extendBody: true,
         backgroundColor: Colors.black.withOpacity(0.6),
         appBar: AppBar(
           title: Text("Work Book"),

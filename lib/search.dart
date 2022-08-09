@@ -28,6 +28,7 @@ class _WorkersState extends State<Workers> {
     "بيتا",
   ];
   cities? _city = cities.everywhere;
+
   Widget _buildcheckbox(bool? chked, String worktype, int Li) {
     return StatefulBuilder(
       builder: ((context, setState) {

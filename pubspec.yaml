@@ -44,6 +44,9 @@ dependencies:
   carousel_pro: ^1.0.0
   url_launcher: ^6.1.5
   whatsapp_unilink: ^2.0.2
+  google_maps_flutter: ^2.1.10
+  geolocator: ^9.0.1
+  awesome_dialog: ^2.2.1
 
 
 dev_dependencies:
