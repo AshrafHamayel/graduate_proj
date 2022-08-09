@@ -42,6 +42,8 @@ dependencies:
   firebase_core: ^1.20.0
   firebase_storage: ^10.3.4
   carousel_pro: ^1.0.0
+  url_launcher: ^6.1.5
+  whatsapp_unilink: ^2.0.2
 
 
 dev_dependencies:
@@ -81,6 +83,11 @@ flutter:
    - images/sui.jpg
    - images/logo.jpg
    - images/logo-removebg-preview.png
+   - images/aboutus.png
+   - images/contact.png
+   - images/contact2.png
+   - images/cont.png
+   - images/workbook.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

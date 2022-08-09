@@ -1,12 +1,47 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_logic_in_create_state, camel_case_types, use_key_in_widget_constructors, import_of_legacy_library_into_null_safe, deprecated_member_use, sized_box_for_whitespace
-
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_logic_in_create_state, camel_case_types, use_key_in_widget_constructors, import_of_legacy_library_into_null_safe, deprecated_member_use, sized_box_for_whitespace, empty_catches
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-
 import 'workersDetails.dart';
 
 class home_Page extends StatelessWidget {
+  _launchURL() async {
+    const url = 'https://www.facebook.com/laith.jabali.9';
+    if (await launch(url)) {
+      await canLaunch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  launchWhatsApp() async {
+    final link = WhatsAppUnilink(
+      phoneNumber: '+972569957891',
+      text: "مرحبا , احتاج مساعدة ",
+    );
+    await launch('$link');
+  }
+
+  _sendingMails() async {
+    var url = Uri.parse("mailto:laithkingjabali@gmail.com");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _callNumber() async {
+    var url = Uri.parse("tel:0569957891");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,11 +67,6 @@ class home_Page extends StatelessWidget {
               ),
 
               // DrawerHeader(child: Image(image: AssetImage("images/logo.jpg"))),
-              ListTile(
-                title: Text(""),
-                leading: Icon(Icons.abc),
-                onTap: () {},
-              )
             ],
           ),
         ),
@@ -57,8 +87,321 @@ class home_Page extends StatelessWidget {
                   dotPosition: DotPosition.bottomCenter,
                   showIndicator: true,
                   images: [
-                    AssetImage("images/logo.jpg"),
-                    AssetImage("images/sui.jpg"),
+                    Image.asset(
+                      "images/workbook.png",
+                      fit: BoxFit.cover,
+                    ),
+                    InkWell(
+                      child: GridTile(child: Image.asset("images/aboutus.png")),
+                      onTap: () {
+                        showModalBottomSheet(
+                          enableDrag: true,
+                          isDismissible: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(24),
+                            ),
+                          ),
+                          barrierColor: Colors.grey.withOpacity(0.2),
+                          context: context,
+                          builder: (context) => ListView(
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 3.0,
+                                    width: 40.0,
+                                    color: Color(0xFF32335C),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.withOpacity(.3),
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'معلومات عنا ',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 120,
+                                        width: 160,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(width: 0.5),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            )),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "١٢+",
+                                              style: TextStyle(
+                                                  fontSize: 30.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red),
+                                            ),
+                                            Text(
+                                              "نوع عمل",
+                                              style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 25,
+                                      ),
+                                      Container(
+                                        height: 120,
+                                        width: 160,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(width: 0.5),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(5),
+                                            )),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "٢٧٥+",
+                                              style: TextStyle(
+                                                  fontSize: 30.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red),
+                                            ),
+                                            Text(
+                                              "عامل",
+                                              style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Divider(color: Colors.grey.withOpacity(0.5)),
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Column(
+                                        children: [
+                                          Title(
+                                              color: Colors.black,
+                                              child: Text(
+                                                "لماذا نحن موجودون؟",
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "يجعل موقعنا الامر سهلا في ايجاد عامل لتلبية حاجتك مما يوفر عليك الوقت واحيانا المال,وبالتاكيد نفس الشيء بالنسبة للعامل.\nاعثر على عامل او عمل من منزلك وببضع خطوات فقط.\n",
+                                          ),
+                                          Text(
+                                              "تأسس موقعنا في عامل 2022, لتبسيط عملية العثور على عامل او عمل بوقت بسيط واسعار معقولة.\n"),
+                                          Divider(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          Title(
+                                              color: Colors.black,
+                                              child: Text(
+                                                "كيفية الاستخدام",
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "منصتنا سهلة الاستخدام وذات شفافية عالية للعثور على عامل او عمل,وذلك بناءً على التقيمات والخبرات. \n",
+                                          ),
+                                          Text(
+                                              "ابحث الان عن طلبك واختر ما تحتاج,وعلى الفور سنطابق لك الافضل والاعلى تقيما.\n"),
+                                          Divider(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    InkWell(
+                      child:
+                          GridTile(child: Image.asset("images/contact2.png")),
+                      onTap: () {
+                        showModalBottomSheet(
+                          enableDrag: true,
+                          isDismissible: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(24),
+                            ),
+                          ),
+                          barrierColor: Colors.grey.withOpacity(0.2),
+                          context: context,
+                          builder: (context) => ListView(
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 3.0,
+                                    width: 40.0,
+                                    color: Color(0xFF32335C),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.withOpacity(.3),
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'تواصل معنا',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("images/cont.png"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ButtonTheme(
+                                        minWidth: 350,
+                                        child: RaisedButton(
+                                          child:
+                                              const Text('اتصل على - 2595000'),
+                                          onPressed: () {
+                                            _callNumber();
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth: 350,
+                                        child: RaisedButton(
+                                          child: const Text(
+                                              ' WorkBook@gmail.com - راسلنا على  '),
+                                          onPressed: () {
+                                            _sendingMails();
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth: 350,
+                                        child: RaisedButton(
+                                          child: const Text(
+                                              'Facebook - تواصل عبر'),
+                                          onPressed: () {
+                                            _launchURL();
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth: 350,
+                                        child: RaisedButton(
+                                          child: const Text(
+                                              'WhatsApp - تواصل عبر '),
+                                          onPressed: () {
+                                            launchWhatsApp();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -161,7 +504,9 @@ class home_Page extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(color: Colors.white)
+              SizedBox(
+                height: 10,
+              )
             ],
           ),
         ),

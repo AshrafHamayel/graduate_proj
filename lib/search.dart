@@ -465,7 +465,6 @@ class _WorkersState extends State<Workers> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: FlatButton(
                           onPressed: () {
-
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
