@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
+import 'addPost.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -196,9 +197,11 @@ Future<void> getEamil() async {
 
 
   final Storage storage=Storage();
-   
+    final addPost AddPost=addPost();
+ 
 
   late File _file;
+
    late String pathes='NOooo';
 uploadImage() async {
     // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
@@ -230,6 +233,115 @@ uploadImage() async {
       
     }
   }
+
+  late File _filePost;
+
+uploadImagePost() async {
+    // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+    var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+
+    if (pickedImage != null) {
+      _filePost = File(pickedImage.path);
+      final imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+       storage.uploadFile(path,imageName).then((value) =>
+       {
+
+        print('done'),
+         
+        sendToDB(imageName),
+
+       }
+       );
+      //  print(imageName);
+      //   print(path);
+
+    } else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image not selected'))
+      );
+      
+    }
+  }
+
+Future<void> showPost(BuildContext context)async{
+return await showDialog(context: context, 
+builder: (context){
+  final TextEditingController _textController =TextEditingController();
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+    children: [
+      TextFormField(
+        controller: _textController,
+        validator:((value) {
+          return value!.isNotEmpty ?null:"غير صحيح";
+      
+        }
+        ),
+        decoration:InputDecoration(hintText:"ادخل وصف"),
+      ),
+              const SizedBox(height: 35),
+
+      Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+       
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  image:FileImage(_filePost),
+                  child: InkWell(
+                    onTap: () {
+                      
+                          
+                    },
+                    child: const Align(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                        child: Text(
+                          '',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white70,
+                              fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+    ],
+  )
+  
+  
+  )
+  
+  ),
+  actions:<Widget> [
+TextButton(onPressed: (){  }, child: Text("نشر",style:const TextStyle( color: Color.fromARGB(255, 22, 0, 216), fontSize: 17.0,),))
+  ],
+);
+}
+
+);
+}
+
+
+
+
+
 
 
 Future sendToDB(String imagePath) async {
@@ -440,21 +552,21 @@ Future sendToDB(String imagePath) async {
         child: Card(
           child: Column(
             children: <Widget>[
-              ListTile(
-                leading: CircleAvatar(
-                  child: Icon(Icons.person_outline),
-                ),
-                title: TextFormField(
-                  maxLines: 10,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(right: 10),
-                      hintText: 'شاركنا عملك',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(20))),
-                ),
-              ),
+              // ListTile(
+              //   leading: CircleAvatar(
+              //     child: Icon(Icons.person_outline),
+              //   ),
+              //   title: TextFormField(
+              //     maxLines: 10,
+              //     minLines: 1,
+              //     decoration: InputDecoration(
+              //         contentPadding: EdgeInsets.only(right: 10),
+              //         hintText: 'شاركنا عملك',
+              //         border: OutlineInputBorder(
+              //             borderSide: BorderSide(color: Colors.grey),
+              //             borderRadius: BorderRadius.circular(20))),
+              //   ),
+              // ),
               SizedBox(
                 height: 10,
               ),
@@ -470,19 +582,19 @@ Future sendToDB(String imagePath) async {
                                         color: Colors.grey.withOpacity(0.3)),
                                     top: BorderSide(
                                         color: Colors.grey.withOpacity(.3)))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                IconButton(
-                                    onPressed: null ,
-                                    icon: Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.grey,
-                                    )),
-                                Padding(padding: EdgeInsets.only(right: 10)),
-                              ],
-                            ),
+                            // child: Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: <Widget>[
+                            //     IconButton(
+                            //         onPressed: null ,
+                            //         icon: Icon(
+                            //           Icons.camera_alt_outlined,
+                            //           color: Colors.grey,
+                            //         )),
+                            //     Padding(padding: EdgeInsets.only(right: 10)),
+                            //   ],
+                            // ),
                           ))),
                   Expanded(
                       child: InkWell(
@@ -492,19 +604,19 @@ Future sendToDB(String imagePath) async {
                                 border: Border(
                                     top: BorderSide(
                                         color: Colors.grey.withOpacity(.3)))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.add_location_alt_outlined,
-                                      color: Colors.grey,
-                                    )),
-                                Padding(padding: EdgeInsets.only(right: 10)),
-                              ],
-                            ),
+                            // child: Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: <Widget>[
+                            //     IconButton(
+                            //         onPressed: () {},
+                            //         icon: Icon(
+                            //           Icons.add_location_alt_outlined,
+                            //           color: Colors.grey,
+                            //         )),
+                            //     Padding(padding: EdgeInsets.only(right: 10)),
+                            //   ],
+                            // ),
                           )))
                 ],
               ),
@@ -512,7 +624,20 @@ Future sendToDB(String imagePath) async {
                 children: <Widget>[
                   Expanded(
                       child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+
+                                  uploadImagePost().then((value) =>
+                                        {
+
+                                          print('done'),
+                                          showPost(context),
+
+                                        });
+                                  //AddPost.getEamil(email,context);
+            //                 Navigator.push( context,
+            //  MaterialPageRoute(builder: (context) =>  addPost()));
+                           
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 border: Border(
@@ -669,7 +794,7 @@ late String downloadURL;
                       const SizedBox(height: 10.0),
                       //_buildButtons(),
                       const SizedBox(height: 8.0),
-                      _buildSeparator2(screenSize),
+                    //  _buildSeparator2(screenSize),
                       SizedBox(
                         height: 10,
                       ),
