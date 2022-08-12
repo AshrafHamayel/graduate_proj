@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/posts.dart';
+import 'Chats/screens/auth_screen.dart';
 import 'chat/screens/chats/chats_screen.dart';
 import 'finalHome.dart';
 import 'homePage.dart';
@@ -77,7 +78,7 @@ class _mainState extends State<mainPage> {
       else
         return myProfile();
     } else if (_currentIndex == 3) {
-      return ChatsScreen();
+      return AuthScreen();
     } else if (_currentIndex == 1) {
       return Post();
     } else if (_currentIndex == 0) {

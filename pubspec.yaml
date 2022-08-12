@@ -41,6 +41,9 @@ dependencies:
   shared_preferences: ^2.0.15
   firebase_core: ^1.20.0
   firebase_storage: ^10.3.4
+  firebase_auth: ^3.6.3
+  google_sign_in: ^5.4.1
+  cloud_firestore: ^3.4.4
   carousel_pro: ^1.0.0
   url_launcher: ^6.1.5
   whatsapp_unilink: ^2.0.2
