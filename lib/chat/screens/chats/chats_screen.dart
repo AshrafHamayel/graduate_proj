@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors, unused_field
 import 'package:flutter/material.dart';
 import '../../../SettingsPage.dart';
 import '../../../main.dart';

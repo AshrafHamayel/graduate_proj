@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "414150472186",
-    "project_id": "gradproject-357020",
-    "storage_bucket": "gradproject-357020.appspot.com"
+    "project_number": "333540330755",
+    "project_id": "work-book-62ba4",
+    "storage_bucket": "work-book-62ba4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:414150472186:android:1afd3e550bb91aa0763443",
+        "mobilesdk_app_id": "1:333540330755:android:d37f47ba84cd3c0e222d36",
         "android_client_info": {
           "package_name": "com.example.graduate_proj"
         }
       },
       "oauth_client": [
         {
-          "client_id": "414150472186-b8csjmao4brcdiaevdqu2lrl79124bpt.apps.googleusercontent.com",
+          "client_id": "333540330755-krj717rm3e100njqp89a262gchbanvi2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.graduate_proj",
+            "certificate_hash": "c21ccf016154bedf3fb42eeaeee9d3c34d8f997a"
+          }
+        },
+        {
+          "client_id": "333540330755-etvqs1rs9orlum23837d6vebsh9edn4c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCvPqLczUkBXd5ShU5sACkeIEXbusSevC4"
+          "current_key": "AIzaSyBse8BKxVsQCdF8SzKBhZSug3mIaGkdbW0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "414150472186-b8csjmao4brcdiaevdqu2lrl79124bpt.apps.googleusercontent.com",
+              "client_id": "333540330755-etvqs1rs9orlum23837d6vebsh9edn4c.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

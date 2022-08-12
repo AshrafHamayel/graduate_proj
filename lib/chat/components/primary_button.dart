@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -19,7 +21,9 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      // ignore: prefer_const_constructors
       shape: RoundedRectangleBorder(
+        // ignore: prefer_const_constructors
         borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       padding: padding,
