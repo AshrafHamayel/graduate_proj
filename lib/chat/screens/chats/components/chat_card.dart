@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../models/ChatElements.dart';
 import '../../../constants.dart';
-import '../../../models/Chat.dart';
 
 class ChatCard extends StatelessWidget {
   const ChatCard({
@@ -12,7 +9,7 @@ class ChatCard extends StatelessWidget {
     required this.press,
   }) : super(key: key);
 
-  final Chat chat;//الاراي بلب رح اخذن فيها معلومات و دردشات الناس يلي حكيت معهم
+  final chatsElements chat;//الاراي بلب رح اخذن فيها معلومات و دردشات الناس يلي حكيت معهم
   final VoidCallback press;
 
 
@@ -31,7 +28,7 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: AssetImage(chat.image),  /////////////////
+                  backgroundImage: AssetImage(chat.SenderImage.toString()),  /////////////////
                 ),
                 // if (chat.isActive)
                 //   Positioned(
@@ -59,7 +56,7 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.name,        ////////////////
+                      chat.SenderName.toString(),        ////////////////
                       style:
                           // ignore: prefer_const_constructors
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -69,7 +66,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.64,
                       child: Text(
-                        chat.lastMessage,      /////////////////////
+                        chat.TextMessage.toString(),      /////////////////////
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -80,7 +77,7 @@ class ChatCard extends StatelessWidget {
             ),
             Opacity(
               opacity: 0.64,
-              child: Text(chat.time),    ///////////////////
+              child: Text(chat.date.toString()),    ///////////////////
             ),
           ],
         ),

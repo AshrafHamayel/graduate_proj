@@ -18,39 +18,51 @@ class Body extends StatelessWidget {
 
   
 
-Widget buildd(BuildContext context) {
-  return FutureBuilder(
-    future: getEamil(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        return Myemail;
-      }
-      return CircularProgressIndicator(); // or some other widget
-    },
-  );
-}
-Future<void> getEamil() async {
-  SharedPreferences    preferences = await SharedPreferences.getInstance();
+// Widget buildd(BuildContext context) {
+
+//  return Container( 
+//   child: Scaffold(   
+//   body: FutureBuilder(
+// future: getEamil(),
+//     builder: (context, snapshot) {
+//       if (snapshot.hasData||Myemail.length>6) 
+//       {
+//         getEamil();
+//         return Myemail;
+//       }
+//       return CircularProgressIndicator(); // or some other widget
+//     },
+
+//   ))
+        
+  
+// );
+      
+// }
+
+// Future<void> getEamil() async {
+
+//   SharedPreferences   preferences = await SharedPreferences.getInstance();
+//     Myemail = preferences.getString("email");
+//   print(preferences.getString("email"));
+//   return Myemail;
+
+//   }
+
+
+
+ Future<List<chatsElements>> getInfo(BuildContext context) async {
+
+    SharedPreferences   preferences = await SharedPreferences.getInstance();
     Myemail = preferences.getString("email");
   print(preferences.getString("email"));
-
-  }
-
-
-
- Future <List<chatsElements>>getInfo() async {
-
-    getEamil();
-      print("Email is:");
-      print(Myemail);
- 
     var url = "http://10.0.2.2:8000/chatMessage/getPepole?MyEmail=$Myemail";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body).cast<Map<String, dynamic>>();
   
-  print(responsebody);
-    return responsebody.map<chatsElements>((json) => chatsElements.fromMap(json)).toList();
+  // print(responsebody);
+    return responsebody.map<chatsElements>((json) => chatsElements.fromMap(json)).toList();;
  
 
   }
@@ -58,32 +70,35 @@ Future<void> getEamil() async {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
+      
        child: Scaffold(
+        
   body: FutureBuilder<List<chatsElements>>(
-                     future:getInfo() ,
+                     future:getInfo(context) ,
        builder: (context, snapshot) 
        {
- if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
+      if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
                 print(snapshot);
 
+          
          return Stack(
       children: <Widget>[
         SafeArea(
           child: SingleChildScrollView(
-            child: Expanded(
+            //child: Expanded(
 
           child: Column(
-            children: [
-                 // Expanded(
-                    
+            children: <Widget> [
+                 
                     ListView.builder(
                       scrollDirection: Axis.vertical,
                          shrinkWrap: true,
-                      itemCount: chatsData.length,
+                      itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) => ChatCard(
-                        chat: chatsData[index],
+                        chat: snapshot.data![index],
                         press: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -96,7 +111,7 @@ Future<void> getEamil() async {
                 ],
 
           )
-          )
+          //)
                   )
 
         )
@@ -158,8 +173,7 @@ Future<void> getEamil() async {
     );
     
 
-  }
-
+}
 }
 
 

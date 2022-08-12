@@ -181,6 +181,7 @@ Future<void> getEamil() async {
 
   Future getInfo() async {
     getEamil();
+  
     var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
 
     var response = await http.get(Uri.parse(url));
@@ -744,6 +745,7 @@ Future sendToDB(String imagePath) async {
 late String downloadURL;
   @override
   Widget build(BuildContext context) {
+    buildd(context);
     Size screenSize = MediaQuery.of(context).size;
     return Container(
       
