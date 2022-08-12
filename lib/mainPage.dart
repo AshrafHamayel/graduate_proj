@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, camel_case_types, prefer_const_constructors, unused_import, use_key_in_widget_constructors, file_names, curly_braces_in_flow_control_structures
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduate_proj/Chats/models/user_model.dart';
+import 'package:graduate_proj/Chats/screens/home_screen.dart';
 import 'package:graduate_proj/posts.dart';
 import 'Chats/screens/auth_screen.dart';
 import 'chat/screens/chats/chats_screen.dart';
@@ -12,6 +15,9 @@ import 'signIn.dart';
 import 'signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'myProfile.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class mainPage extends StatefulWidget {
   @override
@@ -31,6 +37,17 @@ class _mainState extends State<mainPage> {
 
     email = preferences.getString("email");
     print(email);
+  }
+
+ Future<Widget> userSignedIn()async{
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      UserModel userModel = UserModel.fromJson(userData);
+      return HomeScreen(userModel);
+    }else{
+      return AuthScreen();
+    }
   }
 
   @override
@@ -77,9 +94,27 @@ class _mainState extends State<mainPage> {
         return SignIn();
       else
         return myProfile();
-    } else if (_currentIndex == 3) {
-      return AuthScreen();
-    } else if (_currentIndex == 1) {
+    }
+     else if (_currentIndex == 3) 
+     {
+       return FutureBuilder(
+        future: userSignedIn(),
+        builder:(context,AsyncSnapshot<Widget> snapshot){
+          if(snapshot.hasData){
+            return snapshot.data!;
+          }
+          return Scaffold(
+              body:Center(
+                child: CircularProgressIndicator(),
+              ) ,
+          );
+
+        }
+        );
+    
+    } 
+    
+    else if (_currentIndex == 1) {
       return Post();
     } else if (_currentIndex == 0) {
       return Workers();
