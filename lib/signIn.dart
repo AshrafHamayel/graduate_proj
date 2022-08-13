@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'SignUpOptions.dart';
 import 'signup.dart';
 import 'main.dart';
 import 'dart:convert';
@@ -281,7 +282,7 @@ showAlertDialog(String textMessage) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignupPage()));
+                              builder: (context) => SignUpOptions()));
                     },
                   )
                 ],

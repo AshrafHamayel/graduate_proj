@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:graduate_proj/Chats/models/user_model.dart';
 import 'package:graduate_proj/Chats/screens/home_screen.dart';
 import 'package:graduate_proj/posts.dart';
-import 'Chats/screens/auth_screen.dart';
 import 'chat/screens/chats/chats_screen.dart';
 import 'finalHome.dart';
 import 'homePage.dart';
@@ -46,7 +45,7 @@ class _mainState extends State<mainPage> {
       UserModel userModel = UserModel.fromJson(userData);
       return HomeScreen(userModel);
     }else{
-      return AuthScreen();
+      return SignIn();
     }
   }
 

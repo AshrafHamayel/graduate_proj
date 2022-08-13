@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/Chats/screens/search_screen.dart';
+import '../../signIn.dart';
 import '../models/user_model.dart';
-import 'auth_screen.dart';
 import 'chat_screen.dart';
 
 
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(onPressed: ()async{
             await GoogleSignIn().signOut();
             await FirebaseAuth.instance.signOut();
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AuthScreen()), (route) => false);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
           }, icon: Icon(Icons.logout))
         ],
       ),
