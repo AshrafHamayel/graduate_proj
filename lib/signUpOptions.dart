@@ -5,10 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/main.dart';
+import 'package:graduate_proj/myProfile.dart';
 import 'package:graduate_proj/signup.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpOptions extends StatefulWidget {
 
@@ -33,20 +36,9 @@ class _SignUpOptionsState extends State<SignUpOptions> {
     );
     UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-    DocumentSnapshot userExist = await firestore.collection('users').doc(userCredential.user!.uid).get();
 
-    if(userExist.exists){
-      print("User Already Exists in Database");
-    }else{
-       await firestore.collection('users').doc(userCredential.user!.uid).set({
-      'email':userCredential.user!.email,
-      'name':userCredential.user!.displayName,
-      'image':userCredential.user!.photoURL,
-      'uid':userCredential.user!.uid,
-      'date':DateTime.now(),
-    });
-    }
-     showPassword(context);
+    // ignore: use_build_context_synchronously
+    showPassword(context,userCredential.user!.email,userCredential.user!.displayName,userCredential.user!.photoURL,userCredential.user!.uid);
    
 
   }
@@ -61,11 +53,11 @@ class _SignUpOptionsState extends State<SignUpOptions> {
 
 
 
-Future<void> showPassword(BuildContext context)async{
+Future<void> showPassword(BuildContext context,String? em,String? nam,String? im,String uidd)async{
 return await showDialog(context: context, 
 builder: (context){
   final TextEditingController _passwordController =TextEditingController();
-    final TextEditingController _confPasswordController =TextEditingController();
+  final TextEditingController _confPasswordController =TextEditingController();
 
 return AlertDialog(
   content: Form(child: Directionality(textDirection: TextDirection.rtl,
@@ -79,7 +71,7 @@ return AlertDialog(
       
         }
         ),
-        decoration:InputDecoration(hintText:" ادخل كلمة السر"),
+        decoration:InputDecoration(hintText:" ادخل كلمة سر"),
       ),
               const SizedBox(height: 35),
 
@@ -101,7 +93,16 @@ return AlertDialog(
   ),
   actions:<Widget> [
 TextButton(onPressed: (){ 
-     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+                if(_passwordController.text==_confPasswordController.text)
+                {
+
+                       CreatUser( em,  nam,  _passwordController.text , _confPasswordController.text ,im,uidd );
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+
+                }
+                else{
+                   showAlertDialog('كلمة السر غير متطابقة');
+                }
 
 
  }, child: Text("تخزين",style:const TextStyle( color: Color.fromARGB(255, 22, 0, 216), fontSize: 17.0,),))
@@ -111,6 +112,119 @@ TextButton(onPressed: (){
 
 );
 }
+
+
+showAlertDialog(String textMessage) {
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+
+     },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Abort"),
+    // ignore: unnecessary_string_interpolations
+    content: Text("$textMessage"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+// shareEamil(String? email)async
+// {
+  
+//           SharedPreferences preferences =await SharedPreferences.getInstance();
+//           preferences.setString("email", email);
+           
+//      //    print(preferences.getString("email"));
+        
+// }
+
+ Future CreatUser(String? email, String? name, String password ,String confPassword ,String? imge,String Uid)async {
+                  
+                        
+       var url = "http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword";
+       var response =await http.post(Uri.parse(url));
+      var responsebody= jsonDecode(response.body) ;
+
+      // print(responsebody['NT']);
+       if (responsebody['NT']=='done')
+       {
+
+       DocumentSnapshot userExist = await firestore.collection('users').doc(Uid).get();
+
+    if(userExist.exists)
+    {
+     showAlertDialog(' لديك حساب بالفعل');
+    }
+    else
+    {
+       await firestore.collection('users').doc(Uid).set({
+      'email':email,
+      'name':name,
+      'image':imge,
+      'uid':Uid,
+      'password':password,
+      'date':DateTime.now(),
+    });
+    
+    }
+
+            //  shareEamil(email);
+            // ignore: use_build_context_synchronously
+
+            Navigator.push( context,
+            MaterialPageRoute(builder: (context) => myProfile()));
+       }
+       
+      else if (responsebody['NT']=='Email exists !')
+       {
+     
+           showAlertDialog('هذا الحساب موجود بالفعل ');
+       
+       }
+
+      else if (responsebody['NT']=='Invalid Email !')
+       {
+      
+           showAlertDialog('ايميل غير صالح ');
+
+       }
+        else if (responsebody['NT']=='password does not match')
+       {
+      
+                    showAlertDialog('كلمة السر غير متطابقة');
+
+       }
+
+
+      else {
+                    showAlertDialog('خطأ ');
+
+          }
+
+
+
+
+
+    
+  }
+
+
+
 
 
 
