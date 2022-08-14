@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
+import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'SettingsPage.dart';
 import 'addPost.dart';
@@ -19,6 +20,8 @@ import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
 class myProfile extends StatelessWidget {
+   UserModel user;
+  myProfile(this.user);
     out() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
   await preferences.clear();
@@ -124,7 +127,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                               out();
                               
                                  Navigator.push( context,
-             MaterialPageRoute(builder: (context) =>  mainPage()));
+             MaterialPageRoute(builder: (context) =>  MyApp()));
                 },
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(

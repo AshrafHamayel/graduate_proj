@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'PasswordCH.dart';
 import 'main-grid.dart';
+import 'main.dart';
 import 'mainPage.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -35,7 +36,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => myProfile()));
+                builder: (BuildContext context) => MyApp()));
           },
           icon: const Icon(
             Icons.arrow_back,

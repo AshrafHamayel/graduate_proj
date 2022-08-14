@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:graduate_proj/workersDetails.dart';
 import 'package:path/path.dart';
 
+import 'Chats/models/user_model.dart';
 import 'main.dart';
 import 'workerProfile.dart';
 
 class Workers extends StatefulWidget {
+   UserModel user;
+  Workers(this.user);
   @override
   _WorkersState createState() => _WorkersState();
 }

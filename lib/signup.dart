@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'main.dart';
 import 'myProfile.dart';
 import 'signIn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -140,7 +141,7 @@ else{
             // ignore: use_build_context_synchronously
 
             Navigator.push( context,
-            MaterialPageRoute(builder: (context) => myProfile()));
+            MaterialPageRoute(builder: (context) => MyApp()));
        }
        
       else if (responsebody['NT']=='Email exists !')

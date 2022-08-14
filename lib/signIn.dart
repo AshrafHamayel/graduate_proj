@@ -123,7 +123,7 @@ showAlertDialog(String textMessage) {
            shareEamil(email);
      
              Navigator.push( context,
-            MaterialPageRoute(builder: (context) => myProfile()));
+            MaterialPageRoute(builder: (context) => MyApp()));
            
            }
 

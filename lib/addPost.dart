@@ -127,7 +127,7 @@ uploadImagePost() async {
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => myProfile()));
+                  builder: (BuildContext context) => MyApp()));
             },
           ),
         ],

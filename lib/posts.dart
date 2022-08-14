@@ -11,7 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:graduate_proj/posts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'Chats/models/user_model.dart';
+
 class Post extends StatelessWidget {
+   UserModel user;
+  Post(this.user);
   @override
   Widget build(BuildContext context) {
     Future pickercamera() async {

@@ -19,6 +19,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class mainPage extends StatefulWidget {
+  UserModel user;
+  mainPage(this.user);
+
   @override
   State<StatefulWidget> createState() {
     return _mainState();
@@ -27,27 +30,8 @@ class mainPage extends StatefulWidget {
 
 class _mainState extends State<mainPage> {
   var _currentIndex = 2;
-  var email;
 
-  getEamil() async {
-    //SharedPreferences.setMockInitialValues({});
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-//await preferences.clear();
 
-    email = preferences.getString("email");
-    print(email);
-  }
-
- Future<Widget> userSignedIn()async{
-    User? user = FirebaseAuth.instance.currentUser;
-    if(user != null){
-      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      UserModel userModel = UserModel.fromJson(userData);
-      return HomeScreen(userModel);
-    }else{
-      return SignIn();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,38 +69,20 @@ class _mainState extends State<mainPage> {
 
   getBodyWidget() {
     if (_currentIndex == 2) {
-      return home_Page();
+      return home_Page(widget.user);
     } else if (_currentIndex == 4) {
-      getEamil();
-
-      if (email.toString().length < 5)
-        return SignIn();
-      else
-        return myProfile();
+        return myProfile(widget.user);
     }
      else if (_currentIndex == 3) 
      {
-       return FutureBuilder(
-        future: userSignedIn(),
-        builder:(context,AsyncSnapshot<Widget> snapshot){
-          if(snapshot.hasData){
-            return snapshot.data!;
-          }
-          return Scaffold(
-              body:Center(
-                child: CircularProgressIndicator(),
-              ) ,
-          );
-
-        }
-        );
+     return HomeScreen(widget.user);
     
     } 
     
     else if (_currentIndex == 1) {
-      return Post();
+      return Post(widget.user);
     } else if (_currentIndex == 0) {
-      return Workers();
+      return Workers(widget.user);
     } else {
       return Container();
     }

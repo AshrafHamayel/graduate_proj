@@ -4,9 +4,13 @@ import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'Chats/models/user_model.dart';
 import 'workersDetails.dart';
 
 class home_Page extends StatelessWidget {
+   UserModel user;
+  home_Page(this.user);
+
   _launchURL() async {
     const url = 'https://www.facebook.com/laith.jabali.9';
     if (await launch(url)) {

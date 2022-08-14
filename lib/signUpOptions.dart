@@ -5,13 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/main.dart';
-import 'package:graduate_proj/myProfile.dart';
 import 'package:graduate_proj/signup.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-
 import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart';
 
 class SignUpOptions extends StatefulWidget {
 
@@ -187,7 +185,7 @@ showAlertDialog(String textMessage) {
             // ignore: use_build_context_synchronously
 
             Navigator.push( context,
-            MaterialPageRoute(builder: (context) => myProfile()));
+            MaterialPageRoute(builder: (context) =>MyApp()));
        }
        
       else if (responsebody['NT']=='Email exists !')
