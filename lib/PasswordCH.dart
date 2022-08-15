@@ -72,11 +72,11 @@ showAlertDialog(String textMessage) {
 }
 
 
-  var email;
+  var UserId;
   getEamil() async {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    email = preferences.getString("email");
+    UserId = preferences.getString("UserId");
   
   }
    Future editPassword(String oldPass, String NewPass, String ConfNewPass ) async 
@@ -95,7 +95,7 @@ showAlertDialog(String textMessage) {
 
                     else
                     { 
-                      var url = "http://10.0.2.2:8000/myProf/editPassword?email=$email&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
+                      var url = "http://10.0.2.2:8000/myProf/editPassword?UserId=$UserId&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
                  var response = await http.post(Uri.parse(url));
              var responsebody = json.decode(response.body);
              

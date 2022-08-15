@@ -19,8 +19,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class mainPage extends StatefulWidget {
-  UserModel user;
-  mainPage(this.user);
 
   @override
   State<StatefulWidget> createState() {
@@ -69,20 +67,20 @@ class _mainState extends State<mainPage> {
 
   getBodyWidget() {
     if (_currentIndex == 2) {
-      return home_Page(widget.user);
+      return home_Page();
     } else if (_currentIndex == 4) {
-        return myProfile(widget.user);
+        return myProfile();
     }
      else if (_currentIndex == 3) 
      {
-     return HomeScreen(widget.user);
+     return HomeScreen();
     
     } 
     
     else if (_currentIndex == 1) {
-      return Post(widget.user);
+      return Post();
     } else if (_currentIndex == 0) {
-      return Workers(widget.user);
+      return Workers();
     } else {
       return Container();
     }

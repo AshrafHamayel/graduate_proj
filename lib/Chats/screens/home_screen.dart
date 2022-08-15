@@ -4,21 +4,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/Chats/screens/search_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../signIn.dart';
 import '../models/user_model.dart';
 import 'chat_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  UserModel user;
-  HomeScreen(this.user);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+var UID;
+late UserModel user;
 class _HomeScreenState extends State<HomeScreen> {
+
+
+
+  Future<void> getEamil() async {
+  SharedPreferences    preferences = await SharedPreferences.getInstance();
+     UID = preferences.getString("UserId");
+
+       print(' UID from home screen :');
+
+  print(preferences.getString("UserId"));
+     DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(UID).get();
+      user = UserModel.fromJson(userData);
+  return UID;
+
+  }
   @override
   Widget build(BuildContext context) {
+    getEamil();
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -26,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.teal,
         actions: [
           IconButton(onPressed: ()async{
-            await GoogleSignIn().signOut();
+              SharedPreferences preferences = await SharedPreferences.getInstance();
+               await preferences.clear();
+              await GoogleSignIn().signOut();
             await FirebaseAuth.instance.signOut();
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
           }, icon: Icon(Icons.logout))
@@ -34,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').doc(widget.user.uid).collection('messages').snapshots(),
+        stream: FirebaseFirestore.instance.collection('users').doc(UID).collection('messages').snapshots(),
         builder: (context,AsyncSnapshot snapshot){
           if(snapshot.hasData){
             if(snapshot.data.docs.length < 1){
@@ -68,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(
-                            currentUser: widget.user,
+                            currentUser: user,
                              friendId: friend['uid'],
                               friendName: friend['name'],
                                friendImage: friend['image'])));
@@ -87,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
         onPressed: (){
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen(widget.user)));
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen(user)));
         },
       ),
       

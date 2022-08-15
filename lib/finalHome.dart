@@ -8,8 +8,7 @@ import 'Chats/models/user_model.dart';
 import 'workersDetails.dart';
 
 class home_Page extends StatelessWidget {
-   UserModel user;
-  home_Page(this.user);
+
 
   _launchURL() async {
     const url = 'https://www.facebook.com/laith.jabali.9';

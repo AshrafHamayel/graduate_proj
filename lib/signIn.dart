@@ -1,6 +1,9 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, deprecated_member_use, use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, file_names, use_build_context_synchronously, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'SignUpOptions.dart';
@@ -39,17 +42,16 @@ shareEamil(String email)async
 {
   
           SharedPreferences preferences =await SharedPreferences.getInstance();
-          preferences.setString("email", email);
+          preferences.setString("UserId", email);
            
-     //    print(preferences.getString("email"));
+        print(preferences.getString("UserId"));
         
 }
 
 
 
 
-
-  late File iimage;
+  // late File iimage;
 showAlertDialog(String textMessage) {
 
   // set up the button
@@ -81,7 +83,7 @@ showAlertDialog(String textMessage) {
 }
 
 
- Future getpost(String email,String password )async {
+ Future SignINWithEmail(String email,String password )async {
  
 
                           if(email+"--"=="--")
@@ -119,11 +121,29 @@ showAlertDialog(String textMessage) {
 
              else  if (responsebody['NT']=='done')
           {
-      
-           shareEamil(email);
+    
+            shareEamil(responsebody['uid']);
+         DocumentSnapshot userExist = await firestore.collection('users').doc(responsebody['uid'].toString()).get();
+
+    if(userExist.exists)
+    {
      
-             Navigator.push( context,
-            MaterialPageRoute(builder: (context) => MyApp()));
+      return Navigator.push(context,MaterialPageRoute(builder: (context) => MyApp()));
+    }
+    else
+    {
+       await firestore.collection('users').doc(responsebody['uid'].toString()).set({
+      'email':email,
+      'name':responsebody['name'].toString(),
+      'image':responsebody['imegUrl'].toString(),
+      'uid':responsebody['uid'].toString(),
+      'date':DateTime.now(),
+    });
+    
+            Navigator.push( context,MaterialPageRoute(builder: (context) => MyApp()));
+    }
+   
+             
            
            }
 
@@ -132,7 +152,7 @@ showAlertDialog(String textMessage) {
           else 
            {
 
-          showAlertDialog('Error');
+          showAlertDialog('هناك خطأ ما');
        
            }
 
@@ -140,27 +160,81 @@ showAlertDialog(String textMessage) {
                     }
 
 
+  }
 
+
+
+
+ GoogleSignIn googleSignIn = GoogleSignIn();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future signInwithGoogle()async{
+    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if(googleUser == null){
+      return;
+    }
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+    );
+
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+   
+           CreatUser(userCredential.user!.email, userCredential.user!.displayName,userCredential.user!.photoURL,userCredential.user!.uid );
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+
+
+  }
+
+
+
+
+ Future CreatUser(String? email, String? name,String? imge,String Uid)async {
+                  
+                        
+       var url = "http://10.0.2.2:8000/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge";
+       var response =await http.post(Uri.parse(url));
+      var responsebody= jsonDecode(response.body) ;
+       if (responsebody['NT']=='done')
+       {
+        shareEamil(Uid);
+       DocumentSnapshot userExist = await firestore.collection('users').doc(Uid).get();
+
+    if(userExist.exists)
+    {
+        
+
+      return;
+    }
+    else
+    {
+       await firestore.collection('users').doc(Uid).set({
+      'email':email,
+      'name':name,
+      'image':imge,
+      'uid':Uid,
+      'date':DateTime.now(),
+    });
+
+    }
+    return;
+            // Navigator.push( context,
+            // MaterialPageRoute(builder: (context) =>MyApp()));
+       }
        
-
      
 
-    
+      else {
+                    showAlertDialog('هناك خطأ ما ');
+
+          }
+
+
   }
 
-
-
-
-
-
-  uploadImage() async {
-    var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      iimage = File(pickedImage.path);
-    } else {}
-  }
-
-  final imagepicker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,17 +267,17 @@ showAlertDialog(String textMessage) {
               const Text(
                 "   رجاءً قم بتسجيل الدخول للاستمرار ",
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 22,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.end,
               ),
               const SizedBox(
-                height: 15,
+                height: 30,
               ),
-              const SizedBox(
-                height: 35,
-              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
               buildTextField("الايميل", "ex@gmail.com", false,ControllerEmail),
               buildTextField("كلمة السر", "********", true,ControllerPass),
               
@@ -218,7 +292,7 @@ showAlertDialog(String textMessage) {
                       child: const Text(
                         'نسيت كلمة السر',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 19),
+                            fontWeight: FontWeight.bold, fontSize: 16),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -247,7 +321,10 @@ showAlertDialog(String textMessage) {
                   // ),
                   RaisedButton(
                     onPressed: () {
-                     getpost(ControllerEmail.text,ControllerPass.text);
+                      
+                  //  await GoogleSignIn().signOut();
+                  //   await FirebaseAuth.instance.signOut();
+                    SignINWithEmail(ControllerEmail.text,ControllerPass.text);
 
 
                     },
@@ -266,12 +343,84 @@ showAlertDialog(String textMessage) {
                   )
                 ],
               ),
+               const SizedBox(
+                height: 15,
+              ),
+              Row(
+                textDirection: TextDirection.rtl,
+                children: <Widget>[
+                  const Text(
+                    '   او قم بتسجيل الدخول  بواسطة  ' ,
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 18),
+                  )
+            
+                ],
+                //mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              
+
+
+                 //        Google --------------------------------------------------
+            Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+            await signInwithGoogle();
+          }, 
+          icon: Icon(Icons.email_sharp),  //icon data for elevated button
+          label: Text("     Google حساب     ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 56, 53, 53)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+
+            //        Facebook --------------------------------------------------
+            Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+  children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            child:ElevatedButton.icon(
+          onPressed: ()async{
+           //  await  signInwithFacebook();
+          
+          }, 
+          icon: Icon(Icons.facebook),  //icon data for elevated button
+          label: Text("Facebook   حساب     ",style:TextStyle(fontSize: 16),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 62, 63, 158)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12))
+              ),
+                  ) 
+            ),
+          ]
+
+
+            ),
+
+  //        with Email --------------------------------------------------
+ const SizedBox(
+                height: 15,
+              ),
               Row(
                 textDirection: TextDirection.rtl,
                 children: <Widget>[
                   const Text(
                     'ليس لديك حساب ؟',
-                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 22),
                   ),
                   TextButton(
                     child: const Text(
@@ -279,15 +428,19 @@ showAlertDialog(String textMessage) {
                       style: TextStyle(fontSize: 20),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpOptions()));
+                              builder: (context) => SignupPage()));
                     },
-                  )
+                  ),
+
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
+              
+           
+
             ],
           ),
         ),
@@ -299,7 +452,7 @@ showAlertDialog(String textMessage) {
   
   {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
+      padding: const EdgeInsets.only(bottom: 10.0),
       child: TextField(
         controller:    myController,
 

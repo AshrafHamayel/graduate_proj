@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
@@ -15,13 +17,13 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
 import 'mainPage.dart';
+import 'signIn.dart';
 import 'storage_sercice.dart';
 import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
 class myProfile extends StatelessWidget {
-   UserModel user;
-  myProfile(this.user);
+  
     out() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
   await preferences.clear();
@@ -123,11 +125,11 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
               Center(
               child: OutlinedButton(
                 
-                onPressed: () {
+                onPressed: () async {
                               out();
-                              
-                                 Navigator.push( context,
-             MaterialPageRoute(builder: (context) =>  MyApp()));
+                             await GoogleSignIn().signOut();
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
                 },
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -159,7 +161,7 @@ class UserProfile_Page extends StatefulWidget {
 
 class _UserProfilePage extends State<UserProfile_Page> {
 
-  var email;
+  var UserId;
      
 
   
@@ -169,7 +171,7 @@ Widget buildd(BuildContext context) {
     future: getEamil(),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
-        return email;
+        return UserId;
       }
       return CircularProgressIndicator(); // or some other widget
     },
@@ -177,21 +179,21 @@ Widget buildd(BuildContext context) {
 }
 Future<void> getEamil() async {
   SharedPreferences    preferences = await SharedPreferences.getInstance();
-    email = preferences.getString("email");
-  print(preferences.getString("email"));
+    UserId = preferences.getString("UserId");
+     print(' UID from home muProfile :');
+  print(preferences.getString("UserId"));
 
   }
 
   Future getInfo() async {
-    getEamil();
-  
-    var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
+
+    var url = "http://10.0.2.2:8000/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
   
 
-    return responsebody;
+    return  responsebody;
  
 
   }
@@ -350,7 +352,7 @@ TextButton(onPressed: (){  }, child: Text("نشر",style:const TextStyle( color:
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imagePath=$imagePath";
+             var url = "http://10.0.2.2:8000/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -556,21 +558,7 @@ Future sendToDB(String imagePath) async {
         child: Card(
           child: Column(
             children: <Widget>[
-              // ListTile(
-              //   leading: CircleAvatar(
-              //     child: Icon(Icons.person_outline),
-              //   ),
-              //   title: TextFormField(
-              //     maxLines: 10,
-              //     minLines: 1,
-              //     decoration: InputDecoration(
-              //         contentPadding: EdgeInsets.only(right: 10),
-              //         hintText: 'شاركنا عملك',
-              //         border: OutlineInputBorder(
-              //             borderSide: BorderSide(color: Colors.grey),
-              //             borderRadius: BorderRadius.circular(20))),
-              //   ),
-              // ),
+            
               SizedBox(
                 height: 10,
               ),
@@ -586,19 +574,7 @@ Future sendToDB(String imagePath) async {
                                         color: Colors.grey.withOpacity(0.3)),
                                     top: BorderSide(
                                         color: Colors.grey.withOpacity(.3)))),
-                            // child: Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   crossAxisAlignment: CrossAxisAlignment.center,
-                            //   children: <Widget>[
-                            //     IconButton(
-                            //         onPressed: null ,
-                            //         icon: Icon(
-                            //           Icons.camera_alt_outlined,
-                            //           color: Colors.grey,
-                            //         )),
-                            //     Padding(padding: EdgeInsets.only(right: 10)),
-                            //   ],
-                            // ),
+                           
                           ))),
                   Expanded(
                       child: InkWell(
@@ -608,19 +584,7 @@ Future sendToDB(String imagePath) async {
                                 border: Border(
                                     top: BorderSide(
                                         color: Colors.grey.withOpacity(.3)))),
-                            // child: Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   crossAxisAlignment: CrossAxisAlignment.center,
-                            //   children: <Widget>[
-                            //     IconButton(
-                            //         onPressed: () {},
-                            //         icon: Icon(
-                            //           Icons.add_location_alt_outlined,
-                            //           color: Colors.grey,
-                            //         )),
-                            //     Padding(padding: EdgeInsets.only(right: 10)),
-                            //   ],
-                            // ),
+                          
                           )))
                 ],
               ),
@@ -637,9 +601,6 @@ Future sendToDB(String imagePath) async {
                                           showPost(context),
 
                                         });
-                                  //AddPost.getEamil(email,context);
-            //                 Navigator.push( context,
-            //  MaterialPageRoute(builder: (context) =>  addPost()));
                            
                           },
                           child: Container(
@@ -675,14 +636,14 @@ Future sendToDB(String imagePath) async {
     );
   }
 
-  Widget _buildSeparator(Size screenSize) {
-    return Container(
-      width: screenSize.width,
-      height: 2.0,
-      color: Colors.black54,
-      margin: const EdgeInsets.only(top: 4.0),
-    );
-  }
+  // Widget _buildSeparator(Size screenSize) {
+  //   return Container(
+  //     width: screenSize.width,
+  //     height: 2.0,
+  //     color: Colors.black54,
+  //     margin: const EdgeInsets.only(top: 4.0),
+  //   );
+  // }
 
   Widget _buildSeparator2(Size screenSize)
    {
@@ -694,71 +655,29 @@ Future sendToDB(String imagePath) async {
     );
   }
 
-  // Widget _buildButtons() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-  //     child: Row(
-  //       children: <Widget>[
-  //         Expanded(
-  //           child: InkWell(
-  //             onTap: () => {},
-  //             child: Container(
-  //               height: 40.0,
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(),
-  //                 color: const Color(0xFF404A5C),
-  //               ),
-  //               child: const Center(
-  //                 child: Text(
-  //                   "متابعة",
-  //                   style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontWeight: FontWeight.w600,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 10.0),
-  //         Expanded(
-  //           child: InkWell(
-  //             onTap: () => {},
-  //             child: Container(
-  //               height: 40.0,
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(),
-  //               ),
-  //               child: const Center(
-  //                 child: Padding(
-  //                   padding: EdgeInsets.all(10.0),
-  //                   child: Text(
-  //                     "مراسلة",
-  //                     style: TextStyle(fontWeight: FontWeight.w600),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 late String downloadURL;
+
   @override
+
   Widget build(BuildContext context) {
-    buildd(context);
+       
     Size screenSize = MediaQuery.of(context).size;
+     getEamil();
+     
     return Container(
       
       child: Scaffold(
+        
          body: FutureBuilder(
                      future:getInfo() ,
+                     
        builder: (BuildContext context, AsyncSnapshot snapshot) 
    {   
-       
 
+
+           print('snapshot :-------------');
+           print(snapshot.data);
+           
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
        
@@ -773,23 +692,23 @@ late String downloadURL;
                       SizedBox(height: screenSize.height / 18.0),
 
                       
-                        FutureBuilder<String>(
-                        future: storage.downloadURL(snapshot.data["image"]),
-                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
-                        {
-                            if (snapshot.hasData)
-                             {
+                      //   FutureBuilder<String>(
+                      //   future: storage.downloadURL(snapshot.data["image"]),
+                      //   builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                      //   {
+                      //       if (snapshot.hasData)
+                      //        {
                             
-                                return  _buildProfileImage(context,snapshot.data!);
-                            } 
-                            else 
-                            {
-                                return CircularProgressIndicator();
-                            }
-                        },  
-                      ),
+                      //           return  _buildProfileImage(context,snapshot.data!);
+                      //       } 
+                      //       else 
+                      //       {
+                      //           return CircularProgressIndicator();
+                      //       }
+                      //   },  
+                      // ),
 
-
+                       _buildProfileImage(context,snapshot.data["image"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
                       _buildSeparator2(screenSize),
@@ -812,10 +731,13 @@ late String downloadURL;
           );
             }
           return Container(
+            
         child: Column(
+          
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 5),
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -836,6 +758,7 @@ late String downloadURL;
         Row(
          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Material(

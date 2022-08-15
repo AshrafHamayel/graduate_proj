@@ -9,8 +9,7 @@ import 'main.dart';
 import 'workerProfile.dart';
 
 class Workers extends StatefulWidget {
-   UserModel user;
-  Workers(this.user);
+ 
   @override
   _WorkersState createState() => _WorkersState();
 }
