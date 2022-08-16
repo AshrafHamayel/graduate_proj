@@ -187,7 +187,7 @@ Future<void> getEamil() async {
 
   Future getInfo() async {
 
-    var url = "http://10.0.2.2:8000/myProf/myProf?UserId=$UserId";
+    var url = "http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -352,7 +352,7 @@ TextButton(onPressed: (){  }, child: Text("نشر",style:const TextStyle( color:
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://10.0.2.2:8000/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
+             var url = "http://192.168.0.114:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 

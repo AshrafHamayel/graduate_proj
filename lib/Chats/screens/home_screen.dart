@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/Chats/screens/search_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../SettingsPage.dart';
+import '../../main.dart';
 import '../../signIn.dart';
 import '../models/user_model.dart';
 import 'chat_screen.dart';
@@ -19,7 +21,12 @@ var UID;
 late UserModel user;
 class _HomeScreenState extends State<HomeScreen> {
 
+   out() async {
+SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
 
+
+  }
 
   Future<void> getEamil() async {
   SharedPreferences    preferences = await SharedPreferences.getInstance();
@@ -36,20 +43,105 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     getEamil();
-    return Scaffold(
+    return Directionality(textDirection: TextDirection.rtl, 
+    child: Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
+        
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+        elevation: 1,
         actions: [
-          IconButton(onPressed: ()async{
-              SharedPreferences preferences = await SharedPreferences.getInstance();
-               await preferences.clear();
-              await GoogleSignIn().signOut();
+          IconButton(
+            icon: Icon(
+              Icons.arrow_forward,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MyApp()));
+            },
+          ),
+        ],
+      ),
+       drawer: Drawer(
+        
+          child: ListView(
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
+
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+                 ListTile(
+                    title: Text("تغيير نوع العمل "),
+                    leading: Icon(Icons.work),
+                    subtitle: Text("change work"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+                 ListTile(
+                    title: Text(" تقديم شكوى "),
+                    leading: Icon(Icons.drafts_sharp),
+                    subtitle: Text(" Make a complaint"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+              ListTile(
+                    title: Text("  موقعي "),
+                    leading: Icon(Icons.edit_location_alt_sharp),
+                    subtitle: Text(" My location"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+               ListTile(
+                    title: Text("الاعدادات"),
+                    leading: Icon(Icons.settings),
+                    subtitle: Text("Settings"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                       Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage()));
+                    },
+                ),
+              Center(
+              child: OutlinedButton(
+                
+                onPressed: () async {
+                              out();
+                             await GoogleSignIn().signOut();
             await FirebaseAuth.instance.signOut();
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
-          }, icon: Icon(Icons.logout))
-        ],
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0))),
+                ),
+                child: const Text("تسجيل الخروج",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+              ),
+            )
+
+
+            ],
+
+          ),
+
+
       ),
 
       body: StreamBuilder(
@@ -58,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if(snapshot.hasData){
             if(snapshot.data.docs.length < 1){
               return Center(
-                child: Text("No Chats Available !"),
+                child: Text("اضغط على العدسة بالاسفل و ابدأ بالمحادثة "),
               );
             }
             return ListView.builder(
@@ -71,17 +163,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context,AsyncSnapshot asyncSnapshot){
                     if(asyncSnapshot.hasData){
                       var friend = asyncSnapshot.data;
-                      return ListTile(
+                      return Directionality(textDirection: TextDirection.rtl, 
+                      
+                      child: ListTile(
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(80),
                           child: CachedNetworkImage(
                             imageUrl:friend['image'],
                             placeholder: (conteext,url)=>CircularProgressIndicator(),
                             errorWidget: (context,url,error)=>Icon(Icons.error,),
-                            height: 50,
+                            height: 55,
+                            width: 55,
                           ),
                         ),
-                        title: Text(friend['name']),
+                        title: Text(friend['name'],style: TextStyle(fontSize: 18),),
                         subtitle: Container(
                           child: Text("$lastMsg",style: TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis,),
                         ),
@@ -92,6 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               friendName: friend['name'],
                                friendImage: friend['image'])));
                         },
+                      ),
+                      
+                      
                       );
                     }
                     return LinearProgressIndicator();
@@ -104,12 +202,15 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
 
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
+         backgroundColor: Color.fromARGB(255, 66, 64, 64),
+        child: Icon(Icons.search,color: Color.fromARGB(255, 255, 255, 255),size: 25,),
         onPressed: (){
            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchScreen(user)));
         },
       ),
       
+    )
+    
     );
   }
 }

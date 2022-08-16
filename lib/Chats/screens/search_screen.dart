@@ -1,8 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../SettingsPage.dart';
+import '../../signIn.dart';
 import '../models/user_model.dart';
 import 'chat_screen.dart';
+import 'home_screen.dart';
 
 
 class SearchScreen extends StatefulWidget {
@@ -42,11 +49,113 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+   out() async {
+SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
+
+
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Search your Friend"),
+    return Directionality(textDirection: TextDirection.rtl, 
+    child:Scaffold(
+       appBar: AppBar(
+        
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+        elevation: 1,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_forward,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => HomeScreen()));
+            },
+          ),
+        ],
+      ),
+       drawer: Drawer(
+        
+          child: ListView(
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
+
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+                 ListTile(
+                    title: Text("تغيير نوع العمل "),
+                    leading: Icon(Icons.work),
+                    subtitle: Text("change work"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+                 ListTile(
+                    title: Text(" تقديم شكوى "),
+                    leading: Icon(Icons.drafts_sharp),
+                    subtitle: Text(" Make a complaint"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+              ListTile(
+                    title: Text("  موقعي "),
+                    leading: Icon(Icons.edit_location_alt_sharp),
+                    subtitle: Text(" My location"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+               ListTile(
+                    title: Text("الاعدادات"),
+                    leading: Icon(Icons.settings),
+                    subtitle: Text("Settings"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                       Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage()));
+                    },
+                ),
+              Center(
+              child: OutlinedButton(
+                
+                onPressed: () async {
+                              out();
+                             await GoogleSignIn().signOut();
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0))),
+                ),
+                child: const Text("تسجيل الخروج",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+              ),
+            )
+
+
+            ],
+
+          ),
+
+
       ),
       body: Column(
         children: [
@@ -58,7 +167,7 @@ class _SearchScreenState extends State<SearchScreen> {
                    child: TextField(
                      controller: searchController,
                      decoration: InputDecoration(
-                       hintText: "type username....",
+                       hintText: "ادخل اسم العامل ",
                        border: OutlineInputBorder(
                          borderRadius: BorderRadius.circular(10)
                        )
@@ -68,7 +177,7 @@ class _SearchScreenState extends State<SearchScreen> {
                ),
                IconButton(onPressed: (){
                   onSearch();
-               }, icon: Icon(Icons.search))
+               }, icon: Icon(Icons.search_sharp),iconSize: 30,)
              ],
            ),
            if(searchResult.length > 0)
@@ -77,9 +186,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context,index){
                   return ListTile(
-                    leading: CircleAvatar(
-                      child: Image.network(searchResult[index]['image']),
-                    ),
+                    
+                    leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: CachedNetworkImage(
+                            imageUrl:searchResult[index]['image'],
+                            placeholder: (conteext,url)=>CircularProgressIndicator(),
+                            errorWidget: (context,url,error)=>Icon(Icons.error,),
+                            height: 55,
+                            width: 55,
+                          ),
+                        ),
+                
                     title: Text(searchResult[index]['name']),
                     subtitle: Text(searchResult[index]['email']),
                     trailing: IconButton(onPressed: (){
@@ -91,7 +209,7 @@ class _SearchScreenState extends State<SearchScreen> {
                              friendId: searchResult[index]['uid'],
                               friendName: searchResult[index]['name'],
                                friendImage: searchResult[index]['image'])));
-                    }, icon: Icon(Icons.message)),
+                    }, icon: Icon(Icons.wechat_outlined ,size: 35,)),
                   );
                 }))
            else if(isLoading == true)
@@ -99,6 +217,9 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       
+    ),
+    
     );
+    
   }
 }

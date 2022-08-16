@@ -126,7 +126,7 @@ shareEamil(String UserId)async
 else{
 
 
-       var url = "http://10.0.2.2:8000/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword";
+       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 

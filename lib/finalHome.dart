@@ -526,7 +526,7 @@ Widget buildCard(BuildContext context) {
       borderRadius: BorderRadius.circular(10),
     ),
     child: Container(
-      width: MediaQuery.of(context).size.width - 250,
+      width: MediaQuery.of(context).size.width - 220,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         textDirection: TextDirection.rtl,
@@ -541,31 +541,31 @@ Widget buildCard(BuildContext context) {
               ),
               Column(
                 children: [
-                  SizedBox(
-                    height: 2,
-                  ),
+                  // SizedBox(
+                  //   height: 2,
+                  // ),
                   Container(
-                    height: 55,
-                    width: 55,
+                    height: 50,
+                    width: 50,
                     child: const CircleAvatar(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.green,
                       backgroundImage: NetworkImage(
-                          "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"),
+                          "https://img2.arabpng.com/20180903/gvk/kisspng-construction-worker-hard-hats-laborer-getting-a-jo-serviceguru-powerful-job-management-software-for-5b8d7378d664e5.1323450915359967928782.jpg"),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
                   Text(
-                    "data",
+                    "الاسم",
                     style: TextStyle(fontSize: 18),
                   ),
-                  SizedBox(
-                    height: 2,
-                  ),
+                  // SizedBox(
+                  //   height: 1,
+                  // ),
                   Text(
-                    "daaaaaata",
+                    "المهنة",
                     style: TextStyle(
                         fontSize: 14, color: Colors.black.withOpacity(0.5)),
                   ),

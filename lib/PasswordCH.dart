@@ -95,7 +95,7 @@ showAlertDialog(String textMessage) {
 
                     else
                     { 
-                      var url = "http://10.0.2.2:8000/myProf/editPassword?UserId=$UserId&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
+                      var url = "http://192.168.0.114:80/myProf/editPassword?UserId=$UserId&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
                  var response = await http.post(Uri.parse(url));
              var responsebody = json.decode(response.body);
              

@@ -99,7 +99,7 @@ showAlertDialog(String textMessage) {
 
                     {
 
-        var url = "http://10.0.2.2:8000/login/login?email=$email&password=$password";
+        var url = "http://192.168.0.114:80/login/login?email=$email&password=$password";
         var response =await http.post(Uri.parse(url));
           var responsebody= jsonDecode(response.body) ;
      
@@ -183,7 +183,7 @@ showAlertDialog(String textMessage) {
 
 
    
-           CreatUser(userCredential.user!.email, userCredential.user!.displayName,userCredential.user!.photoURL,userCredential.user!.uid );
+           CreatUser(userCredential.user!.email, userCredential.user!.displayName,userCredential.user!.photoURL);
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
 
 
@@ -192,39 +192,37 @@ showAlertDialog(String textMessage) {
 
 
 
- Future CreatUser(String? email, String? name,String? imge,String Uid)async {
+ Future CreatUser(String? email, String? name,String? imge)async {
                   
-                        
-       var url = "http://10.0.2.2:8000/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge";
+       var url = "http://192.168.0.114:80/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
+
+    DocumentSnapshot userExist = await firestore.collection('users').doc(responsebody['uid'].toString()).get();
+
        if (responsebody['NT']=='done')
        {
-        shareEamil(Uid);
-       DocumentSnapshot userExist = await firestore.collection('users').doc(Uid).get();
+        shareEamil(responsebody['uid'].toString());
 
-    if(userExist.exists)
-    {
-        
-
-      return;
-    }
-    else
-    {
-       await firestore.collection('users').doc(Uid).set({
+       await firestore.collection('users').doc(responsebody['uid'].toString()).set(
+          {
       'email':email,
       'name':name,
       'image':imge,
-      'uid':Uid,
+      'uid':responsebody['uid'].toString(),
       'date':DateTime.now(),
-    });
+         });
 
-    }
-    return;
-            // Navigator.push( context,
-            // MaterialPageRoute(builder: (context) =>MyApp()));
-       }
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+    }     
+  
        
+      else if (responsebody['NT']=='Email exists !'&&userExist.exists)
+       {
+        shareEamil(responsebody['uid'].toString());
+       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+
+       }
      
 
       else {

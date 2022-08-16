@@ -101,7 +101,7 @@ class _UserProfilePage extends State<workerProfile_Page> {
 
   Future getInfo() async {
     //getEamil();
-    var url = "http://10.0.2.2:8000/myProf/myProf?email=$email";
+    var url = "http://192.168.0.114:80/myProf/myProf?email=$email";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -155,7 +155,7 @@ uploadImage() async {
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://10.0.2.2:8000/myProf/saveImage?email=$email&imagePath=$imagePath";
+             var url = "http://192.168.0.114:80/myProf/saveImage?email=$email&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
