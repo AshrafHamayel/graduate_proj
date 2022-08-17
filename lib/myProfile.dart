@@ -24,6 +24,8 @@ import 'storage_sercice.dart';
 import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
+import '../models/postModel.dart';
+
 class myProfile extends StatelessWidget {
   
     out() async {
@@ -783,22 +785,22 @@ Future sendPostToDB(String description,String imagepost ) async
 
 
 
-  Future <void>getUserPosts() async {
+  Future <List<Postt>> getUserPosts() async {
 
-    var url = await"http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
+    final  url = "http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
 
-    var response = await http.get(Uri.parse(url));
-    var responsebody = json.decode(response.body);
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
   
 
-    return await responsebody;
+    return responsebody.map((e) => Postt.fromJson(e)).toList();
  
 
   }
 
 
 
-  Widget _buildStatPosts( String ImageURL ,String Nlike,String NDisLike) {
+  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     color: Color.fromARGB(255, 239, 245, 237),
@@ -812,7 +814,7 @@ Future sendPostToDB(String description,String imagepost ) async
                 backgroundImage: NetworkImage('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1327&q=80'),
               ),
                         
-                        title: Container(child: Text('اشرف حمايل',style: TextStyle(fontSize: 18),)),
+                        title: Container(child: Text(namePost,style: TextStyle(fontSize: 18),)),
                         trailing: IconButton(
                             onPressed: () {
                               
@@ -820,14 +822,14 @@ Future sendPostToDB(String description,String imagepost ) async
                             icon: Icon(Icons.more_vert_outlined)
                             ),
                         isThreeLine: true,
-                        subtitle: Text('17/8/2022'),
+                        subtitle: Text(DatePost),
                       ),
 
 
          Row( 
                children:  [
                   const SizedBox(width: 30.0),
-                Text( 'من العمل ',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
+                Text(description,  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
             ),
                ],
             ),
@@ -1026,9 +1028,31 @@ late String downloadURL;
                         height: 10,
                       ),
 
-                      _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
-                       _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
-                        _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
+                      FutureBuilder<List<Postt>>(
+                                      future: getUserPosts(),
+                                      builder: (context,snapshot){
+                                        print('snapshot.data post---------');
+                                        print(snapshot.data);
+                                         if (snapshot.hasData)
+                                         {
+                                          ListView.builder(
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index) {
+                                                    return _buildStatPosts(snapshot.data![index].name.toString(),snapshot.data![index].description.toString(),snapshot.data![index].imageuser.toString(),snapshot.data![index].imagepost.toString(),snapshot.data![index].numberLike.toString(),snapshot.data![index].numberDisLike.toString(),snapshot.data![index].date.toString(),);
+                                                  },
+                                                );
+                                         }
+                                        
+                                               return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+
+                                        
+                                      }
+                                    ),
+          //  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+
+                      // _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
+                      //  _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
+                      //   _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
                     ],
                   ),
                 ),

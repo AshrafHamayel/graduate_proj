@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
@@ -193,8 +194,9 @@ showAlertDialog(String textMessage) {
 
 
  Future CreatUser(String? email, String? name,String? imge)async {
+           final fbm = FirebaseMessaging.instance.getToken();
                   
-       var url = "http://192.168.0.114:80/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge";
+       var url = "http://192.168.0.114:80/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge&fbm=$fbm";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 

@@ -2,8 +2,10 @@
   // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:graduate_proj/storage_sercice.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -11,7 +13,6 @@ import 'dart:io';
 import 'main.dart';
 import 'signIn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 void main() => runApp(SignupPage());
 
 class SignupPage extends StatelessWidget {
@@ -44,7 +45,7 @@ class _SignupPage extends State<Signup_Page> {
  GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   
-      Future signUpTofirebase(String email,String name,String userId,String ImageUrl )async{
+     signUpTofirebase(String email,String name,String userId,String ImageUrl )async{
 
    
     DocumentSnapshot userExist = await firestore.collection('users').doc(userId).get();
@@ -109,9 +110,9 @@ shareEamil(String UserId)async
           SharedPreferences preferences =await SharedPreferences.getInstance();
           preferences.setString("UserId", UserId);
            
-     //    print(preferences.getString("UserId"));
         
 }
+  final Storage storage=Storage();
 
  Future CreatUser(String email, String name, String password ,String confPassword )async {
                     if(email+"--"=="--")
@@ -125,20 +126,37 @@ shareEamil(String UserId)async
                         
 else{
 
-
-       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword";
+          final fbm = await FirebaseMessaging.instance.getToken();
+       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword&fbm=$fbm";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
       // print(responsebody['NT']);
        if (responsebody['NT']=='done')
        {
-             await signUpTofirebase(email,name,responsebody['uid'].toString(),responsebody['imegUrl'].toString());
-              shareEamil(responsebody['uid'].toString());
-            // ignore: use_build_context_synchronously
 
-            Navigator.push( context,
-            MaterialPageRoute(builder: (context) => MyApp()));
+
+                   return  FutureBuilder<String>(
+                        future: storage.downloadURL(responsebody['imegUrl'].toString()),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String NewUrl=snapshot.data!.toString();
+                               
+                                 shareEamil(responsebody['uid'].toString());
+                                 Navigator.push( context,MaterialPageRoute(builder: (context) => MyApp()));
+                                return   signUpTofirebase(email,name,responsebody['uid'].toString(),NewUrl);
+                             } 
+                                                    else 
+                                                    {
+                                                        return CircularProgressIndicator();
+                                                    }
+                                                },  
+                                              );
+
+           
+           
        }
        
       else if (responsebody['NT']=='Email exists !')
