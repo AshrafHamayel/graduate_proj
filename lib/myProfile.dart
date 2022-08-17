@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,7 +32,9 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
 
   }
+  
   @override
+  
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
@@ -166,34 +170,38 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
   
 
-Widget buildd(BuildContext context) {
+Widget buildd(BuildContext context) 
+{
   return FutureBuilder(
     future: getEamil(),
     builder: (context, snapshot) {
+      
       if (snapshot.hasData) {
+        
         return UserId;
       }
       return CircularProgressIndicator(); // or some other widget
     },
   );
 }
-Future<void> getEamil() async {
-  SharedPreferences    preferences = await SharedPreferences.getInstance();
-    UserId = preferences.getString("UserId");
-     print(' UID from home muProfile :');
+Future<String> getEamil() async {
+  SharedPreferences   preferences = await SharedPreferences.getInstance();
+    UserId = await preferences.getString("UserId");
+    print (' UID from home muProfile :');
   print(preferences.getString("UserId"));
 
+     return UserId;
   }
 
-  Future getInfo() async {
+  Future <void>getInfo() async {
 
-    var url = "http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
   
 
-    return  responsebody;
+    return await responsebody;
  
 
   }
@@ -221,15 +229,13 @@ uploadImage() async {
        storage.uploadFile(path,imageName).then((value) =>
        {
 
-        print('done'),
+        
          
         sendToDB(imageName),
 
        }
        );
-      //  print(imageName);
-      //   print(path);
-
+    
     } else 
     {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -241,27 +247,29 @@ uploadImage() async {
   }
 
   late File _filePost;
-
-uploadImagePost() async {
+ late final String imageName;
+uploadImagePost() async 
+{
     // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
     var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
 
     if (pickedImage != null) {
       _filePost = File(pickedImage.path);
-      final imageName=pickedImage.path.split("/").last;
+       imageName=pickedImage.path.split("/").last;
        final path =pickedImage.path;
 
-       storage.uploadFile(path,imageName).then((value) =>
+   
+
+       print(imageName);
+       storage.uploadImagesPost(path,imageName).then((value) =>
        {
 
-        print('done'),
+        print(' upload Image Post done'),
          
-        sendToDB(imageName),
-
+       
        }
        );
-      //  print(imageName);
-      //   print(path);
+   
 
     } else 
     {
@@ -336,7 +344,11 @@ return AlertDialog(
   
   ),
   actions:<Widget> [
-TextButton(onPressed: (){  }, child: Text("نشر",style:const TextStyle( color: Color.fromARGB(255, 22, 0, 216), fontSize: 17.0,),))
+TextButton(onPressed: (){  
+             
+       sendPostToDB(_textController.text,imageName);
+
+       }, child: Text("نشر",style:const TextStyle( color: Color.fromARGB(255, 22, 0, 216), fontSize: 17.0,),))
   ],
 );
 }
@@ -358,13 +370,55 @@ Future sendToDB(String imagePath) async {
 
 }
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+Future sendPostToDB(String description,String imagepost ) async 
+{
+
+             var url = "http://192.168.0.114:80/addPost/newPost?UserId=$UserId&description=$description&imagepost=$imagepost";
+            var response = await http.post(Uri.parse(url));
+            var responsebody = json.decode(response.body);
+
+              if (responsebody['NT']=='done')
+       {
+           await firestore.collection('users').doc(UserId).collection('Posts').doc(UserId).set({
+     
+      'name':responsebody['name'].toString(),
+      'uid':responsebody['id'].toString(),
+      'imageuser':responsebody['imageuser'].toString(),
+      'imagepost':responsebody['imagepost'].toString(),
+      'description':responsebody['description'].toString(),
+      'numberLike':responsebody['numberLike'].toString(),
+      'date':DateTime.now(),
+      'numberDisLike':responsebody['numberDisLike'].toString(),
+
+      
+    }); 
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false);
+
+       }
+
+       else{
+               ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لم يتم حفظ المنشور')) );
+
+       }
+
+
+
+}
+
+
+
 
 
 
   final imagepicker = ImagePicker();
 
-  Widget _buildProfileImage(BuildContext context ,String imagee) {
-    return Center(
+  Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
+    if(Type=='Google')
+    {
+       return Center(
       child: Stack(
         children: [
           Container(
@@ -416,6 +470,79 @@ Future sendToDB(String imagePath) async {
         ],
       ),
     );
+    }
+    
+       else{
+ 
+                      return  FutureBuilder<String>(
+                        future: storage.downloadURL(imagee),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String NewUrl=snapshot.data!.toString();
+                                return  Center(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 130,
+                                    height: 130,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 4, color: Theme.of(context).scaffoldBackgroundColor),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              blurRadius: 10,
+                                              color: Colors.black.withOpacity(0.1),
+                                              offset: const Offset(0, 10))
+                                        ],
+                                        shape: BoxShape.circle,
+                                        image:  DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage("$NewUrl")
+                                                )),
+                                  ),
+                                  Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            width: 4,
+                                            color: Theme.of(context).scaffoldBackgroundColor,
+                                          ),
+                                          color: Colors.green,
+                                        ),
+                                        child: IconButton(
+                                          padding: EdgeInsets.all(3),
+                                          onPressed: () {
+
+                                              uploadImage();
+                            
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            );
+                      } 
+                                                    else 
+                                                    {
+                                                        return CircularProgressIndicator();
+                                                    }
+                                                },  
+                                              );
+                              
+    }
+   
   }
 
   Widget _buildFullName( String _fullName) {
@@ -597,7 +724,6 @@ Future sendToDB(String imagePath) async {
                                   uploadImagePost().then((value) =>
                                         {
 
-                                          print('done'),
                                           showPost(context),
 
                                         });
@@ -655,6 +781,188 @@ Future sendToDB(String imagePath) async {
     );
   }
 
+
+
+  Future <void>getUserPosts() async {
+
+    var url = await"http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
+
+    var response = await http.get(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+  
+
+    return await responsebody;
+ 
+
+  }
+
+
+
+  Widget _buildStatPosts( String ImageURL ,String Nlike,String NDisLike) {
+  return Container(
+    margin: const EdgeInsets.all(10.0),
+    color: Color.fromARGB(255, 239, 245, 237),
+     width: MediaQuery.of(context).size.width * 0.95,
+    height: MediaQuery.of(context).size.height * 0.68,
+    child: Column(
+      children: [
+          ListTile(
+                                      leading:CircleAvatar(
+                radius: 45, // Image radius
+                backgroundImage: NetworkImage('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1327&q=80'),
+              ),
+                        
+                        title: Container(child: Text('اشرف حمايل',style: TextStyle(fontSize: 18),)),
+                        trailing: IconButton(
+                            onPressed: () {
+                              
+                            },
+                            icon: Icon(Icons.more_vert_outlined)
+                            ),
+                        isThreeLine: true,
+                        subtitle: Text('17/8/2022'),
+                      ),
+
+
+         Row( 
+               children:  [
+                  const SizedBox(width: 30.0),
+                Text( 'من العمل ',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
+            ),
+               ],
+            ),
+
+
+       Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24), ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Ink.image(
+              image: NetworkImage(ImageURL),
+            //  colorFilter: ColorFilters.greyscale,
+              child: InkWell(
+                onTap: () {},
+              ),
+             width: MediaQuery.of(context).size.width * 0.86,
+    height: MediaQuery.of(context).size.height * 0.4195,
+              fit: BoxFit.cover,
+            ),
+            
+          ],
+        ),
+        
+      ),
+     
+
+       Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      left: BorderSide(
+                                          color:
+                                              Colors.grey.withOpacity(0.3)))),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color: Color.fromARGB(255, 158, 158, 158)
+                                                        .withOpacity(.3)))),
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.thumb_up_alt_outlined,
+                                              color: Color.fromARGB(255, 114, 111, 111),
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
+                                            Text(
+                                              '$Nlike اعجبني' ,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                 color: Color.fromARGB(255, 36, 33, 33),
+                                                  fontSize: 15),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                    child: InkWell(
+                                        onTap: () {
+
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: Colors.grey
+                                                          .withOpacity(.3)))),
+                                          padding: EdgeInsets.all(10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.thumb_down_alt_outlined,
+                                                  color: Color.fromARGB(255, 114, 111, 111),
+
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 10)),
+                                              Text(
+                                                ' $NDisLike  لم يعجبني',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Color.fromARGB(255, 36, 33, 33),
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ))),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    
+                     _buildSeparator2(MediaQuery.of(context).size),
+
+
+      ]
+
+  ),
+  );
+           
+  }
+
+
 late String downloadURL;
 
   @override
@@ -662,9 +970,15 @@ late String downloadURL;
   Widget build(BuildContext context) {
        
     Size screenSize = MediaQuery.of(context).size;
-     getEamil();
-     
-    return Container(
+    
+
+  return FutureBuilder(
+    future: getEamil(),
+    builder: (context, snapshot) {
+      
+      if (snapshot.hasData) {
+        
+         return Container (
       
       child: Scaffold(
         
@@ -675,7 +989,7 @@ late String downloadURL;
    {   
 
 
-           print('snapshot :-------------');
+           print('snapshot :-');
            print(snapshot.data);
            
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
@@ -691,24 +1005,8 @@ late String downloadURL;
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
 
-                      
-                      //   FutureBuilder<String>(
-                      //   future: storage.downloadURL(snapshot.data["image"]),
-                      //   builder: (BuildContext context, AsyncSnapshot <String>snapshot)
-                      //   {
-                      //       if (snapshot.hasData)
-                      //        {
-                            
-                      //           return  _buildProfileImage(context,snapshot.data!);
-                      //       } 
-                      //       else 
-                      //       {
-                      //           return CircularProgressIndicator();
-                      //       }
-                      //   },  
-                      // ),
 
-                       _buildProfileImage(context,snapshot.data["image"].toString()),
+                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
                       _buildSeparator2(screenSize),
@@ -723,6 +1021,14 @@ late String downloadURL;
                         height: 10,
                       ),
                       _buildpost(),
+
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                      _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
+                       _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
+                        _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
                     ],
                   ),
                 ),
@@ -776,6 +1082,15 @@ late String downloadURL;
          },
         ),
       ),
-    );
+    ); 
+       
+      }
+      return CircularProgressIndicator(); // or some other widget
+    },
+  );
+
+
+     
+   
   }
 }
