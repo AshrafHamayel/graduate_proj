@@ -14,54 +14,12 @@ import 'package:image_picker/image_picker.dart';
 import 'Chats/models/user_model.dart';
 
 class Post extends StatelessWidget {
- 
   @override
   Widget build(BuildContext context) {
     Future pickercamera() async {
       final myFile = await ImagePicker().getImage(
         source: ImageSource.camera,
       );
-    }
-
-    Position myP;
-    var lat, long;
-    CameraPosition _kGooglePlex = CameraPosition(
-      target: LatLng(0, 0),
-      zoom: 14.4746,
-    );
-    ;
-    Future getPer() async {
-      bool ser;
-      LocationPermission per;
-      ser = await Geolocator.isLocationServiceEnabled();
-      if (ser == false) {
-        AwesomeDialog(
-            context: context,
-            //  title: Text("services"),
-            body: Text("S not enabled"))
-          ..show();
-      }
-      per = await Geolocator.requestPermission();
-      if (per == LocationPermission.denied)
-        per = await Geolocator.requestPermission();
-      return per;
-    }
-
-    Future<void> getLatAndLong() async {
-      myP = await Geolocator.getCurrentPosition().then((value) => value);
-      lat = myP.latitude;
-      long = myP.longitude;
-
-      _kGooglePlex = CameraPosition(
-        target: LatLng(lat, long),
-        zoom: 14.4746,
-      );
-    }
-
-    void initState() {
-      getPer();
-
-      //super.initState();
     }
 
     Completer<GoogleMapController> _controller = Completer();
@@ -145,9 +103,7 @@ class Post extends StatelessWidget {
                               children: <Widget>[
                                 Expanded(
                                     child: InkWell(
-                                        onTap: () {
-                                          getLatAndLong();
-                                        },
+                                        onTap: () {},
                                         child: Container(
                                           decoration: BoxDecoration(
                                               border: Border(
@@ -183,19 +139,6 @@ class Post extends StatelessWidget {
                           ),
                         ],
                       ),
-                      _kGooglePlex == null
-                          ? CircularProgressIndicator()
-                          : Container(
-                              height: 300,
-                              width: 500,
-                              child: GoogleMap(
-                                mapType: MapType.normal,
-                                initialCameraPosition: _kGooglePlex,
-                                onMapCreated: (GoogleMapController controller) {
-                                  _controller.complete(controller);
-                                },
-                              ),
-                            )
                     ],
                   ),
                 ),
