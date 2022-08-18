@@ -154,7 +154,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
               );
             }
             return ListView.builder(
-              reverse: true,
+            //  reverse: true,
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context,index){
                 var friendId = snapshot.data.docs[index].id;

@@ -1,5 +1,5 @@
 
-  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
+  // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'addUserInfo.dart';
 import 'main.dart';
 import 'signIn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,34 +45,6 @@ class _SignupPage extends State<Signup_Page> {
 
  GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
-     signUpTofirebase(String email,String name,String userId,String ImageUrl )async{
-
-   
-    DocumentSnapshot userExist = await firestore.collection('users').doc(userId).get();
-
-    if(userExist.exists)
-    {
-          showAlertDialog(' لديك حساب بالفعل');
-
-    }
-    
-    else
-    {
-       await firestore.collection('users').doc(userId).set({
-      'email':email,
-      'name':name,
-      'image':ImageUrl,
-      'uid':userId,
-      'date':DateTime.now(),
-    });
-    }
-   
-
-  }
-
-
-
 
   late File iimage;
 
@@ -136,27 +109,33 @@ else{
        {
 
 
-                   return  FutureBuilder<String>(
-                        future: storage.downloadURL(responsebody['imegUrl'].toString()),
-                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
-                        {
-                            if (snapshot.hasData)
-                             {
-                                String NewUrl=snapshot.data!.toString();
-                               
-                                 shareEamil(responsebody['uid'].toString());
-                                 Navigator.push( context,MaterialPageRoute(builder: (context) => MyApp()));
-                                return   signUpTofirebase(email,name,responsebody['uid'].toString(),NewUrl);
-                             } 
-                                                    else 
-                                                    {
-                                                        return CircularProgressIndicator();
-                                                    }
-                                                },  
-                                              );
+    DocumentSnapshot userExist = await firestore.collection('users').doc(responsebody['uid'].toString()).get();
 
-           
-           
+    if(userExist.exists)
+    {
+          showAlertDialog(' لديك حساب بالفعل');
+
+    }
+    
+                    else
+                    {
+                         firestore.collection('users').doc(responsebody['uid'].toString()).set({
+                                                  'email':email,
+                                                  'name':name,
+                                                  'image':'https://firebasestorage.googleapis.com/v0/b/work-book-62ba4.appspot.com/o/Images%2FNoImage.jpg?alt=media&token=74a4be84-df37-4510-b88e-431e980e608e',
+                                                  'uid':responsebody['uid'].toString(),
+                                                  'date':DateTime.now(),
+                                                });  
+                                          
+                                           shareEamil(responsebody['uid'].toString()).then((value) =>{
+                        Navigator.push( context,MaterialPageRoute(builder: (context) => AddUserInfo(
+                          currentUser:responsebody['uid'].toString(),
+                        ))),
+                      });
+                          }
+      
+
+          
        }
        
       else if (responsebody['NT']=='Email exists !')

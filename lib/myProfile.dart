@@ -220,10 +220,26 @@ Future<String> getEamil() async {
 
    late String pathes='NOooo';
 uploadImage() async {
-    // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
-    var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+    return await showDialog(context: context, 
+builder: (context){
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+    children: [
+              const SizedBox(height: 20),
 
-    if (pickedImage != null) {
+       Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+           var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+         if (pickedImage != null) {
       _file = File(pickedImage.path);
       final imageName=pickedImage.path.split("/").last;
        final path =pickedImage.path;
@@ -233,7 +249,9 @@ uploadImage() async {
 
         
          
-        sendToDB(imageName),
+        sendToDB(imageName).then((value) =>{
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false),
+        }),
 
        }
        );
@@ -246,16 +264,111 @@ uploadImage() async {
       );
       
     }
+              return;
+ 
+          }, 
+          icon: Icon(Icons.camera_alt_outlined),  //icon data for elevated button
+          label: Text("اللتقاط صورة ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 143, 140, 140)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+
+          Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+             var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+           if (pickedImage != null) {
+      _file = File(pickedImage.path);
+      final imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+       storage.uploadFile(path,imageName).then((value) =>
+       {
+
+        
+         
+        sendToDB(imageName).then((value){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false);
+        }),
+
+       }
+       );
+    
+    } else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image not selected'))
+      );
+      
+    }
+    return;
+           
+          }, 
+          icon: Icon(Icons.image),  //icon data for elevated button
+          label: Text(" اختر من المعرض ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 70, 6, 245)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+    ],
+  )
+  
+  
+  )
+  
+  ),
+
+);
+}
+
+);
   }
-
-  late File _filePost;
+late File _filePost;
  late final String imageName;
-uploadImagePost() async 
-{
-    // var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
-    var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
 
-    if (pickedImage != null) {
+Future<void> showcamera(BuildContext context)async{
+return await showDialog(context: context, 
+builder: (context){
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+    children: [
+              const SizedBox(height: 20),
+
+       Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+           var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+            if (pickedImage != null) {
       _filePost = File(pickedImage.path);
        imageName=pickedImage.path.split("/").last;
        final path =pickedImage.path;
@@ -281,7 +394,89 @@ uploadImagePost() async
       );
       
     }
-  }
+              return;
+ 
+          }, 
+          icon: Icon(Icons.camera_alt_outlined),  //icon data for elevated button
+          label: Text("اللتقاط صورة ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 143, 140, 140)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+
+          Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+             var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+              if (pickedImage != null) {
+      _filePost = File(pickedImage.path);
+       imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+   
+
+       print(imageName);
+       storage.uploadImagesPost(path,imageName).then((value) =>
+       {
+
+        print(' upload Image Post done'),
+         
+       
+       }
+       );
+   
+
+    } else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image not selected'))
+      );
+      
+    }
+    return;
+           
+          }, 
+          icon: Icon(Icons.image),  //icon data for elevated button
+          label: Text(" اختر من المعرض ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 70, 6, 245)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+    ],
+  )
+  
+  
+  )
+  
+  ),
+
+);
+}
+
+);
+}
+
 
 Future<void> showPost(BuildContext context)async{
 return await showDialog(context: context, 
@@ -369,6 +564,8 @@ Future sendToDB(String imagePath) async {
              var url = "http://192.168.0.114:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
+
+            
 
 }
 
@@ -483,6 +680,8 @@ Future sendPostToDB(String description,String imagepost ) async
                             if (snapshot.hasData)
                              {
                                 String NewUrl=snapshot.data!.toString();
+                                FirebaseFirestore.instance.collection('users').doc(UserId).update({'image':NewUrl});
+
                                 return  Center(
                               child: Stack(
                                 children: [
@@ -562,7 +761,7 @@ Future sendPostToDB(String description,String imagepost ) async
     
   }
 
-  Widget _buildStatus(BuildContext context ,String _status) {
+  Widget _buildStatus(BuildContext context ,String Work,String city,String phoneN ,String Salary) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
@@ -575,9 +774,9 @@ Future sendPostToDB(String description,String imagepost ) async
             
             children: <Widget>[
               ListTile(
-              title: Text( _status, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
+              title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.work),
-                    subtitle: Text(" Basic work"),
+                    subtitle: Text(" المهنة"),
                     isThreeLine: true,
                     dense: true,
                     onTap: (){},
@@ -585,23 +784,34 @@ Future sendPostToDB(String description,String imagepost ) async
                 ),
 
                  ListTile(
-              title: Text( 'الموقع', style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
+              title: Text(city, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.location_pin),
-                    subtitle: Text(" Location "),
+                    subtitle: Text(" المدينة "),
                     isThreeLine: true,
                     dense: true,
                     onTap: (){},
 
                 ),
  ListTile(
-              title: Text( '0569957891', style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
+              title: Text( phoneN, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.phone),
-                    subtitle: Text(" phone  "),
+                    subtitle: Text(" رقم الهاتف  "),
                     isThreeLine: true,
                     dense: true,
                     onTap: (){},
 
                 ),
+
+                 ListTile(
+              title: Text( Salary, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
+                    leading: Icon(Icons.attach_money),
+                    subtitle: Text(" اجرة العمل اليومي بالشيكل"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+
 
             ])
        
@@ -723,7 +933,7 @@ Future sendPostToDB(String description,String imagepost ) async
                       child: InkWell(
                           onTap: () {
 
-                                  uploadImagePost().then((value) =>
+                                  showcamera(context).then((value) =>
                                         {
 
                                           showPost(context),
@@ -785,15 +995,14 @@ Future sendPostToDB(String description,String imagepost ) async
 
 
 
-  Future <List<Postt>> getUserPosts() async {
+  Future<List> getUserPosts() async {
 
     final  url = "http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
-  
 
-    return responsebody.map((e) => Postt.fromJson(e)).toList();
+    return responsebody;
  
 
   }
@@ -801,6 +1010,27 @@ Future sendPostToDB(String description,String imagepost ) async
 
 
   Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+
+
+                      return  FutureBuilder<String>(
+                        future: storage.downloadURLPost(ImageURL),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String ImageURLPost=snapshot.data!.toString();
+
+
+
+                       return  FutureBuilder<String>(
+                        future: storage.downloadURL(ImageUserURL),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String UserPostURL=snapshot.data!.toString();
+
+                                  
   return Container(
     margin: const EdgeInsets.all(10.0),
     color: Color.fromARGB(255, 239, 245, 237),
@@ -811,7 +1041,7 @@ Future sendPostToDB(String description,String imagepost ) async
           ListTile(
                                       leading:CircleAvatar(
                 radius: 45, // Image radius
-                backgroundImage: NetworkImage('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1327&q=80'),
+                backgroundImage: NetworkImage(UserPostURL),
               ),
                         
                         title: Container(child: Text(namePost,style: TextStyle(fontSize: 18),)),
@@ -843,7 +1073,7 @@ Future sendPostToDB(String description,String imagepost ) async
           alignment: Alignment.center,
           children: [
             Ink.image(
-              image: NetworkImage(ImageURL),
+              image: NetworkImage(ImageURLPost),
             //  colorFilter: ColorFilters.greyscale,
               child: InkWell(
                 onTap: () {},
@@ -961,7 +1191,35 @@ Future sendPostToDB(String description,String imagepost ) async
 
   ),
   );
-           
+   
+                            } 
+                                                   
+                                                   
+                                                   
+                                                    else 
+                                                    {
+                                                      return Text('... جار اظهار منشوراتك ');
+                                                        //return CircularProgressIndicator();
+                                                    }
+                                                },  
+                                              );
+
+
+
+
+
+
+
+                               
+                            } 
+                                                    else 
+                                                    {
+                                                        return CircularProgressIndicator();
+                                                    }
+                                                },  
+                                              );
+                              
+         
   }
 
 
@@ -1013,7 +1271,7 @@ late String downloadURL;
                       _buildBio(context,snapshot.data['description'].toString()),
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['work'].toString()),
+                      _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
                       const SizedBox(height: 10.0),
                       //_buildButtons(),
@@ -1028,22 +1286,30 @@ late String downloadURL;
                         height: 10,
                       ),
 
-                      FutureBuilder<List<Postt>>(
+                      FutureBuilder<List>(
                                       future: getUserPosts(),
                                       builder: (context,snapshot){
-                                        print('snapshot.data post---------');
-                                        print(snapshot.data);
-                                         if (snapshot.hasData)
+
+                                       if (snapshot.hasData)
                                          {
-                                          ListView.builder(
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
-                                                  itemBuilder: (context, index) {
-                                                    return _buildStatPosts(snapshot.data![index].name.toString(),snapshot.data![index].description.toString(),snapshot.data![index].imageuser.toString(),snapshot.data![index].imagepost.toString(),snapshot.data![index].numberLike.toString(),snapshot.data![index].numberDisLike.toString(),snapshot.data![index].date.toString(),);
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                    print('snapshot.data![index][name] --');
+                                                     print(snapshot.data![index]['name'].toString());
+                                                     
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
                                                   },
                                                 );
                                          }
                                         
-                                               return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+                                     return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }

@@ -29,11 +29,15 @@ class SignIn extends StatelessWidget {
 }
 
 class Sign_In extends StatefulWidget {
+  
   @override
   _SignIn createState() => _SignIn();
 }
 
 class _SignIn extends State<Sign_In> {
+  
+
+  
   bool showPassword = false;
 
       final ControllerEmail = TextEditingController();
@@ -165,9 +169,9 @@ showAlertDialog(String textMessage) {
 
 
 
-
  GoogleSignIn googleSignIn = GoogleSignIn();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+ late UserCredential userCredential;
 
   Future signInwithGoogle()async{
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
@@ -180,12 +184,14 @@ showAlertDialog(String textMessage) {
       idToken: googleAuth.idToken
     );
 
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+     userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
 
    
-           CreatUser(userCredential.user!.email, userCredential.user!.displayName,userCredential.user!.photoURL);
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+           CreatUser(userCredential.user!.email, userCredential.user!.displayName,userCredential.user!.photoURL).then((value) =>{
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false),
+
+           } );
 
 
   }
@@ -204,8 +210,7 @@ showAlertDialog(String textMessage) {
 
        if (responsebody['NT']=='done')
        {
-        shareEamil(responsebody['uid'].toString());
-
+   
        await firestore.collection('users').doc(responsebody['uid'].toString()).set(
           {
       'email':email,
@@ -215,14 +220,20 @@ showAlertDialog(String textMessage) {
       'date':DateTime.now(),
          });
 
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+        shareEamil(responsebody['uid'].toString()).then((value) =>{
+                        Navigator.push( context,MaterialPageRoute(builder: (context) => MyApp())),
+                      });
+
+ 
+       
     }     
   
        
-      else if (responsebody['NT']=='Email exists !'&&userExist.exists)
+      else if (responsebody['NT']=='Email exists !'|| userExist.exists)
        {
-        shareEamil(responsebody['uid'].toString());
-       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MyApp()), (route) => false);
+      shareEamil(responsebody['uid'].toString()).then((value) =>{
+                        Navigator.push( context,MaterialPageRoute(builder: (context) => MyApp())),
+                      });
 
        }
      
