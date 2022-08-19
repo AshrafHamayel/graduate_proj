@@ -19,14 +19,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class mainPage extends StatefulWidget {
+   late final String currentUser;
+    mainPage
+    ({
+    required this.currentUser,
+  
+  });
 
   @override
   State<StatefulWidget> createState() {
-    return _mainState();
+    
+    return _mainState(
+      currentUser:currentUser,
+    );
   }
 }
 
 class _mainState extends State<mainPage> {
+
+  late final String currentUser;
+    _mainState
+    ({
+    required this.currentUser,
+  
+  });
   var _currentIndex = 2;
 
 
@@ -67,13 +83,17 @@ class _mainState extends State<mainPage> {
 
   getBodyWidget() {
     if (_currentIndex == 2) {
-      return home_Page();
+      return home_Page(
+        currentUser:currentUser,
+      );
     } else if (_currentIndex == 4) {
-        return myProfile();
+        return myProfile(
+           UserId:currentUser,
+        );
     }
      else if (_currentIndex == 3) 
      {
-     return HomeScreen();
+     return HomeScreen( );
     
     } 
     

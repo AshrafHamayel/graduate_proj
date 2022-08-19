@@ -27,20 +27,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../models/postModel.dart';
 
 class workerProfile extends StatelessWidget {
+  late final String UserId;
+   late final String CurrentUser;
+    workerProfile
+    ({
+    required this.UserId,
+   required this.CurrentUser,
+  });
   
-    out() async {
-SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.clear();
-
-
-  }
-  
+ 
   @override
   
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: UserProfile_Page(),
+      body: workerProfile_Page( UserId:UserId, CurrentUser:CurrentUser),
     
       appBar: AppBar(
         
@@ -65,9 +66,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
               Icons.arrow_forward,
               color: Colors.green,
             ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
+            onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MyApp()));
             },
           ),
         ],
@@ -79,7 +78,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             
             children: <Widget>[
               
-                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                UserAccountsDrawerHeader(accountName: Text(' ',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
                   currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
 
                  decoration:BoxDecoration(
@@ -90,15 +89,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
                 ),
                
-                 ListTile(
-                    title: Text("تغيير نوع العمل "),
-                    leading: Icon(Icons.work),
-                    subtitle: Text("change work"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
+               
                  ListTile(
                     title: Text(" تقديم شكوى "),
                     leading: Icon(Icons.drafts_sharp),
@@ -128,25 +119,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                   builder: (BuildContext context) => SettingsPage()));
                     },
                 ),
-              Center(
-              child: OutlinedButton(
-                
-                onPressed: () async {
-                              out();
-                             await GoogleSignIn().signOut();
-            await FirebaseAuth.instance.signOut();
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
-                },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0))),
-                ),
-                child: const Text("تسجيل الخروج",
-                    style: TextStyle(
-                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
-              ),
-            )
-
+         
 
             ],
 
@@ -160,49 +133,44 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   }
 }
 
-class UserProfile_Page extends StatefulWidget {
-  @override
-  _UserProfilePage createState() => _UserProfilePage();
-}
+class workerProfile_Page extends StatefulWidget {
 
-class _UserProfilePage extends State<UserProfile_Page> {
-
-  var UserId;
-     
-
+ late final String UserId;
+   late final String CurrentUser;
+    workerProfile_Page
+    ({
+    required this.UserId,
+   required this.CurrentUser,
+  });
   
-
-Widget buildd(BuildContext context) 
-{
-  return FutureBuilder(
-    future: getEamil(),
-    builder: (context, snapshot) {
-      
-      if (snapshot.hasData) {
-        
-        return UserId;
-      }
-      return CircularProgressIndicator(); // or some other widget
-    },
+  @override
+  _WorkerProfilePage createState() => _WorkerProfilePage(
+    UserId:UserId,
+   CurrentUser:CurrentUser,
   );
 }
-Future<String> getEamil() async {
-  SharedPreferences   preferences = await SharedPreferences.getInstance();
-    UserId = await preferences.getString("UserId");
-    print (' UID from home muProfile :');
-  print(preferences.getString("UserId"));
 
-     return UserId;
-  }
+class _WorkerProfilePage extends State<workerProfile_Page> {
 
+
+      late final String UserId;
+       late final String CurrentUser;
+    _WorkerProfilePage
+    ({
+    required this.UserId,
+   required this.CurrentUser,
+  }); 
+
+  
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://192.168.0.114:80/myProf/frindProf?frindId=$UserId&currentUser=$CurrentUser";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
-  
+       print('responsebody from line 167');
 
+     print(responsebody);
     return await responsebody;
  
 
@@ -210,16 +178,17 @@ Future<String> getEamil() async {
 
 
 
-
-
   final Storage storage=Storage();
+    final addPost AddPost=addPost();
+ 
+
+   late String pathes='NOooo';
 
 
-
+ late final String imageName;
 
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
 
   final imagepicker = ImagePicker();
 
@@ -248,33 +217,7 @@ Future<String> getEamil() async {
                     image: NetworkImage("$imagee")
                         )),
           ),
-          // Positioned(
-          //     bottom: 0,
-          //     right: 0,
-          //     child: Container(
-          //       height: 40,
-          //       width: 40,
-          //       decoration: BoxDecoration(
-          //         shape: BoxShape.circle,
-          //         border: Border.all(
-          //           width: 4,
-          //           color: Theme.of(context).scaffoldBackgroundColor,
-          //         ),
-          //         color: Colors.green,
-          //       ),
-          //       child: IconButton(
-          //         padding: EdgeInsets.all(3),
-          //         onPressed: () {
 
-          //             uploadImage();
-     
-          //         },
-          //         icon: const Icon(
-          //           Icons.edit,
-          //           color: Colors.white,
-          //         ),
-          //       ),
-          //     )),
         ],
       ),
     );
@@ -289,6 +232,8 @@ Future<String> getEamil() async {
                             if (snapshot.hasData)
                              {
                                 String NewUrl=snapshot.data!.toString();
+                                FirebaseFirestore.instance.collection('users').doc(UserId).update({'image':NewUrl});
+
                                 return  Center(
                               child: Stack(
                                 children: [
@@ -311,33 +256,7 @@ Future<String> getEamil() async {
                                             image: NetworkImage("$NewUrl")
                                                 )),
                                   ),
-                                  // Positioned(
-                                  //     bottom: 0,
-                                  //     right: 0,
-                                  //     child: Container(
-                                  //       height: 40,
-                                  //       width: 40,
-                                  //       decoration: BoxDecoration(
-                                  //         shape: BoxShape.circle,
-                                  //         border: Border.all(
-                                  //           width: 4,
-                                  //           color: Theme.of(context).scaffoldBackgroundColor,
-                                  //         ),
-                                  //         color: Colors.green,
-                                  //       ),
-                                  //       child: IconButton(
-                                  //         padding: EdgeInsets.all(3),
-                                  //         onPressed: () {
-
-                                  //             uploadImage();
-                            
-                                  //         },
-                                  //         icon: const Icon(
-                                  //           Icons.edit,
-                                  //           color: Colors.white,
-                                  //         ),
-                                  //       ),
-                                  //     )),
+                                  
                                 ],
                               ),
                             );
@@ -458,7 +377,7 @@ Future<String> getEamil() async {
     );
   }
 
-  Widget _buildStatContainer(String _followers ,String _Rating,String _Ifollow) {
+  Widget _buildStatContainer(String _followers ,String _Rating) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -468,9 +387,9 @@ Future<String> getEamil() async {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-            _buildStatItem("التقيم", _Rating),
+            _buildStatItem("التقييم", _Rating),
           _buildStatItem("المتابعون", _followers),
-         _buildStatItem("أتابعه", _Ifollow),
+        
         
           
         ],
@@ -497,15 +416,6 @@ Future<String> getEamil() async {
     );
   }
 
-  // Widget _buildSeparator(Size screenSize) {
-  //   return Container(
-  //     width: screenSize.width,
-  //     height: 2.0,
-  //     color: Colors.black54,
-  //     margin: const EdgeInsets.only(top: 4.0),
-  //   );
-  // }
-
   Widget _buildSeparator2(Size screenSize)
    {
     return Container(
@@ -527,8 +437,7 @@ Future<String> getEamil() async {
 
     return responsebody;
  
-
-  }
+}
 
 
 
@@ -625,7 +534,10 @@ Future<String> getEamil() async {
                                 children: <Widget>[
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+
+
+                                      },
                                       child: Container(
                                         decoration: BoxDecoration(
                                             border: Border(
@@ -744,8 +656,65 @@ Future<String> getEamil() async {
                               
          
   }
+bool pressAttention = true;
+Widget _buildButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: () => {
 
-
+                 setState(() => pressAttention = !pressAttention),
+              },
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  color: pressAttention ? Color(0xFF404A5C) : Colors.blue,
+                ),
+                child: pressAttention ? Center(
+                  child: Text( "متابعة",style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ) :Center(
+                  child: Text( "تمت المتابعة",style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+            child: InkWell(
+              onTap: () => {},
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "مراسلة",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 late String downloadURL;
 
   @override
@@ -755,12 +724,7 @@ late String downloadURL;
     Size screenSize = MediaQuery.of(context).size;
     
 
-  return FutureBuilder(
-    future: getEamil(),
-    builder: (context, snapshot) {
-      
-      if (snapshot.hasData) {
-        
+
          return Container (
       
       child: Scaffold(
@@ -795,16 +759,14 @@ late String downloadURL;
                       _buildSeparator2(screenSize),
 
                       _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
-                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
+                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString()),
                       const SizedBox(height: 10.0),
-                      //_buildButtons(),
+                      _buildButtons(),
                       const SizedBox(height: 8.0),
                     //  _buildSeparator2(screenSize),
                       SizedBox(
                         height: 10,
                       ),
-                   
-
                       SizedBox(
                         height: 10,
                       ),
@@ -832,12 +794,16 @@ late String downloadURL;
                                          }
                                         
                                      return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
-                               
+                                // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
-         
+          //  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+
+                      // _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
+                      //  _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
+                      //   _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
                     ],
                   ),
                 ),
@@ -892,13 +858,6 @@ late String downloadURL;
         ),
       ),
     ); 
-       
-      }
-      return CircularProgressIndicator(); // or some other widget
-    },
-  );
-
-
      
    
   }

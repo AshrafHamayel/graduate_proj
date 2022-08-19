@@ -13,6 +13,7 @@ import 'chat_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
+  
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -68,7 +69,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             
             children: <Widget>[
               
-                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
                   currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
 
                  decoration:BoxDecoration(
@@ -79,15 +80,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
                 ),
                
-                 ListTile(
-                    title: Text("تغيير نوع العمل "),
-                    leading: Icon(Icons.work),
-                    subtitle: Text("change work"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
+              
                  ListTile(
                     title: Text(" تقديم شكوى "),
                     leading: Icon(Icons.drafts_sharp),

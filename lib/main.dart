@@ -13,6 +13,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
     {
       // DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       // UserModel userModel = UserModel.fromJson(userData);
-      return mainPage();
+      return mainPage(
+        currentUser:UserId,
+      );
     }
     else
     {

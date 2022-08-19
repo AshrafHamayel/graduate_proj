@@ -27,6 +27,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../models/postModel.dart';
 
 class myProfile extends StatelessWidget {
+  late final String UserId;
+    myProfile
+    ({
+    required this.UserId,
+  
+  });
   
     out() async {
 SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -40,7 +46,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: UserProfile_Page(),
+      body: UserProfile_Page( UserId:UserId,),
     
       appBar: AppBar(
         
@@ -79,7 +85,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             
             children: <Widget>[
               
-                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                UserAccountsDrawerHeader(accountName: Text(' ',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
                   currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
 
                  decoration:BoxDecoration(
@@ -161,39 +167,53 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 }
 
 class UserProfile_Page extends StatefulWidget {
+
+    late final String UserId;
+    UserProfile_Page
+    ({
+    required this.UserId,
+  
+  });
   @override
-  _UserProfilePage createState() => _UserProfilePage();
+  _UserProfilePage createState() => _UserProfilePage(
+    UserId:UserId,
+  );
 }
 
 class _UserProfilePage extends State<UserProfile_Page> {
 
-  var UserId;
-     
+
+      late final String UserId;
+    _UserProfilePage
+    ({
+    required this.UserId,
+  
+  }); 
 
   
 
-Widget buildd(BuildContext context) 
-{
-  return FutureBuilder(
-    future: getEamil(),
-    builder: (context, snapshot) {
+// Widget buildd(BuildContext context) 
+// {
+//   return FutureBuilder(
+//     future: getEamil(),
+//     builder: (context, snapshot) {
       
-      if (snapshot.hasData) {
+//       if (snapshot.hasData) {
         
-        return UserId;
-      }
-      return CircularProgressIndicator(); // or some other widget
-    },
-  );
-}
-Future<String> getEamil() async {
-  SharedPreferences   preferences = await SharedPreferences.getInstance();
-    UserId = await preferences.getString("UserId");
-    print (' UID from home muProfile :');
-  print(preferences.getString("UserId"));
+//         return UserId;
+//       }
+//       return CircularProgressIndicator(); // or some other widget
+//     },
+//   );
+// }
+// Future<String> getEamil() async {
+//   SharedPreferences   preferences = await SharedPreferences.getInstance();
+//     UserId = await preferences.getString("UserId");
+//     print (' UID from home muProfile :');
+//   print(preferences.getString("UserId"));
 
-     return UserId;
-  }
+//      return UserId;
+//   }
 
   Future <void>getInfo() async {
 
@@ -250,7 +270,7 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value) =>{
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false),
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
         }),
 
        }
@@ -302,7 +322,7 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
         }),
 
        }
@@ -593,7 +613,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
       
     }); 
-         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile()), (route) => false);
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
 
        }
 
@@ -1232,12 +1252,7 @@ late String downloadURL;
     Size screenSize = MediaQuery.of(context).size;
     
 
-  return FutureBuilder(
-    future: getEamil(),
-    builder: (context, snapshot) {
-      
-      if (snapshot.hasData) {
-        
+
          return Container (
       
       child: Scaffold(
@@ -1373,13 +1388,6 @@ late String downloadURL;
         ),
       ),
     ); 
-       
-      }
-      return CircularProgressIndicator(); // or some other widget
-    },
-  );
-
-
      
    
   }

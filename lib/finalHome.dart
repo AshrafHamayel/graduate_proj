@@ -1,13 +1,30 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_logic_in_create_state, camel_case_types, use_key_in_widget_constructors, import_of_legacy_library_into_null_safe, deprecated_member_use, sized_box_for_whitespace, empty_catches
+import 'dart:convert';
+
+import 'package:graduate_proj/workerProfile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'Chats/models/user_model.dart';
 import 'workersDetails.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart'as Path;
+import 'storage_sercice.dart';
+import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class home_Page extends StatelessWidget {
+
+ 
+ late final String currentUser;
+    home_Page
+    ({
+    required this.currentUser,
+  
+  });
 
 
   _launchURL() async {
@@ -44,6 +61,30 @@ class home_Page extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
+//----------------------------Building---------------------------------------
+
+Future<List> getUsersBuilding() async
+  {
+    String TypeUser='Building';
+    final  url = "http://192.168.0.114:80/usersInfo/usersBuilding";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body) as List<dynamic>;
+    return responsebody;
+  }
+//-----------------------water and electricity-------------------------------
+
+Future<List> getUsersWaterAndElectricity() async
+  {
+    String TypeUser='WaterAndElectricity';
+    final  url = "http://192.168.0.114:80/usersInfo/usersWaterAndElectricity";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
+    return responsebody;
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -412,27 +453,79 @@ class home_Page extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
                 child: Text(
-                  "عمال بناء",
+                  "قسم البناء ",
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
               Container(
                 height: 202,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                  ],
-                ),
+                child: FutureBuilder<List>(
+                                      future: getUsersBuilding(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
                 child: Text(
-                  "عمال كهرباء",
+                  "قسم التمديدات الكهربائية و الصحية ",
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
+              ),
+              Container(
+                height: 202,
+                child: FutureBuilder<List>(
+                                      future: getUsersWaterAndElectricity(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
+              ),
+              Divider(color: Colors.white),
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
+                child: Text(
+                  "قسم الدهان و ديكورات الجبصين ",
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
@@ -441,10 +534,10 @@ class home_Page extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
                   ],
                 ),
               ),
@@ -452,7 +545,7 @@ class home_Page extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
                 child: Text(
-                  "عمال بلاط",
+                  "قسم البلاط ",
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
@@ -461,10 +554,10 @@ class home_Page extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
                   ],
                 ),
               ),
@@ -472,7 +565,7 @@ class home_Page extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
                 child: Text(
-                  "عمال دهان",
+                  "مهن اخرى متنوعة ",
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
@@ -481,30 +574,10 @@ class home_Page extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                  ],
-                ),
-              ),
-              Divider(color: Colors.white),
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text(
-                  "خدمات اخرى",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
-              ),
-              Container(
-                height: 202,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
-                    buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
+                    // buildCard(context),
                   ],
                 ),
               ),
@@ -518,86 +591,157 @@ class home_Page extends StatelessWidget {
     );
   }
 }
+  final Storage storage=Storage();
+  
+Widget buildCard(BuildContext context ,String ImageUser ,String NameUser,String WorkUser,String IdUser,String currentUser) {
 
-Widget buildCard(BuildContext context) {
-  return Card(
-    elevation: 5,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Container(
-      width: MediaQuery.of(context).size.width - 220,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
-        textDirection: TextDirection.rtl,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                children: [
-                  // SizedBox(
-                  //   height: 2,
-                  // ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.green,
-                      backgroundImage: NetworkImage(
-                          "https://img2.arabpng.com/20180903/gvk/kisspng-construction-worker-hard-hats-laborer-getting-a-jo-serviceguru-powerful-job-management-software-for-5b8d7378d664e5.1323450915359967928782.jpg"),
-                    ),
-                  ),
-                  // SizedBox(
-                  //   height: 5,
-                  // ),
-                  Text(
-                    "الاسم",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  // SizedBox(
-                  //   height: 1,
-                  // ),
-                  Text(
-                    "المهنة",
-                    style: TextStyle(
-                        fontSize: 14, color: Colors.black.withOpacity(0.5)),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => WorkersData(),
-                          ),
-                        );
-                      },
-                      color: Colors.red[200],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        'تواصل ',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+return FutureBuilder<String>(
+                        future: storage.downloadURL(ImageUser),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String NewUrl=snapshot.data!.toString();
+
+                                  return Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width - 220,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                      child: Row(
+                                        textDirection: TextDirection.rtl,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        children: [
+                                          // SizedBox(
+                                          //   height: 2,
+                                          // ),
+                                          Container(
+                                            height: 50,
+                                            width: 50,
+                                            child:  CircleAvatar(
+                                              backgroundColor: Colors.green,
+                                              foregroundColor: Colors.green,
+                                              backgroundImage:NetworkImage(NewUrl),
+                                            ),
+                                          ),
+                                          // SizedBox(
+                                          //   height: 5,
+                                          // ),
+                                          Text(
+                                            NameUser,
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          // SizedBox(
+                                          //   height: 1,
+                                          // ),
+                                          Text(
+                                            WorkUser,
+                                            style: TextStyle(
+                                                fontSize: 14, color: Colors.black.withOpacity(0.5)),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                            child: FlatButton(
+                                              onPressed: () {
+
+                                        
+                                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:IdUser , CurrentUser:currentUser,)), (route) => false);
+
+
+                                              },
+                                              color: Color.fromARGB(255, 141, 137, 137),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                ' تواصل ',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+
+
+                                                          
+                           } 
+                                                  
+                       return Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width - 220,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                      child: Row(
+                                        textDirection: TextDirection.rtl,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        children: [
+                                          // SizedBox(
+                                          //   height: 2,
+                                          // ),
+                                          // SizedBox(
+                                          //   height: 5,
+                                          // ),
+                                          Text(
+                                            'جار التحميل',
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          SizedBox(
+                                            height:30,
+                                          ),
+                                         
+                                          Container(
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                           child: Material(
+                                                  child: CircularProgressIndicator(),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );   
+                                                  
+                                                },  
+                                              );
+
+
+
+
 }

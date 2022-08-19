@@ -468,12 +468,14 @@ class _WorkersState extends State<Workers> {
                         child: FlatButton(
                           onPressed: () {
 
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    workerProfile(),
-                              ),
-                            );
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (BuildContext context) =>
+                            //         workerProfile(
+
+                            //         ),
+                            //   ),
+                            // );
                           },
                           color: Colors.red[200],
                           shape: RoundedRectangleBorder(
