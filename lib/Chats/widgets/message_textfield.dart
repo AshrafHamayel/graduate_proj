@@ -8,6 +8,7 @@ class MessageTextField extends StatefulWidget {
   final String currentId;
   final String friendId;
   final String friendToken;
+  
   MessageTextField(this.currentId,this.friendId,this.friendToken);
 
   @override
