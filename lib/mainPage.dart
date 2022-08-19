@@ -20,6 +20,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class mainPage extends StatefulWidget {
    late final String currentUser;
+   
     mainPage
     ({
     required this.currentUser,

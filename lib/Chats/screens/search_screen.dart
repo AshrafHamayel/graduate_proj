@@ -208,7 +208,9 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                              currentUser: widget.user, 
                              friendId: searchResult[index]['uid'],
                               friendName: searchResult[index]['name'],
-                               friendImage: searchResult[index]['image'])));
+                               friendImage: searchResult[index]['image'],
+                               friendToken: searchResult[index]['token'],
+                               )));
                     }, icon: Icon(Icons.wechat_outlined ,size: 35,)),
                   );
                 }))

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 class MessageTextField extends StatefulWidget {
   final String currentId;
   final String friendId;
-
-  MessageTextField(this.currentId,this.friendId);
+  final String friendToken;
+  MessageTextField(this.currentId,this.friendId,this.friendToken);
 
   @override
   _MessageTextFieldState createState() => _MessageTextFieldState();

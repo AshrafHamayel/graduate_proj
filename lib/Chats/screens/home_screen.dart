@@ -179,7 +179,10 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                             currentUser: user,
                              friendId: friend['uid'],
                               friendName: friend['name'],
-                               friendImage: friend['image'])));
+                               friendImage: friend['image'],
+                                friendToken: friend['token'],
+                               
+                               )));
                         },
                       ),
                       
