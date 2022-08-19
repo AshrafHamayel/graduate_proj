@@ -124,6 +124,7 @@ else{
                                                   'name':name,
                                                   'image':'https://firebasestorage.googleapis.com/v0/b/work-book-62ba4.appspot.com/o/Images%2FNoImage.jpg?alt=media&token=74a4be84-df37-4510-b88e-431e980e608e',
                                                   'uid':responsebody['uid'].toString(),
+                                                  'token':responsebody['token'].toString(),
                                                   'date':DateTime.now(),
                                                 });  
                                           

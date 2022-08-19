@@ -142,6 +142,7 @@ showAlertDialog(String textMessage) {
       'name':responsebody['name'].toString(),
       'image':responsebody['imegUrl'].toString(),
       'uid':responsebody['uid'].toString(),
+       'token':responsebody['token'].toString(),
       'date':DateTime.now(),
     });
     
@@ -217,6 +218,8 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
       'name':name,
       'image':imge,
       'uid':responsebody['uid'].toString(),
+     'token':responsebody['token'].toString(),
+
       'date':DateTime.now(),
          });
 

@@ -176,6 +176,21 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
 
   }
 
+ Future <void>setfollow() async {
+
+    var url = await"http://192.168.0.114:80/myProf/setFollow?frindId=$UserId&currentUser=$CurrentUser";
+
+    var response = await http.get(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+       print('responsebody from line 167');
+
+     print(responsebody);
+    return await responsebody;
+ 
+
+  }
+
+
 
 
   final Storage storage=Storage();
