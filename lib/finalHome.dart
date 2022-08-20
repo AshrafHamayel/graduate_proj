@@ -61,25 +61,121 @@ class home_Page extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
-//----------------------------Building---------------------------------------
+  //----------------------------Get Name sec user---------------------------------------
 
-Future<List> getUsersBuilding() async
+Future getNameUserSec() async
   {
-    String TypeUser='Building';
-    final  url = "http://192.168.0.114:80/usersInfo/usersBuilding";
+    
+    final  url = "http://192.168.0.114:80/usersInfo/userSec?currentUser=$currentUser";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+    return responsebody['NT'];
+  }
+
+//----------------------------Get Name Secand sec ---------------------------------------
+
+Future getNameSecandSec() async
+  {
+    
+    final  url = "http://192.168.0.114:80/usersInfo/getNameSecandSec?currentUser=$currentUser";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+    return responsebody['NT'];
+  }
+
+//----------------------------Get Name Third sec ---------------------------------------
+
+Future getNameThirdSec() async
+  {
+    
+    final  url = "http://192.168.0.114:80/usersInfo/getNameThirdSec?currentUser=$currentUser";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+    return responsebody['NT'];
+  }
+
+//----------------------------Get Name Fourth sec ---------------------------------------
+
+Future getNameFourthSec() async
+  {
+    
+    final  url = "http://192.168.0.114:80/usersInfo/getNameFourthSec?currentUser=$currentUser";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+    return responsebody['NT'];
+  }
+
+
+//----------------------------Get Name Fifth sec ---------------------------------------
+
+// Future getNameFifthSec() async
+//   {
+    
+//     final  url = "http://192.168.0.114:80/usersInfo/getNameFifthSec?currentUser=$currentUser";
+//     final  response = await http.get(Uri.parse(url));
+//     final  responsebody =  json.decode(response.body);
+//     return responsebody['NT'];
+//   }
+
+
+// //----------------------------Get Name Sixth sec ---------------------------------------
+
+// Future getNameSixthSec() async
+//   {
+    
+//     final  url = "http://192.168.0.114:80/usersInfo/getNameSixthSec?currentUser=$currentUser";
+//     final  response = await http.get(Uri.parse(url));
+//     final  responsebody =  json.decode(response.body);
+//     return responsebody['NT'];
+//   }
+
+
+
+
+
+
+//-----------------------------Get users same sec---------------------------------------
+
+Future<List> getUsersSameSec() async
+  {
+   
+    final  url = "http://192.168.0.114:80/usersInfo/usersSameSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
-    return responsebody;
+    
+    return responsebody.reversed.toList();
   }
-//-----------------------water and electricity-------------------------------
 
-Future<List> getUsersWaterAndElectricity() async
+//----------------------------get Users Second Sec---------------------------------------
+
+Future<List> getUsersSecondSec() async
+  {
+    String TypeUser='Building';
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersSecondSec";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody =  json.decode(response.body) as List<dynamic>;
+    return responsebody.reversed.toList();
+  }
+//-----------------------get Users Third Sec-------------------------------
+
+Future<List> getUsersThirdSec() async
   {
     String TypeUser='WaterAndElectricity';
-    final  url = "http://192.168.0.114:80/usersInfo/usersWaterAndElectricity";
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersThirdSec";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
-    return responsebody;
+    return responsebody.reversed.toList();
+  }
+
+//-----------------------get Users Fourth Sec-------------------------------
+
+Future<List> getUsersFourthSec() async
+  {
+    String TypeUser='WaterAndElectricity';
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersFourthSec";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
+    return responsebody.reversed.toList();
   }
 
 
@@ -452,15 +548,29 @@ Future<List> getUsersWaterAndElectricity() async
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                child: Text(
-                  "قسم البناء ",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
+                child: FutureBuilder(
+                                      future: getNameUserSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return Text(snapshot.data.toString() ,
+                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                    );
+                                                                            }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Container(
                 height: 202,
                 child: FutureBuilder<List>(
-                                      future: getUsersBuilding(),
+                                      future: getUsersSameSec(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -488,15 +598,29 @@ Future<List> getUsersWaterAndElectricity() async
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                child: Text(
-                  "قسم التمديدات الكهربائية و الصحية ",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
+                child: FutureBuilder(
+                                      future: getNameSecandSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return Text(snapshot.data.toString() ,
+                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                    );
+                                                                            }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Container(
                 height: 202,
                 child: FutureBuilder<List>(
-                                      future: getUsersWaterAndElectricity(),
+                                      future: getUsersSecondSec(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -524,50 +648,107 @@ Future<List> getUsersWaterAndElectricity() async
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text(
-                  "قسم الدهان و ديكورات الجبصين ",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
+                child: FutureBuilder(
+                                      future: getNameThirdSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return Text(snapshot.data.toString() ,
+                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                    );
+                                                                            }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Container(
                 height: 202,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                  ],
-                ),
+                child: FutureBuilder<List>(
+                                      future: getUsersThirdSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text(
-                  "قسم البلاط ",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
+                child: FutureBuilder(
+                                      future: getNameFourthSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return Text(snapshot.data.toString() ,
+                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                    );
+                                                                            }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Container(
                 height: 202,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                  ],
-                ),
+                child: FutureBuilder<List>(
+                                      future: getUsersFourthSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text(
-                  "مهن اخرى متنوعة ",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
+                child: Text('مهن اخرى متنوعة',style: TextStyle(fontSize: 25, color: Colors.white), ),
               ),
               Container(
                 height: 202,
