@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -66,7 +66,8 @@ class workerProfile extends StatelessWidget {
               Icons.arrow_forward,
               color: Colors.green,
             ),
-            onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MyApp()));
+            onPressed: () {  Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MyApp()));
             },
           ),
         ],
@@ -161,7 +162,8 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
    required this.CurrentUser,
   }); 
 
-  
+ late bool pressAttention=true;
+
   Future <void>getInfo() async {
 
     var url = await"http://192.168.0.114:80/myProf/frindProf?frindId=$UserId&currentUser=$CurrentUser";
@@ -170,7 +172,11 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
     var responsebody = json.decode(response.body);
        print('responsebody from line 167');
 
-     print(responsebody);
+    //   print(responsebody);
+    //  if(responsebody['pressAttention'].toString()=='true')
+    //  pressAttention=true;
+    //  if(responsebody['pressAttention'].toString()=='false')
+    //  pressAttention=false;
     return await responsebody;
  
 
@@ -180,11 +186,14 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
 
     var url = await"http://192.168.0.114:80/myProf/setFollow?frindId=$UserId&currentUser=$CurrentUser";
 
-    var response = await http.get(Uri.parse(url));
-    var responsebody = json.decode(response.body);
-       print('responsebody from line 167');
-
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+       print('responsebody from setfollow');
      print(responsebody);
+    // if(responsebody['pressAttention'].toString()=='true')
+    //  pressAttention=true;
+    //  if(responsebody['pressAttention'].toString()=='false')
+    //  pressAttention=false;
     return await responsebody;
  
 
@@ -671,7 +680,6 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
                               
          
   }
-bool pressAttention = true;
 Widget _buildButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -680,7 +688,30 @@ Widget _buildButtons() {
           Expanded(
             child: InkWell(
               onTap: () => {
+                //  FutureBuilder(
+                //                       future: setfollow(),
+                //                       builder: (context,snapshot){
 
+                //                        if (snapshot.hasData)
+                //                          {
+                //                                  if(snapshot.data!.toString()=='true')
+                //                                             pressAttention=false;
+                //                                             else
+                //                                               pressAttention=true;
+                //                           setState(() => pressAttention = !pressAttention);
+
+                //                         return Text('... جار اظهار  ');
+                                        
+                //                          }
+                                        
+                                     
+                //                return CircularProgressIndicator(); // or some other widget
+
+                                        
+                //                       }
+                //                     ),
+
+                 setfollow(),
                  setState(() => pressAttention = !pressAttention),
               },
               child: Container(
