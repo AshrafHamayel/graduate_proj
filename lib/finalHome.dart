@@ -7,7 +7,6 @@ import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'workersDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart'as Path;
 import 'storage_sercice.dart';
@@ -106,34 +105,6 @@ Future getNameFourthSec() async
   }
 
 
-//----------------------------Get Name Fifth sec ---------------------------------------
-
-// Future getNameFifthSec() async
-//   {
-    
-//     final  url = "http://192.168.0.114:80/usersInfo/getNameFifthSec?currentUser=$currentUser";
-//     final  response = await http.get(Uri.parse(url));
-//     final  responsebody =  json.decode(response.body);
-//     return responsebody['NT'];
-//   }
-
-
-// //----------------------------Get Name Sixth sec ---------------------------------------
-
-// Future getNameSixthSec() async
-//   {
-    
-//     final  url = "http://192.168.0.114:80/usersInfo/getNameSixthSec?currentUser=$currentUser";
-//     final  response = await http.get(Uri.parse(url));
-//     final  responsebody =  json.decode(response.body);
-//     return responsebody['NT'];
-//   }
-
-
-
-
-
-
 //-----------------------------Get users same sec---------------------------------------
 
 Future<List> getUsersSameSec() async
@@ -142,7 +113,7 @@ Future<List> getUsersSameSec() async
     final  url = "http://192.168.0.114:80/usersInfo/usersSameSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
-    
+
     return responsebody.reversed.toList();
   }
 
@@ -150,7 +121,7 @@ Future<List> getUsersSameSec() async
 
 Future<List> getUsersSecondSec() async
   {
-    String TypeUser='Building';
+   
     final  url = "http://192.168.0.114:80/usersInfo/getUsersSecondSec";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
@@ -160,7 +131,7 @@ Future<List> getUsersSecondSec() async
 
 Future<List> getUsersThirdSec() async
   {
-    String TypeUser='WaterAndElectricity';
+    
     final  url = "http://192.168.0.114:80/usersInfo/getUsersThirdSec";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -171,13 +142,24 @@ Future<List> getUsersThirdSec() async
 
 Future<List> getUsersFourthSec() async
   {
-    String TypeUser='WaterAndElectricity';
+   
     final  url = "http://192.168.0.114:80/usersInfo/getUsersFourthSec";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
     return responsebody.reversed.toList();
   }
 
+
+//-----------------------get Users Fifth Sec-------------------------------
+
+Future<List> getUsersFifthhSec() async
+  {
+    
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersFifthhSec";
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
+    return responsebody.reversed.toList();
+  }
 
 
 
@@ -752,15 +734,31 @@ Future<List> getUsersFourthSec() async
               ),
               Container(
                 height: 202,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                    // buildCard(context),
-                  ],
-                ),
+                child:FutureBuilder<List>(
+                                      future: getUsersFifthhSec(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
               ),
               SizedBox(
                 height: 10,

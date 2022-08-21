@@ -10,9 +10,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
+import 'Chats/screens/chat_screen.dart';
+import 'Chats/screens/home_screen.dart';
 import 'EditProfile.dart';
+import 'Ratings.dart';
 import 'SettingsPage.dart';
-import 'addPost.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -150,10 +152,11 @@ class workerProfile_Page extends StatefulWidget {
    CurrentUser:CurrentUser,
   );
 }
-
+     late UserModel Frind;
+    late UserModel currentUser1;
 class _WorkerProfilePage extends State<workerProfile_Page> {
 
-
+   
       late final String UserId;
        late final String CurrentUser;
     _WorkerProfilePage
@@ -203,7 +206,6 @@ var responsebody = json.decode(response.body);
 
 
   final Storage storage=Storage();
-    final addPost AddPost=addPost();
  
 
    late String pathes='NOooo';
@@ -323,6 +325,22 @@ var responsebody = json.decode(response.body);
     shrinkWrap: true,
             
             children: <Widget>[
+
+              ListTile(
+              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 25, 0, 255), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.star,size: 50,color: Color.fromARGB(255, 204, 206, 125),),
+                    subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => false);
+
+
+                    },
+
+                ),
+                
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.work),
@@ -401,7 +419,7 @@ var responsebody = json.decode(response.body);
     );
   }
 
-  Widget _buildStatContainer(String _followers ,String _Rating) {
+  Widget _buildStatContainer(String _followers ) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -411,7 +429,7 @@ var responsebody = json.decode(response.body);
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-            _buildStatItem("التقييم", _Rating),
+          
           _buildStatItem("المتابعون", _followers),
         
         
@@ -459,7 +477,7 @@ var responsebody = json.decode(response.body);
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
 
-    return responsebody;
+    return responsebody.reversed.toList();
  
 }
 
@@ -657,7 +675,7 @@ var responsebody = json.decode(response.body);
                                                    
                                                     else 
                                                     {
-                                                      return Text('... جار اظهار منشوراتك ');
+                                                      return Text('بانتظار التحميل ...');
                                                         //return CircularProgressIndicator();
                                                     }
                                                 },  
@@ -680,6 +698,25 @@ var responsebody = json.decode(response.body);
                               
          
   }
+
+
+  
+    
+    Future<void>  navigateToNextScreen() async
+    {
+
+          DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(CurrentUser).get();
+       
+          currentUser1 = UserModel.fromJson(userData);
+
+          DocumentSnapshot userData2 = await FirebaseFirestore.instance.collection('users').doc(UserId).get();
+
+          Frind = UserModel.fromJson(userData2);
+               
+        
+    }
+
+
 Widget _buildButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -739,7 +776,21 @@ Widget _buildButtons() {
           const SizedBox(width: 10.0),
           Expanded(
             child: InkWell(
-              onTap: () => {},
+              onTap: () => {
+                     
+                   
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(
+
+                             currentUser:currentUser1, 
+                             friendId: Frind.uid,
+                              friendName: Frind.name,
+                               friendImage: Frind.image,
+                               friendToken: Frind.token,
+                               ))),
+
+
+
+              },
               child: Container(
                 height: 40.0,
                 decoration: BoxDecoration(
@@ -769,7 +820,7 @@ late String downloadURL;
        
     Size screenSize = MediaQuery.of(context).size;
     
-
+    navigateToNextScreen();
 
          return Container (
       
@@ -798,14 +849,14 @@ late String downloadURL;
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
 
-
+                       
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
                       _buildSeparator2(screenSize),
 
                       _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
-                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString()),
+                      _buildStatContainer(snapshot.data['followers'].toString()),
                       const SizedBox(height: 10.0),
                       _buildButtons(),
                       const SizedBox(height: 8.0),
@@ -839,17 +890,13 @@ late String downloadURL;
                                                 );
                                          }
                                         
-                                     return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+                                     return Text('لم يقم هذا المستخدم  بنشر اي منشور بعد '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
-          //  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
-
-                      // _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
-                      //  _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
-                      //   _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
+         
                     ],
                   ),
                 ),

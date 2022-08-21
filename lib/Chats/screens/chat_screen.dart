@@ -3,10 +3,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import '../../ratingPage.dart';
+import '../../workerProfile.dart';
 import '../models/user_model.dart';
 import '../widgets/message_textfield.dart';
 import '../widgets/single_message.dart';
 import 'home_screen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 
 class ChatScreen extends StatelessWidget {
   final UserModel currentUser;
@@ -23,9 +28,11 @@ class ChatScreen extends StatelessWidget {
     required this.friendToken,
 
   });
-  
+
   @override
+  
   Widget build(BuildContext context) {
+      bool evaluati;
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
 
@@ -35,16 +42,20 @@ class ChatScreen extends StatelessWidget {
              SizedBox(width: 20,),
             Text(friendName,style: TextStyle(fontSize: 20),),
            SizedBox(width: 12,),
-            ClipRRect(
-                          borderRadius: BorderRadius.circular(120),
-                          child: CachedNetworkImage(
-                            imageUrl:friendImage,
-                            placeholder: (conteext,url)=>CircularProgressIndicator(),
-                            errorWidget: (context,url,error)=>Icon(Icons.error,),
-                            height: 44,
-                            width: 44,
-                          ),
-                        ),
+           CircleAvatar(
+                radius: 22, // Image radius
+                backgroundImage: NetworkImage(friendImage),
+              ),
+            // ClipRRect(
+            //               borderRadius: BorderRadius.circular(120),
+            //               child: CachedNetworkImage(
+            //                 imageUrl:friendImage,
+            //                 placeholder: (conteext,url)=>CircularProgressIndicator(),
+            //                 errorWidget: (context,url,error)=>Icon(Icons.error,),
+            //                 height: 44,
+            //                 width: 44,
+            //               ),
+            //             ),
            
            
           ],
@@ -70,11 +81,16 @@ class ChatScreen extends StatelessWidget {
 
        drawer: Drawer(
         
-          child: ListView(
+          child: StreamBuilder(
+               stream: FirebaseFirestore.instance.collection("users").doc(currentUser.uid).collection('messages').doc(friendId).collection('chats').orderBy("date",descending: true).snapshots(),
+               builder: (context,AsyncSnapshot snapshot){
+                   if(snapshot.hasData){
+                     if(snapshot.data.docs.length < 1){
+                       return ListView(
             
             children: <Widget>[
               
-                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
                   currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
 
                  decoration:BoxDecoration(
@@ -86,39 +102,96 @@ class ChatScreen extends StatelessWidget {
                 ),
                
                  ListTile(
-                    title: Text("تغيير نوع العمل "),
-                    leading: Icon(Icons.work),
-                    subtitle: Text("change work"),
+                    title: Text(" عرض الملف الشخصي",style: TextStyle(fontSize: 19),),
+                    leading: Icon(Icons.visibility_outlined),
+                    subtitle: Text(" عرض المستخدم"),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
+                    onTap: (){
+
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,)), (route) => false);
+
+                    },
 
                 ),
-                 ListTile(
-                    title: Text(" تقديم شكوى "),
-                    leading: Icon(Icons.drafts_sharp),
-                    subtitle: Text(" Make a complaint"),
+                 
+               ListTile(
+                    title:Text("غير مصرح لك التقييم ",style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 233, 18, 18)),),
+                    leading: Icon(Icons.elevator_outlined),
+                    subtitle: Text("قم بالتواصل مع هذا المستخدم اولا"),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
+                    onTap: (){
+
+
+                    },
 
                 ),
-              ListTile(
-                    title: Text("  موقعي "),
-                    leading: Icon(Icons.edit_location_alt_sharp),
-                    subtitle: Text(" My location"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
-             
+                 
            
 
 
             ],
 
-          ),
+          );
+                     }
+                   
+                     return ListView(
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
+                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
+
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+                 ListTile(
+                    title: Text(" عرض الملف الشخصي",style: TextStyle(fontSize: 19),),
+                    leading: Icon(Icons.visibility_outlined),
+                    subtitle: Text(" عرض المستخدم"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,)), (route) => false);
+
+                    },
+
+                ),
+                 
+               ListTile(
+                    title:Text(" تقييم المستخدم",style: TextStyle(fontSize: 19,color: Color.fromARGB(255, 8, 1, 39)),),
+                    leading: Icon(Icons.elevator_outlined),
+                    subtitle: Text(" قم بتقييم هذا المستخدم"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myRating( UserId:currentUser.uid,FrindId:friendId)), (route) => false);
+          
+
+                    },
+
+                ),
+                 
+           
+
+
+            ],
+
+          );
+                   }
+                   return Center(
+                     child: CircularProgressIndicator()
+                   );
+               }),
 
 
       ),
@@ -142,15 +215,18 @@ class ChatScreen extends StatelessWidget {
                builder: (context,AsyncSnapshot snapshot){
                    if(snapshot.hasData){
                      if(snapshot.data.docs.length < 1){
+                      
                        return Center(
                          child: Text("Say Hi"),
                        );
                      }
                      return ListView.builder(
+                      
                        itemCount: snapshot.data.docs.length,
                        reverse: true,
                        physics: BouncingScrollPhysics(),
                        itemBuilder: (context,index){
+                        evaluati=true;
                           bool isMe = snapshot.data.docs[index]['senderId'] == currentUser.uid;
                           return SingleMessage(message: snapshot.data.docs[index]['message'], isMe: isMe);
                        });
@@ -173,4 +249,10 @@ class ChatScreen extends StatelessWidget {
     
     
   }
+
+
+
+
+
 }
+

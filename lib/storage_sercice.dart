@@ -37,6 +37,21 @@ class Storage {
         }
 
 
+         Future<void> uploadImagesComits
+        (
+          String filePath,
+          String fileName,
+        ) async{
+          File file =File(filePath);
+          try{
+            await storage.ref('Comits/$fileName').putFile(file);
+          } on firebase_core.FirebaseException catch (e){
+            print(e);
+          }
+        }
+
+
+
         Future<firebase_storage.ListResult> listFiles()async{
              firebase_storage.ListResult results =await storage.ref('Images').listAll();
              results.items.forEach((firebase_storage.Reference ref)
@@ -61,6 +76,11 @@ class Storage {
           return downloadURL;
         }
         
+        Future<String>downloadURLComits(String imageName)async{
+          String downloadURL =await storage.ref('Comits/$imageName').getDownloadURL();
+          //print(downloadURL);
+          return downloadURL;
+        }
 
 
         

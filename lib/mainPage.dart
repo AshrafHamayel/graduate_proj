@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:graduate_proj/Chats/models/user_model.dart';
 import 'package:graduate_proj/Chats/screens/home_screen.dart';
 import 'package:graduate_proj/posts.dart';
-import 'chat/screens/chats/chats_screen.dart';
 import 'finalHome.dart';
 import 'homePage.dart';
 import 'main-grid.dart';
@@ -99,7 +98,7 @@ class _mainState extends State<mainPage> {
     } 
     
     else if (_currentIndex == 1) {
-      return Post();
+      return Post(UserId:currentUser,);
     } else if (_currentIndex == 0) {
       return Workers();
     } else {

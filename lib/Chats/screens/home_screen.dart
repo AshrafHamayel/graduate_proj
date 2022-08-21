@@ -160,16 +160,10 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                       return Directionality(textDirection: TextDirection.rtl, 
                       
                       child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(80),
-                          child: CachedNetworkImage(
-                            imageUrl:friend['image'],
-                            placeholder: (conteext,url)=>CircularProgressIndicator(),
-                            errorWidget: (context,url,error)=>Icon(Icons.error,),
-                            height: 55,
-                            width: 55,
+                        leading: CircleAvatar(
+                            radius: 45, // Image radius
+                            backgroundImage: NetworkImage(friend['image']),
                           ),
-                        ),
                         title: Text(friend['name'],style: TextStyle(fontSize: 18),),
                         subtitle: Container(
                           child: Text("$lastMsg",style: TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis,),

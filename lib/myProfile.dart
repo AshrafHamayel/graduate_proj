@@ -11,8 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
+import 'Ratings.dart';
 import 'SettingsPage.dart';
-import 'addPost.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -25,7 +25,7 @@ import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
 import '../models/postModel.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class myProfile extends StatelessWidget {
   late final String UserId;
     myProfile
@@ -233,7 +233,6 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
 
   final Storage storage=Storage();
-    final addPost AddPost=addPost();
  
 
   late File _file;
@@ -793,6 +792,24 @@ Future sendPostToDB(String description,String imagepost ) async
     shrinkWrap: true,
             
             children: <Widget>[
+
+             
+             ListTile(
+              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 25, 0, 255), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.star,size: 50,color: Color.fromARGB(255, 204, 206, 125),),
+                    subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => false);
+
+
+                    },
+
+                ),
+
+
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.work),
@@ -871,7 +888,7 @@ Future sendPostToDB(String description,String imagepost ) async
     );
   }
 
-  Widget _buildStatContainer(String _followers ,String _Rating,String _Ifollow) {
+  Widget _buildStatContainer(String _followers ,String _Ifollow) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -881,7 +898,7 @@ Future sendPostToDB(String description,String imagepost ) async
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-            _buildStatItem("التقيم", _Rating),
+          
           _buildStatItem("المتابعون", _followers),
          _buildStatItem("أتابعه", _Ifollow),
         
@@ -1022,7 +1039,7 @@ Future sendPostToDB(String description,String imagepost ) async
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
 
-    return responsebody;
+    return responsebody.reversed.toList();
  
 
   }
@@ -1059,7 +1076,7 @@ Future sendPostToDB(String description,String imagepost ) async
     child: Column(
       children: [
           ListTile(
-                                      leading:CircleAvatar(
+                leading:CircleAvatar(
                 radius: 45, // Image radius
                 backgroundImage: NetworkImage(UserPostURL),
               ),
@@ -1218,7 +1235,7 @@ Future sendPostToDB(String description,String imagepost ) async
                                                    
                                                     else 
                                                     {
-                                                      return Text('... جار اظهار منشوراتك ');
+                                                      return Text('بانتظار التحميل ...');
                                                         //return CircularProgressIndicator();
                                                     }
                                                 },  
@@ -1287,7 +1304,7 @@ late String downloadURL;
                       _buildSeparator2(screenSize),
 
                       _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
-                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['evaluation'].toString(),snapshot.data['Ifollow'].toString()),
+                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
                       const SizedBox(height: 10.0),
                       //_buildButtons(),
                       const SizedBox(height: 8.0),

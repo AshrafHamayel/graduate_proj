@@ -1,7 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, sized_box_for_whitespace, prefer_const_constructors, deprecated_member_use, prefer_const_literals_to_create_immutables, unused_import, unused_element, non_constant_identifier_names, avoid_unnecessary_containers, prefer_final_fields, unused_field, camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:graduate_proj/workersDetails.dart';
 import 'package:path/path.dart';
 
 import 'Chats/models/user_model.dart';
