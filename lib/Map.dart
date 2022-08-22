@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,6 +12,9 @@ import 'package:graduate_proj/mainPage.dart';
 import 'package:graduate_proj/posts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'mainPage.dart';
+import 'package:path/path.dart'as Path;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class myMap extends StatefulWidget {
   @override
@@ -85,6 +87,20 @@ class newMap extends State<myMap> {
     setState(() {});
   }
 
+
+ Future SendMyPos() async {
+
+    final  url = "http://192.168.0.114:80/search/TESTSearch?LAT=$lat&LONG=$long";
+
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) ;
+
+    return responsebody;
+ 
+
+  }
+
+
   @override
   void initState() {
     getPer();
@@ -99,9 +115,11 @@ class newMap extends State<myMap> {
 
     super.initState();
   }
-
+    
   @override
+  
   Widget build(BuildContext context) {
+  
     return Container(
         child: Directionality(
       textDirection: TextDirection.rtl,
@@ -138,12 +156,15 @@ class newMap extends State<myMap> {
                 onPressed: () {
                   LatLng? laln = LatLng(lat!, long!);
                   myPos = PointLatLng(laln.latitude, laln.longitude);
-                  getPolyline();
+                 SendMyPos();
+
+
+
                   // gmc!.animateCamera(CameraUpdate.newCameraPosition(
                   //     CameraPosition(
                   //         target: laln, zoom: 16, tilt: 30, bearing: 30)));
                 },
-                child: Text("get my pos."),
+                child: Text("Send  my pos. to DB"),
               )
             ],
           ),

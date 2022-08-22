@@ -1,8 +1,12 @@
 
   // ignore_for_file: use_key_in_widget_constructors, camel_case_types, library_private_types_in_public_api, non_constant_identifier_names, deprecated_member_use, prefer_const_constructors, unused_local_variable, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduate_proj/storage_sercice.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -74,8 +78,47 @@ class _AddUserInfo extends State<AddUser_Info> {
 //      return UserId;
 //   }
   final Storage storage=Storage();
+Future getPer() async {
+    bool ser;
+    LocationPermission per;
+    ser = await Geolocator.isLocationServiceEnabled();
+    if (ser == false) {
+      // ignore: avoid_single_cascade_in_expression_statements
+      AwesomeDialog(
+          context: context,
+          //  title: Text("services"),
+          body: Text("S not enabled"))
+        ..show();
+    }
+    per = await Geolocator.requestPermission();
+    if (per == LocationPermission.denied)
+      per = await Geolocator.requestPermission();
+
+    return per;
+  }
+
+
+
+  late Position myP;
+  double? lat, long;
+
+  Future<void> getLatAndLong() async {
+    myP = await Geolocator.getCurrentPosition().then((value) => value);
+    lat = myP.latitude;
+    long = myP.longitude;
+    
+   
+  }
+
 
  Future CreatUser(String Work, String Description, String PhoneNumber ,String Salary,String City )async {
+
+
+  print('lat');
+    print(lat);
+    print('long');
+    print(long);
+
                     if(Work+"--"=="--")
                         ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل نوع العمل رجاءً')) );
@@ -100,7 +143,7 @@ class _AddUserInfo extends State<AddUser_Info> {
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/addInfoUser?UserId=$currentUser&Work=$Work&Description=$Description&PhoneNumber=$PhoneNumber&Salary=$Salary&City=$City&Iterest1=$checked";
+       var url = "http://192.168.0.114:80/signUp/addInfoUser?UserId=$currentUser&Work=$Work&Description=$Description&PhoneNumber=$PhoneNumber&Salary=$Salary&City=$City&&LAT=$lat&LONG=$long";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -176,6 +219,8 @@ else{
   }
   @override
   Widget build(BuildContext context) {
+      getPer();
+  getLatAndLong();
     return Scaffold(
 
       appBar: AppBar(
@@ -224,74 +269,81 @@ else{
                     
               buildTextField("..., نوع العمل : بناء ,  دهان  , قصارة , بليط", "ex@gmail.com", false ,ControllerWork),
                buildTextField("صف نفسك", "الاسم", false ,ControllerDescription),
-              buildTextField(" رقم الهاتف", "********", true , ControllerPhoneNumber),
-              buildTextField(" الاجرة اليومية بالشيكل", "********", true , ControllerSalary),
-                buildTextField(" المدينة", "********", true , ControllerCity),
-                ListTile(
-                                leading: Icon(Icons.app_registration_rounded),
-                                title: Text(
-                                  'رجاءا اختر الامور التي تهتم بها',
-                                  textDirection: TextDirection.rtl,
-                                ),
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    enableDrag: true,
-                                    isDismissible: true,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(24),
-                                        topRight: Radius.circular(24),
-                                      ),
-                                    ),
-                                    barrierColor: Colors.grey.withOpacity(0.2),
-                                    context: context,
-                                    builder: (context) => Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Container(
-                                            height: 3.0,
-                                            width: 40.0,
-                                            color: Color(0xFF32335C)),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color:
-                                                    Colors.grey.withOpacity(.3),
-                                              ),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 30,
-                                              ),
-                                              Text(
-                                                ' اختر اهتماماتك',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(10),
-                                        ),
-                                        Column(
-                                          children: [
-                                            for (int i = 0; i < 8; i++)
-                                              _buildcheckbox(checked[i], typeOfWork[i], i),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
+              buildTextField(" رقم الهاتف", "********", false , ControllerPhoneNumber),
+              buildTextField(" الاجرة اليومية بالشيكل", "********", false , ControllerSalary),
+              buildTextField(" ادخل مكان سكنك", "********", false , ControllerCity),
+
+         
+         Text( 'رجاءا قم بتفعيل خاصية GPS لحفظ موقعك', textDirection: TextDirection.rtl, style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 34, 1, 155)),),
+
+
+
+
+                // ListTile(
+                //                 leading: Icon(Icons.app_registration_rounded),
+                //                 title: Text(
+                //                   'رجاءا اختر الامور التي تهتم بها',
+                //                   textDirection: TextDirection.rtl,
+                //                 ),
+                //                 onTap: () {
+                //                   showModalBottomSheet(
+                //                     enableDrag: true,
+                //                     isDismissible: true,
+                //                     shape: RoundedRectangleBorder(
+                //                       borderRadius: BorderRadius.only(
+                //                         topLeft: Radius.circular(24),
+                //                         topRight: Radius.circular(24),
+                //                       ),
+                //                     ),
+                //                     barrierColor: Colors.grey.withOpacity(0.2),
+                //                     context: context,
+                //                     builder: (context) => Column(
+                //                       mainAxisSize: MainAxisSize.min,
+                //                       children: <Widget>[
+                //                         SizedBox(
+                //                           height: 8,
+                //                         ),
+                //                         Container(
+                //                             height: 3.0,
+                //                             width: 40.0,
+                //                             color: Color(0xFF32335C)),
+                //                         Container(
+                //                           decoration: BoxDecoration(
+                //                             border: Border(
+                //                               bottom: BorderSide(
+                //                                 color:
+                //                                     Colors.grey.withOpacity(.3),
+                //                               ),
+                //                             ),
+                //                           ),
+                //                           child: Row(
+                //                             children: [
+                //                               SizedBox(
+                //                                 width: 30,
+                //                               ),
+                //                               Text(
+                //                                 ' اختر اهتماماتك',
+                //                                 style: TextStyle(
+                //                                   fontSize: 15,
+                //                                 ),
+                //                               ),
+                //                             ],
+                //                           ),
+                //                         ),
+                //                         Padding(
+                //                           padding: EdgeInsets.all(10),
+                //                         ),
+                //                         Column(
+                //                           children: [
+                //                             for (int i = 0; i < 8; i++)
+                //                               _buildcheckbox(checked[i], typeOfWork[i], i),
+                //                           ],
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   );
+                //                 },
+                //               ),
 
 
 
@@ -306,6 +358,9 @@ else{
                   SizedBox(width: 50,),
                   RaisedButton(
                     onPressed: () async{
+
+
+                   
                     
                        await CreatUser(ControllerWork.text,ControllerDescription.text,ControllerPhoneNumber.text,ControllerSalary.text,ControllerCity.text);
 

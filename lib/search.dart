@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 import 'Chats/models/user_model.dart';
 import 'main.dart';
 import 'workerProfile.dart';
-
+import 'Map.dart';
 class Workers extends StatefulWidget {
  
   @override
@@ -15,17 +15,23 @@ class Workers extends StatefulWidget {
 enum cities { everywhere, mycity }
 
 class _WorkersState extends State<Workers> {
-  List<bool?> checked = [false, false, false, false, false, false];
+  List<bool?> checked = [false, false, false, false, false, false,false, false, false, false, false, false,false, false];
   List<String> typeOfWork =
    [
     "عامل بناء",
     "عامل دهان",
     "عامل بلاط",
     "منسق حدائق",
-    "عتال"
+    "عتال",
+     "عامل دهان",
+    "عامل بلاط",
+    "منسق حدائق",
+    "عتال",
   ];
   List<String> myCH = [
     "اي مكان",
+    "بيتا",
+     "اي مكان",
     "بيتا",
   ];
   cities? _city = cities.everywhere;
@@ -185,7 +191,7 @@ class _WorkersState extends State<Workers> {
                                                 fontSize: 15),
                                           ),
                                           onPressed: () {
-                                            for (int i = 0; i < 6; i++) {
+                                            for (int i = 0; i <14; i++) {
                                               checked[i] = false;
                                             }
                                             _city = cities.everywhere;
@@ -229,7 +235,7 @@ class _WorkersState extends State<Workers> {
                                         ),
                                         Container(
                                             height: 3.0,
-                                            width: 40.0,
+                                            width: 100.0,
                                             color: Color(0xFF32335C)),
                                         Container(
                                           decoration: BoxDecoration(
@@ -305,6 +311,7 @@ class _WorkersState extends State<Workers> {
                                 },
                               ),
                               ListTile(
+                                
                                 leading: Icon(Icons.handyman_outlined),
                                 title: Text(
                                   'العمل',
@@ -312,6 +319,7 @@ class _WorkersState extends State<Workers> {
                                 ),
                                 onTap: () {
                                   showModalBottomSheet(
+                                   
                                     enableDrag: true,
                                     isDismissible: true,
                                     shape: RoundedRectangleBorder(
@@ -323,8 +331,10 @@ class _WorkersState extends State<Workers> {
                                     barrierColor: Colors.grey.withOpacity(0.2),
                                     context: context,
                                     builder: (context) => Column(
+                                      
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
+                                        
                                         SizedBox(
                                           height: 8,
                                         ),
@@ -333,6 +343,7 @@ class _WorkersState extends State<Workers> {
                                             width: 40.0,
                                             color: Color(0xFF32335C)),
                                         Container(
+                                          
                                           decoration: BoxDecoration(
                                             border: Border(
                                               bottom: BorderSide(
@@ -359,10 +370,10 @@ class _WorkersState extends State<Workers> {
                                           padding: EdgeInsets.all(10),
                                         ),
                                         Column(
+                                           
                                           children: [
-                                            for (int i = 0; i < 5; i++)
-                                              _buildcheckbox(
-                                                  checked[i], typeOfWork[i], i),
+                                             for (int i = 0; i < 5; i++) 
+                                              _buildcheckbox(checked[i], typeOfWork[i], i),
                                           ],
                                         ),
                                       ],
@@ -467,14 +478,7 @@ class _WorkersState extends State<Workers> {
                         child: FlatButton(
                           onPressed: () {
 
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (BuildContext context) =>
-                            //         workerProfile(
-
-                            //         ),
-                            //   ),
-                            // );
+                            Navigator.of(context).push( MaterialPageRoute( builder: (BuildContext context) =>myMap( )));
                           },
                           color: Colors.red[200],
                           shape: RoundedRectangleBorder(
