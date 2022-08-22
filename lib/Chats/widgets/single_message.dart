@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-
 class SingleMessage extends StatelessWidget {
   final String message;
   final bool isMe;

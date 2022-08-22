@@ -428,36 +428,37 @@ late String downloadURL;
                         height: 50,
                       ),
                        Text('التقييمات التي تم حفظها ',style: TextStyle(fontSize: 20),),
-                      FutureBuilder<List>(
+                     
+                       Container(
+                height: 440,
+                child: FutureBuilder<List>(
                                       future: getUserComits(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
                                          {
                                            
-                                         return Column(
-                                              children: [
-                                                ListView.builder(
+                                         return ListView.builder(
                                             scrollDirection: Axis.vertical,
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString());
+                                           return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString());
                                                   },
-                                                ),
-                                              ],
-
-                                          );
+                                                );
                                          }
                                         
-                                     return Text('لا يوجد اي تعليق'); // or some other widget
+                                   return  Text('  '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
+              ),
+                     
+                     
      
                     ],
                   ),
@@ -467,7 +468,7 @@ late String downloadURL;
           );
             }
           return Center(      
-                  child: CircularProgressIndicator(),
+                  child: Text('  '),
 
 
                   );

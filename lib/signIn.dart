@@ -5,14 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'SignUpOptions.dart';
 import 'signup.dart';
 import 'main.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'myProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(SignIn());

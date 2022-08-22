@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:graduate_proj/storage_sercice.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'main.dart';
 import 'signIn.dart';
 //void main() => runApp(AddUserInfo());

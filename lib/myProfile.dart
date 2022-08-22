@@ -14,7 +14,6 @@ import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
 import 'main.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
@@ -496,10 +495,11 @@ return AlertDialog(
 );
 }
 
-
 Future<void> showPost(BuildContext context)async{
 return await showDialog(context: context, 
 builder: (context){
+
+  
   final TextEditingController _textController =TextEditingController();
 return AlertDialog(
   content: Form(child: Directionality(textDirection: TextDirection.rtl,
@@ -515,7 +515,7 @@ return AlertDialog(
         ),
         decoration:InputDecoration(hintText:"ادخل وصف"),
       ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 20),
 
       Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -526,8 +526,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.30,
+                  width: MediaQuery.of(context).size.width * 0.41,
+                  height: MediaQuery.of(context).size.height * 0.14,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -780,7 +780,15 @@ Future sendPostToDB(String description,String imagepost ) async
     
   }
 
-  Widget _buildStatus(BuildContext context ,String Work,String city,String phoneN ,String Salary) {
+  Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary) {
+    
+              bool RTI=false;
+            if(RT=='false'||RT=='NaN'||RT=='0')
+           {
+            RTI =true;
+           }
+           
+               
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
@@ -793,8 +801,21 @@ Future sendPostToDB(String description,String imagepost ) async
             
             children: <Widget>[
 
-             
+             RTI?
              ListTile(
+              title: Text( ' لا يمكن عرض التقييمات', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 26, 25, 25),),
+                    subtitle: Text("لم يقم اي شخص بتقييمك بعد",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                      
+
+
+                    },
+
+                ):ListTile(
               title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 25, 0, 255), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
                     leading: Icon(Icons.star,size: 50,color: Color.fromARGB(255, 204, 206, 125),),
                     subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
@@ -802,7 +823,7 @@ Future sendPostToDB(String description,String imagepost ) async
                     dense: true,
                     onTap: (){
 
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => false);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => true);
 
 
                     },
@@ -812,7 +833,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.work),
+                    leading: Icon(Icons.handyman,size: 30,color: Color.fromARGB(255, 35, 36, 17),),
                     subtitle: Text(" المهنة"),
                     isThreeLine: true,
                     dense: true,
@@ -822,7 +843,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
                  ListTile(
               title: Text(city, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.location_pin),
+                    leading: Icon(Icons.location_pin,size: 30,color: Color.fromARGB(255, 8, 20, 187),),
                     subtitle: Text(" المدينة "),
                     isThreeLine: true,
                     dense: true,
@@ -831,7 +852,7 @@ Future sendPostToDB(String description,String imagepost ) async
                 ),
  ListTile(
               title: Text( phoneN, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.phone),
+                    leading: Icon(Icons.phone,size: 30,color: Color.fromARGB(255, 34, 23, 59),),
                     subtitle: Text(" رقم الهاتف  "),
                     isThreeLine: true,
                     dense: true,
@@ -841,7 +862,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
                  ListTile(
               title: Text( Salary, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.attach_money),
+                    leading: Icon(Icons.attach_money,size: 30,color: Color.fromARGB(255, 22, 53, 29),),
                     subtitle: Text(" اجرة العمل اليومي بالشيكل"),
                     isThreeLine: true,
                     dense: true,
@@ -1258,7 +1279,33 @@ Future sendPostToDB(String description,String imagepost ) async
                               
          
   }
+  Widget buildResultRating(String RE){
+        print('RE =');
+        print(RE);
 
+           if(RE=='false'||RE=='NaN'||RE=='0')
+           {
+            return  Text('-',style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 209, 8, 18)),);
+           }
+           
+               else{
+
+                 var Rea = double.parse(RE);
+                return RatingBar.builder(
+                initialRating: Rea,
+                minRating: 1,
+                itemSize: 25,
+                itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
+                updateOnDrag: true,
+                onRatingUpdate:(rating) => setState(() {}),
+
+              );
+
+               }
+         
+
+  }
+  
 
 late String downloadURL;
 
@@ -1301,9 +1348,10 @@ late String downloadURL;
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
+                         buildResultRating(snapshot.data['evaluation'].toString()),
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
+                      _buildStatus(context,snapshot.data['evaluation'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
                       const SizedBox(height: 10.0),
                       //_buildButtons(),
@@ -1317,8 +1365,9 @@ late String downloadURL;
                       SizedBox(
                         height: 10,
                       ),
-
-                      FutureBuilder<List>(
+                            Container(
+                height: 400,
+                child: FutureBuilder<List>(
                                       future: getUserPosts(),
                                       builder: (context,snapshot){
 
@@ -1332,25 +1381,20 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                    print('snapshot.data![index][name] --');
-                                                     print(snapshot.data![index]['name'].toString());
-                                                     
                                                 return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
                                                   },
                                                 );
                                          }
                                         
-                                     return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+                                     return  Text('  '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
-          //  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+              ),
 
-                      // _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
-                      //  _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
-                      //   _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
+
                     ],
                   ),
                 ),

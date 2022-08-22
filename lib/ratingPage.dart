@@ -371,7 +371,7 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
                       } 
                                                     else 
                                                     {
-                                                        return CircularProgressIndicator();
+                                                        return  Text('  ');
                                                     }
                                                 },  
                                               );
@@ -577,7 +577,7 @@ return AlertDialog(
         ),
         decoration:InputDecoration(hintText:"ادخل وصف"),
       ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 20),
 
       Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -588,8 +588,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.30,
+                  width: MediaQuery.of(context).size.width * 0.41,
+                  height: MediaQuery.of(context).size.height * 0.14,
                   image:FileImage(_fileComit),
                   child: InkWell(
                     onTap: () {
@@ -782,16 +782,17 @@ late String downloadURL;
                         height: 50,
                       ),
                        Text('تقييمات اخرى لهذا المستخدم ',style: TextStyle(fontSize: 20),),
-                      FutureBuilder<List>(
+                    
+                        Container(
+                height: 440,
+                child: FutureBuilder<List>(
                                       future: getUserComits(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
                                          {
                                            
-                                         return Column(
-                                              children: [
-                                                ListView.builder(
+                                         return ListView.builder(
                                             scrollDirection: Axis.vertical,
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
@@ -800,18 +801,19 @@ late String downloadURL;
                                      
                                                 return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString());
                                                   },
-                                                ),
-                                              ],
-
-                                          );
+                                                );
                                          }
                                         
-                                     return Text('لا يوجد اي تعليق'); // or some other widget
+                                     return  Text('  '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
+              ),
+                    
+                    
+                    
      
                     ],
                   ),
@@ -821,7 +823,7 @@ late String downloadURL;
           );
             }
           return Center(      
-                  child: CircularProgressIndicator(),
+                  child:  Text('  '),
 
 
                   );

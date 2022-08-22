@@ -3,13 +3,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduate_proj/EditProfile.dart';
-import 'package:graduate_proj/myProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'PasswordCH.dart';
-import 'main-grid.dart';
 import 'main.dart';
-import 'mainPage.dart';
+
 
 class SettingsPage extends StatefulWidget {
   @override

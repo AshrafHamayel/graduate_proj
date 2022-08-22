@@ -1,16 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../../ratingPage.dart';
 import '../../workerProfile.dart';
 import '../models/user_model.dart';
 import '../widgets/message_textfield.dart';
 import '../widgets/single_message.dart';
 import 'home_screen.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 
 
 class ChatScreen extends StatelessWidget {

@@ -14,7 +14,6 @@ import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
 import 'main.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
@@ -383,6 +382,8 @@ return AlertDialog(
 Future<void> showPost(BuildContext context)async{
 return await showDialog(context: context, 
 builder: (context){
+
+  
   final TextEditingController _textController =TextEditingController();
 return AlertDialog(
   content: Form(child: Directionality(textDirection: TextDirection.rtl,
@@ -398,7 +399,7 @@ return AlertDialog(
         ),
         decoration:InputDecoration(hintText:"ادخل وصف"),
       ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 20),
 
       Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -409,8 +410,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.30,
+                  width: MediaQuery.of(context).size.width * 0.41,
+                  height: MediaQuery.of(context).size.height * 0.14,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -523,16 +524,16 @@ Future sendPostToDB(String description,String imagepost ) async
       child: Stack(
         children: [
           Container(
-            width: 130,
-            height: 130,
+            width: 100,
+            height: 100,
             decoration: BoxDecoration(
                 border: Border.all(
                     width: 4, color: Theme.of(context).scaffoldBackgroundColor),
                 boxShadow: [
                   BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 5,
+                      blurRadius: 20,
+                      color: Colors.black.withOpacity(0.3),
                       offset: const Offset(0, 10))
                 ],
                 shape: BoxShape.circle,
@@ -562,16 +563,16 @@ Future sendPostToDB(String description,String imagepost ) async
                               child: Stack(
                                 children: [
                                   Container(
-                                    width: 130,
-                                    height: 130,
+                                    width: 100,
+                                    height: 100,
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             width: 4, color: Theme.of(context).scaffoldBackgroundColor),
                                         boxShadow: [
                                           BoxShadow(
-                                              spreadRadius: 2,
-                                              blurRadius: 10,
-                                              color: Colors.black.withOpacity(0.1),
+                                              spreadRadius: 5,
+                                              blurRadius: 20,
+                                              color: Colors.black.withOpacity(0.3),
                                               offset: const Offset(0, 10))
                                         ],
                                         shape: BoxShape.circle,
@@ -594,6 +595,21 @@ Future sendPostToDB(String description,String imagepost ) async
                               
     }
    
+  }
+
+  Widget _buildFullName( String _fullName) {
+    TextStyle _nameTextStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 28.0,
+      fontWeight: FontWeight.w700,
+    );
+
+  
+         return Text(
+      _fullName,
+      style: _nameTextStyle,
+    );
+    
   }
 
 
@@ -659,15 +675,15 @@ Future sendPostToDB(String description,String imagepost ) async
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Icon(
-                                  Icons.add_box,
-                                  color: Colors.grey,
+                                  Icons.camera_alt_outlined,
+                                  color: Color.fromARGB(255, 7, 40, 226),
                                 ),
                                 Padding(padding: EdgeInsets.only(right: 10)),
                                 Text(
                                   'اضف منشور',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 15),
+                                      color: Color.fromARGB(255, 70, 9, 238), fontSize: 15,fontWeight:FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -693,14 +709,14 @@ Future sendPostToDB(String description,String imagepost ) async
 
 
 
-  Future<List> getUserPosts() async {
+  Future<List> getPosts() async {
 
     final  url = "http://192.168.0.114:80/addPost/allPosts?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
 
-    return responsebody.reversed.toList();
+    return responsebody;
  
 
   }
@@ -912,7 +928,7 @@ Future sendPostToDB(String description,String imagepost ) async
                             } 
                                                     else 
                                                     {
-                                                        return CircularProgressIndicator();
+                                                        return Text(' ');
                                                     }
                                                 },  
                                               );
@@ -956,9 +972,10 @@ late String downloadURL;
 
 
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
-                    
+
+                      _buildFullName(snapshot.data["name"].toString()),
                       
-                      _buildSeparator2(screenSize),
+                     
 
                      
                       const SizedBox(height: 10.0),
@@ -973,9 +990,10 @@ late String downloadURL;
                       SizedBox(
                         height: 10,
                       ),
-
-                      FutureBuilder<List>(
-                                      future: getUserPosts(),
+                   Container(
+                height: 440,
+                child: FutureBuilder<List>(
+                                      future: getPosts(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -988,25 +1006,20 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                    print('snapshot.data![index][name] --');
-                                                     print(snapshot.data![index]['name'].toString());
-                                                     
                                                 return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
                                                   },
                                                 );
                                          }
                                         
-                                     return Text('لم تقم بنشر اي منشور بعد '); // or some other widget
+                                     return Text(' ...جار التحميل '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
-          //  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
-
-                      // _buildStatPosts('https://blog.educationalgate.com/uploads/images/image_750x_5ddcde6d9eddf.jpg','3','5'),
-                      //  _buildStatPosts('https://pbs.twimg.com/media/E2KAN8-WUAA1ZZp.jpg:large','10','50'),
-                      //   _buildStatPosts('https://cdn.molhem.com/public/articles/4852/main/16096694781191141585-4852.jpg','14','73'),
+              ),
+                     
+          
                     ],
                   ),
                 ),

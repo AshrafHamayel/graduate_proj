@@ -837,7 +837,7 @@ return FutureBuilder<String>(
                                               onPressed: () {
 
                                         
-                                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:IdUser , CurrentUser:currentUser,)), (route) => false);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:IdUser , CurrentUser:currentUser,)), (route) => true);
 
 
                                               },

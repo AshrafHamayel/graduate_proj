@@ -11,7 +11,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'addUserInfo.dart';
-import 'main.dart';
 import 'signIn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 void main() => runApp(SignupPage());

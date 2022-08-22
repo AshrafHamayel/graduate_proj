@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
@@ -16,7 +17,6 @@ import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
 import 'main.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
@@ -74,7 +74,7 @@ class workerProfile extends StatelessWidget {
           ),
         ],
       ),
-//Directionality
+//Directionality 
       drawer: Drawer(
         
           child: ListView(
@@ -313,7 +313,15 @@ var responsebody = json.decode(response.body);
     
   }
 
-  Widget _buildStatus(BuildContext context ,String Work,String city,String phoneN ,String Salary) {
+  Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary) {
+
+     bool RTI=false;
+            if(RT=='false'||RT=='NaN'||RT=='0')
+           {
+            RTI =true;
+           }
+           
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
@@ -326,15 +334,28 @@ var responsebody = json.decode(response.body);
             
             children: <Widget>[
 
-              ListTile(
-              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 25, 0, 255), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
+                RTI?
+             ListTile(
+              title: Text( ' لا يمكن عرض التقييمات', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 26, 25, 25),),
+                    subtitle: Text("لم يقم اي شخص بتقييمه بعد",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                      
+
+                    },
+
+                ):ListTile(
+              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 35, 207, 87), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
                     leading: Icon(Icons.star,size: 50,color: Color.fromARGB(255, 204, 206, 125),),
                     subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
                     isThreeLine: true,
                     dense: true,
                     onTap: (){
 
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => false);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => true);
 
 
                     },
@@ -343,7 +364,7 @@ var responsebody = json.decode(response.body);
                 
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.work),
+                    leading: Icon(Icons.handyman,size: 30,color: Color.fromARGB(255, 35, 36, 17),),
                     subtitle: Text(" المهنة"),
                     isThreeLine: true,
                     dense: true,
@@ -353,7 +374,7 @@ var responsebody = json.decode(response.body);
 
                  ListTile(
               title: Text(city, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.location_pin),
+                    leading: Icon(Icons.location_pin,size: 30,color: Color.fromARGB(255, 8, 20, 187),),
                     subtitle: Text(" المدينة "),
                     isThreeLine: true,
                     dense: true,
@@ -362,7 +383,7 @@ var responsebody = json.decode(response.body);
                 ),
  ListTile(
               title: Text( phoneN, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.phone),
+                    leading: Icon(Icons.phone,size: 30,color: Color.fromARGB(255, 34, 23, 59),),
                     subtitle: Text(" رقم الهاتف  "),
                     isThreeLine: true,
                     dense: true,
@@ -372,7 +393,7 @@ var responsebody = json.decode(response.body);
 
                  ListTile(
               title: Text( Salary, style: const TextStyle( color: Colors.black, fontSize: 15.0,fontWeight: FontWeight.w300, ), ),
-                    leading: Icon(Icons.attach_money),
+                    leading: Icon(Icons.attach_money,size: 30,color: Color.fromARGB(255, 22, 53, 29),),
                     subtitle: Text(" اجرة العمل اليومي بالشيكل"),
                     isThreeLine: true,
                     dense: true,
@@ -725,29 +746,6 @@ Widget _buildButtons() {
           Expanded(
             child: InkWell(
               onTap: () => {
-                //  FutureBuilder(
-                //                       future: setfollow(),
-                //                       builder: (context,snapshot){
-
-                //                        if (snapshot.hasData)
-                //                          {
-                //                                  if(snapshot.data!.toString()=='true')
-                //                                             pressAttention=false;
-                //                                             else
-                //                                               pressAttention=true;
-                //                           setState(() => pressAttention = !pressAttention);
-
-                //                         return Text('... جار اظهار  ');
-                                        
-                //                          }
-                                        
-                                     
-                //                return CircularProgressIndicator(); // or some other widget
-
-                                        
-                //                       }
-                //                     ),
-
                  setfollow(),
                  setState(() => pressAttention = !pressAttention),
               },
@@ -814,6 +812,38 @@ Widget _buildButtons() {
   }
 late String downloadURL;
 
+
+  Widget buildResultRating(String RE){
+        print('RE =');
+        print(RE);
+
+           if(RE=='false'||RE=='NaN'||RE=='0')
+           {
+            return  Text('-',style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 202, 16, 16)),);
+           }
+           
+               else{
+
+                 var Rea = double.parse(RE);
+                return RatingBar.builder(
+                initialRating: Rea,
+                minRating: 1,
+                itemSize: 25,
+                itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
+                updateOnDrag: true,
+                onRatingUpdate:(rating) => setState(() {}),
+
+              );
+
+               }
+         
+
+  }
+  
+ 
+
+
+
   @override
 
   Widget build(BuildContext context) {
@@ -853,9 +883,12 @@ late String downloadURL;
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
+                        buildResultRating(snapshot.data['evaluation'].toString()),
+                       
+
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
+                      _buildStatus(context,snapshot.data['evaluation'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString()),
                       const SizedBox(height: 10.0),
                       _buildButtons(),
@@ -868,7 +901,11 @@ late String downloadURL;
                         height: 10,
                       ),
 
-                      FutureBuilder<List>(
+
+
+                      Container(
+                height: 440,
+                child: FutureBuilder<List>(
                                       future: getUserPosts(),
                                       builder: (context,snapshot){
 
@@ -882,20 +919,20 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                    print('snapshot.data![index][name] --');
-                                                     print(snapshot.data![index]['name'].toString());
-                                                     
-                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                               return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
                                                   },
                                                 );
                                          }
                                         
-                                     return Text('لم يقم هذا المستخدم  بنشر اي منشور بعد '); // or some other widget
+                                     return  Text('  '); // or some other widget
                                 // return CircularProgressIndicator(); // or some other widget
 
                                         
                                       }
                                     ),
+              ),
+
+
          
                     ],
                   ),

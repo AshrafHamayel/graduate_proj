@@ -6,8 +6,6 @@ import 'package:graduate_proj/Chats/models/user_model.dart';
 import 'package:graduate_proj/Chats/screens/home_screen.dart';
 import 'package:graduate_proj/posts.dart';
 import 'finalHome.dart';
-import 'homePage.dart';
-import 'main-grid.dart';
 import 'search.dart';
 import 'signIn.dart';
 import 'signup.dart';

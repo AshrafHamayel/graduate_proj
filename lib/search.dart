@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-
 import 'Chats/models/user_model.dart';
 import 'main.dart';
 import 'workerProfile.dart';
@@ -17,7 +16,8 @@ enum cities { everywhere, mycity }
 
 class _WorkersState extends State<Workers> {
   List<bool?> checked = [false, false, false, false, false, false];
-  List<String> typeOfWork = [
+  List<String> typeOfWork =
+   [
     "عامل بناء",
     "عامل دهان",
     "عامل بلاط",
