@@ -1,41 +1,50 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, sized_box_for_whitespace, prefer_const_constructors, deprecated_member_use, prefer_const_literals_to_create_immutables, unused_import, unused_element, non_constant_identifier_names, avoid_unnecessary_containers, prefer_final_fields, unused_field, camel_case_types
 
+import 'dart:convert';
+
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:graduate_proj/storage_sercice.dart';
 import 'package:path/path.dart';
 import 'Chats/models/user_model.dart';
+import 'ResultSearch.dart';
 import 'main.dart';
 import 'workerProfile.dart';
 import 'Map.dart';
-class Workers extends StatefulWidget {
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart'as Path;
+class SearchWorker extends StatefulWidget {
+    late final String currentUser;
+   
+    SearchWorker
+    ({
+    required this.currentUser,
+  
+  });
  
   @override
-  _WorkersState createState() => _WorkersState();
+  _SearchWorkerState createState() => _SearchWorkerState(currentUser:currentUser);
 }
 
-enum cities { everywhere, mycity }
 
-class _WorkersState extends State<Workers> {
-  List<bool?> checked = [false, false, false, false, false, false,false, false, false, false, false, false,false, false];
-  List<String> typeOfWork =
-   [
-    "عامل بناء",
-    "عامل دهان",
-    "عامل بلاط",
-    "منسق حدائق",
-    "عتال",
-     "عامل دهان",
-    "عامل بلاط",
-    "منسق حدائق",
-    "عتال",
-  ];
-  List<String> myCH = [
-    "اي مكان",
-    "بيتا",
-     "اي مكان",
-    "بيتا",
-  ];
+enum cities { everywhere, mycity }
+enum Works {MyWork,Building,WaterAndElectricity,PaintAndPlaster,Tiles,Worker,GardenCoordinator,Brick,Reformer,Trolleys,VarietyWorker}
+class _SearchWorkerState extends State<SearchWorker> {
+ late final String currentUser;
+   
+    _SearchWorkerState
+    ({
+    required this.currentUser,
+  
+  });
+
+
+ bool checkedClosest = false;
+
+ 
   cities? _city = cities.everywhere;
-  Widget _buildcheckbox(bool? chked, String worktype, int Li) {
+    Works? work = Works.MyWork;
+  Widget _buildcheckbox(bool? chked, String worktype) {
     return StatefulBuilder(
       builder: ((context, setState) {
         return CheckboxListTile(
@@ -51,7 +60,7 @@ class _WorkersState extends State<Workers> {
                 chked = v;
               },
             );
-            checked[Li] = chked;
+            checkedClosest = chked!;
           },
         );
       }),
@@ -81,6 +90,43 @@ class _WorkersState extends State<Workers> {
     );
   }
 
+
+  Widget _buildradioboxWork(String Workname, int Li) {
+    return StatefulBuilder(
+      builder: ((context, setState) {
+        return RadioListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            Workname,
+            textDirection: TextDirection.rtl,
+          ),
+          value: Works.values[Li],
+          groupValue: work,
+          onChanged: (Works? value) {
+            setState(
+              () {
+                work = value;
+              },
+            );
+          },
+        );
+      }),
+    );
+  }
+
+
+  Future <void>getInfo() async 
+  {
+    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$currentUser";
+    var response = await http.get(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+   
+   return await responsebody;
+  }
+
+
+
+final NameWorker = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +154,35 @@ class _WorkersState extends State<Workers> {
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
-      body: ListView.builder(
+      body: FutureBuilder(
+             future:getInfo(),
+     builder: (BuildContext context, AsyncSnapshot snapshot) {
+
+      if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData){
+        String Cityy =snapshot.data['city'].toString();
+         String Workk =snapshot.data['work'].toString();
+
+          List<String> typeOfWork =
+   [
+    '  مهن مشابه لمجال عملك  ($Workk)',
+    ' البناء بشكل عام ',
+    '  التميديات الكهربائية و الصحية ',
+    'الدهان و ديكورات الجبصين ',
+    ' البلاط',
+    ' العمال المساعدين ',
+    ' منسق حدائق و جنائن ',
+    ' القرميد و ديكوراته',
+    ' صيانة و تصليح',
+    ' ما يخص المركبات',
+    ' اعمال متنوعة',
+  ];
+
+         List<String> myCH = [
+                    "اي مكان",
+                    "$Cityy",
+                    
+                  ];
+          return ListView.builder(
         itemCount: 1,
         shrinkWrap: true,
         itemBuilder: (BuildContext contxt, int index) => Container(
@@ -128,16 +202,30 @@ class _WorkersState extends State<Workers> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: TextField(
+                   controller: NameWorker,
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         color: Colors.grey,
-                        onPressed: () {},
+                        onPressed: () {
+
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>ResultSearch(
+                               currentUser:currentUser,
+                                NameWorker:NameWorker.text,
+                                Work:work.toString(),
+                                City:_city.toString(),
+                                closest:checkedClosest.toString(),
+
+                            
+                              
+                              )), (route) => true);
+
+                        },
                         icon: const Icon(
                           Icons.search,
                           color: Colors.green,
                         ),
                       ),
-                      hintText: 'بحث',
+                      hintText: 'ادخل اسم العامل',
                       border: InputBorder.none,
                     ),
                   ),
@@ -191,10 +279,11 @@ class _WorkersState extends State<Workers> {
                                                 fontSize: 15),
                                           ),
                                           onPressed: () {
-                                            for (int i = 0; i <14; i++) {
-                                              checked[i] = false;
-                                            }
+                                          
+                                             checkedClosest = false;
+                                           work = Works.MyWork;
                                             _city = cities.everywhere;
+
                                           },
                                         );
                                       }),
@@ -330,7 +419,10 @@ class _WorkersState extends State<Workers> {
                                     ),
                                     barrierColor: Colors.grey.withOpacity(0.2),
                                     context: context,
-                                    builder: (context) => Column(
+                                    builder: (context) => ListView.builder(
+                                      itemCount: 1,
+                                      shrinkWrap: true,
+                                      itemBuilder: (BuildContext contxt, int index) =>Column(
                                       
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
@@ -372,16 +464,18 @@ class _WorkersState extends State<Workers> {
                                         Column(
                                            
                                           children: [
-                                             for (int i = 0; i < 5; i++) 
-                                              _buildcheckbox(checked[i], typeOfWork[i], i),
+                                             for (int i = 0; i < 11; i++) 
+                                              _buildradioboxWork(typeOfWork[i], i),
                                           ],
                                         ),
                                       ],
                                     ),
+
+                                    )
                                   );
                                 },
                               ),
-                              _buildcheckbox(checked[5], 'الاقرب الي', 5),
+                              _buildcheckbox(checkedClosest, 'ترتيب حسب الاقرب الي'),
                             ],
                           ),
                         );
@@ -423,83 +517,94 @@ class _WorkersState extends State<Workers> {
                 ],
               ),
               SizedBox(height: 10),
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Row(
-                    textDirection: TextDirection.rtl,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const <Widget>[
-                              Text(
-                                'الاسم',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'الوظيفة',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            height: 55,
-                            width: 55,
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.green,
-                              backgroundImage: NetworkImage(
-                                  "https://media.elcinema.com/uploads/_315x420_4d499ccb5db06ee250289a1d8c753b347b8a31d419fd1eaf80358de753581b7b.jpg"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: FlatButton(
-                          onPressed: () {
-
-                            Navigator.of(context).push( MaterialPageRoute( builder: (BuildContext context) =>myMap( )));
-                          },
-                          color: Colors.red[200],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'تواصل ',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  Container(
+                height: 360.0,
+                width: double.infinity,
+                child: Carousel(
+                  boxFit: BoxFit.cover,
+                  autoplay: true,
+                  autoplayDuration: Duration(seconds: 10),
+                  dotSize: 3.0,
+                  dotBgColor: Color.fromARGB(255, 142, 245, 173).withOpacity(0.2),
+                  dotIncreasedColor: Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
+                  dotPosition: DotPosition.bottomCenter,
+                  showIndicator: true,
+                  images: [
+                    Image.asset(
+                      "images/p1.png",
+                      fit: BoxFit.cover,
+                    ),
+                    Image.asset(
+                      "images/aboutus.png",
+                      fit: BoxFit.cover,
+                    ),
+                    Image.asset(
+                      "images/contact2.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ],
                 ),
               ),
+                                
             ],
           ),
         ),
+      );
+
+      }
+       
+   return Container(
+            
+        child: Column(
+          
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 5),
+        
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  image: const AssetImage('images/LO.png'),
+                ),
+              ),
+            ),
+          ],
+        ),
+       
+        Row(
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Material(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+               
+              ],
+          
+        )
+
+            
+      ],
+    
+    
+    ));
+     }
+     
+
       ),
     );
   }
+
+
+
 }

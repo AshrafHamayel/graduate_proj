@@ -98,7 +98,7 @@ class _mainState extends State<mainPage> {
     else if (_currentIndex == 1) {
       return Post(UserId:currentUser,);
     } else if (_currentIndex == 0) {
-      return Workers();
+      return SearchWorker(currentUser:currentUser);
     } else {
       return Container();
     }

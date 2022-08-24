@@ -564,7 +564,10 @@ Future<List> getUsersFifthhSec() async
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                     
+                                                 if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
@@ -613,7 +616,9 @@ Future<List> getUsersFifthhSec() async
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
-                                                  {
+                                                  { 
+                                                    if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
                                      
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
@@ -664,7 +669,8 @@ Future<List> getUsersFifthhSec() async
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                     
+                                      if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
@@ -714,7 +720,8 @@ Future<List> getUsersFifthhSec() async
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                     
+                                      if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
@@ -747,7 +754,8 @@ Future<List> getUsersFifthhSec() async
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                     
+                                      if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );

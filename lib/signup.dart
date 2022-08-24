@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'addInfoNotWorker.dart';
 import 'addUserInfo.dart';
 import 'signIn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +42,7 @@ class _SignupPage extends State<Signup_Page> {
       final ControllerPass = TextEditingController();
       final ControllerconfPass = TextEditingController();
 
-
+ bool AccountTypy = false;
  GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -99,7 +100,8 @@ shareEamil(String UserId)async
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword&fbm=$fbm";
+          String T=AccountTypy.toString();
+       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword&fbm=$fbm&userType=$T";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -128,9 +130,19 @@ else{
                                                 });  
                                           
                                            shareEamil(responsebody['uid'].toString()).then((value) =>{
-                        Navigator.push( context,MaterialPageRoute(builder: (context) => AddUserInfo(
-                          currentUser:responsebody['uid'].toString(),
-                        ))),
+                                            if(AccountTypy)
+                                            {
+                                            Navigator.push( context,MaterialPageRoute(builder: (context) => AddInfoNotWorker(currentUser:responsebody['uid'].toString(),))),        
+                                            }
+                                                 
+
+                                            else
+                                            {
+                                            Navigator.push( context,MaterialPageRoute(builder: (context) => AddUserInfo(currentUser:responsebody['uid'].toString(),))),
+                                            }
+                                            
+
+
                       });
                           }
       
@@ -177,6 +189,29 @@ else{
     if (pickedImage != null) {
       iimage = File(pickedImage.path);
     } else {}
+  }
+
+ Widget _buildcheckbox(bool? chked, String worktype) {
+    return StatefulBuilder(
+      builder: ((context, setState) {
+        return CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            worktype,
+            textDirection: TextDirection.rtl,
+          ),
+          value: chked,
+          onChanged: (v) {
+            setState(
+              () {
+                chked = v;
+              },
+            );
+            AccountTypy = chked!;
+          },
+        );
+      }),
+    );
   }
 
   final imagepicker = ImagePicker();
@@ -229,6 +264,7 @@ else{
               buildTextField("كلمة السر", "********", true , ControllerPass),
              
                buildTextField("تأكيد كلمة السر", "********", true , ControllerconfPass),
+                _buildcheckbox(AccountTypy, 'انا لست عامل '),
               const SizedBox(
                 height: 35,
               ),
