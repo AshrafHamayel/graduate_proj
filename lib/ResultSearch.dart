@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations, sized_box_for_whitespace
 
 import 'dart:convert';
 import 'dart:io';
@@ -16,6 +16,7 @@ import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
+import 'UsersInMap.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -310,20 +311,13 @@ void initState(){
     if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
 
        {
-                    // print('currentUser');
-                    //  print(currentUser);
-                    //   print('snapshot.data["latitude"]');
-                    //  print(snapshot.data["latitude"].toString());
              var LatUser = double.parse(snapshot.data["latitude"].toString());
              var LongUser = double.parse(snapshot.data["longitude"].toString());
            CameraPosition  kGooglePlex = CameraPosition(
       target: LatLng(LatUser, LongUser),
       zoom: 12,
     );
-    //     Set<Marker>  myMark = {Marker(
-    //   markerId: MarkerId("My Position"),
-    //   position: LatLng(LatUser, LongUser),
-    // )};
+   
 
 
                                                       final MarkerId MymarkerId = MarkerId(snapshot.data['_id'].toString());
@@ -331,12 +325,15 @@ void initState(){
                                                       
                                                       markerId: MarkerId(snapshot.data["_id"].toString()),
                                                     position: LatLng(LatUser, LongUser),
+                                                   
+                                                    
                                                      onTap:(){ 
                                                       _customInfoWindowController.addInfoWindow!(
                                                         Text('Ashraf ',style: TextStyle(fontSize:25,color: Color.fromARGB(31, 114, 3, 240))),
                                                         LatLng(LatUser, LongUser),
                                                       );
                                                      },
+                                                     
                                                      icon:BitmapDescriptor.defaultMarker,
                                                      );
 
@@ -345,49 +342,49 @@ void initState(){
                                                 late var LatUser1;
                                                  late var LongUser1;
                                                   
-          return  Scaffold(
-            body:Stack(
+          return  Column(
+          
                 children: [
 
-   Container(
-                      height: 300,
-                      width: 300,
-                      child:
-                                GoogleMap(
+            // Container(
+            //           height: 300,
+            //           width: 350,
+            //           child:
+            //                     GoogleMap(
                            
-                            initialCameraPosition: kGooglePlex,
-                            markers: Set<Marker>.of(markers.values),
-                               onTap: (postition){
-                                     _customInfoWindowController.hideInfoWindow!();
-                            },
+            //                 initialCameraPosition: kGooglePlex,
+            //                 markers: Set<Marker>.of(markers.values),
+            //                    onTap: (postition){
+            //                          _customInfoWindowController.hideInfoWindow!();
+            //                 },
 
-                             onMapCreated: (GoogleMapController controller)
-                                    {
-                                    _customInfoWindowController.googleMapController=controller;
-                                    },
+            //                  onMapCreated: (GoogleMapController controller)
+            //                         {
+            //                         _customInfoWindowController.googleMapController=controller;
+            //                         },
 
 
-                            onCameraMove:(postition){
-                              _customInfoWindowController.onCameraMove!();
-                            } ,
+            //                 onCameraMove:(postition){
+            //                   _customInfoWindowController.onCameraMove!();
+            //                 } ,
                          
              
-                                    ),
+            //                         ),
                               
-                    ),
+            //         ),
 
 
-                                        CustomInfoWindow(
-                                          controller:_customInfoWindowController,
-                                          height:50,
-                                          width: 50,
-                                          offset: 35,
+//                                         CustomInfoWindow(
+//                                           controller:_customInfoWindowController,
+//                                           height:50,
+//                                           width: 50,
+//                                           offset: 35,
                                           
-                                          ),
+//                                           ),
 
-
+// ///
                        Container(
-                            height: 216.5,
+                            height: 510,
                             child: FutureBuilder<List>(
                                         future:  SendInfoSearch(),
           
@@ -416,11 +413,32 @@ void initState(){
                                                       markerId: MarkerId(index.toString()),
                                                       position: LatLng(LatUser1, LongUser1),
                                                       icon: BitmapDescriptor.defaultMarker,
-                                                       onTap:(){ 
+                                                         onTap:(){ 
+      //                                                     AlertDialog(
+      //   title: const Text('AlertDialog Title'),
+      //   content: SingleChildScrollView(
+      //     child: ListBody(
+      //       children: const <Widget>[
+      //         Text('This is a demo alert dialog.'),
+      //         Text('Would you like to approve of this message?'),
+      //       ],
+      //     ),
+      //   ),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: const Text('Approve'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    
+  
                                                         _customInfoWindowController.addInfoWindow!(
                                                           Container(
-                                                              height: 300,
-                                                              width: 200,
+                                                              height: 500,
+                                                              width: 500,
                                                               decoration: BoxDecoration(
                                                                 color: Colors.white,
                                                                 border: Border.all(color:Colors.grey),
@@ -432,8 +450,8 @@ void initState(){
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
                                                                   Container(
-                                                                    width: 300,
-                                                                    height: 100,
+                                                                    width: 500,
+                                                                    height: 500,
                                                                     decoration:const BoxDecoration(
                                                                       image: DecorationImage(
                                                                         image: NetworkImage('https://www.mapitstudio.com/wp-content/uploads/2021/04/sieninis-medinis-pasaulio-zemelapis-su-saliu-valstybiu-pavadinimais-kelioniu-zemelapis-azuolas-map-it-studio.jpg'),
@@ -449,16 +467,12 @@ void initState(){
           
                                                               ),
                                                           ),
-                                                          // Text('Ashraf ',style: TextStyle(fontSize:25,color: Color.fromARGB(31, 114, 3, 240))),
                                                           LatLng(LatUser1, LongUser1),
                                                         );
                                                        }
                                                        );
           
-                                                    //    myMark.add(Marker(
-                                                    //   markerId: MarkerId(index.toString()),
-                                                    //   position: LatLng(LatUser1, LongUser1),
-                                                    // ));
+                                                  
                                                     markers[markerId] = marker;
                                                   
                                                  if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
@@ -489,11 +503,29 @@ void initState(){
                                       ),
                 ),
 
-           
+                Row(
+                  children: [
 
+    SizedBox(width: 60,),
+           
+        FloatingActionButton(
+         backgroundColor: Color.fromARGB(255, 66, 64, 64),
+        child: Icon(Icons.search,color: Color.fromARGB(255, 255, 255, 255),size: 25,),
+        onPressed: (){
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>UsersInMap(
+           
+           markers:markers,
+          currentUser:currentUser,
+          kGooglePlex:kGooglePlex,
+           )));
+        },
+      ),
+                  ],
+                )
+          
 
                 ],
-            ),
+          
             
           );
 

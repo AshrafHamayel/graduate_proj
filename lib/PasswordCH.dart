@@ -193,16 +193,13 @@ showAlertDialog(String textMessage) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => SettingsPage()));
-                    },
-                    color: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
+                    },style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.white ),
+                  
                     child: const Text(
                       "الغاء",
                       style: TextStyle(
@@ -211,15 +208,12 @@ showAlertDialog(String textMessage) {
                           color: Colors.black),
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       editPassword(ControllerOldPass.text,ControllerNewPass.text,ControllerconfNewPass.text);
-                    },
-                    color: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                    },style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.green ),
+                  
                     child: const Text(
                       "حفظ",
                       style: TextStyle(

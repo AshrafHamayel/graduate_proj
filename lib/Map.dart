@@ -152,7 +152,7 @@ class newMap extends State<myMap> {
                     },
                   ),
                 ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   LatLng? laln = LatLng(lat!, long!);
                   myPos = PointLatLng(laln.latitude, laln.longitude);

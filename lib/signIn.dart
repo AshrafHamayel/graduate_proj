@@ -329,7 +329,7 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
                   //           letterSpacing: 2.2,
                   //           color: Colors.black)),
                   // ),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       
                   //  await GoogleSignIn().signOut();
@@ -337,12 +337,9 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
                     SignINWithEmail(ControllerEmail.text,ControllerPass.text);
 
 
-                    },
-                    color: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                    },style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.green ),
+                   
                     child: const Text(
                       "تسجيل الدخول",
                       style: TextStyle(

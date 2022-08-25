@@ -57,6 +57,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   flutter_rating_bar: ^4.0.1
   custom_info_window: ^1.0.1
+  awesome_notifications: ^0.6.21
 
 
 

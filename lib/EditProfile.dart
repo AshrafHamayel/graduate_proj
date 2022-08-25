@@ -104,13 +104,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           color: Colors.black),
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {},
-                    color: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
+                    style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.green ),
+
+                
                     child: const Text(
                       "حفظ",
                       style: TextStyle(
