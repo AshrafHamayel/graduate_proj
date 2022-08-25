@@ -85,16 +85,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => SettingsPage()));
                     },
-                    color: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
+                       style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.white ),
+                    
+                    
+                 
+                   
                     child: const Text(
                       "الغاء",
                       style: TextStyle(

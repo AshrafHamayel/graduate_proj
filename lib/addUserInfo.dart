@@ -357,7 +357,7 @@ else{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(width: 50,),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () async{
 
                       
@@ -365,12 +365,9 @@ else{
                     
                        await CreatUser(ControllerWork.text,ControllerDescription.text,ControllerPhoneNumber.text,ControllerSalary.text);
 
-                    },
-                    color: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                    },style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),elevation: 2,padding: const EdgeInsets.symmetric(horizontal: 50),primary: Colors.green ),
+                    
                     child: const Text(
                       "  تخزين",
                       style: TextStyle(
