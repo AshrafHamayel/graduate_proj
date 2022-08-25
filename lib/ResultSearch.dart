@@ -345,194 +345,155 @@ void initState(){
                                                 late var LatUser1;
                                                  late var LongUser1;
                                                   
-          return Column(
+          return  Scaffold(
+            body:Stack(
                 children: [
-          //          Row(
-          //      mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          //     children:<Widget>[
-          //     Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-          //      child:ElevatedButton.icon(
 
-          //  onPressed: ()async{
-            
-            
-          // }, 
-          // icon: Icon(Icons.map_outlined),  //icon data for elevated button
-          // label: Text("عرض على الخريطة",style:TextStyle(fontSize: 17),), //label text 
-          // style: ButtonStyle(
-          //       backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 56, 53, 53)),
-          //       padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12,horizontal: 70)),
+   Container(
+                      height: 300,
+                      width: 300,
+                      child:
+                                GoogleMap(
+                           
+                            initialCameraPosition: kGooglePlex,
+                            markers: Set<Marker>.of(markers.values),
+                               onTap: (postition){
+                                     _customInfoWindowController.hideInfoWindow!();
+                            },
 
-          //     ),
+                             onMapCreated: (GoogleMapController controller)
+                                    {
+                                    _customInfoWindowController.googleMapController=controller;
+                                    },
 
 
-          //         ) 
-          //   ),
-          // ]
-          // ),
-            // Container(
-            //       height: 300,
-            //       width: 300,
-            //       child: GoogleMap(
-            //         myLocationEnabled: true,
-            //         tiltGesturesEnabled: true,
-            //         compassEnabled: true,
-            //         scrollGesturesEnabled: true,
-            //         zoomGesturesEnabled: true,
-            //         //polylines: Set<Polyline>.of(polylines.values),
-            //         markers:Set<Marker>.of(markers.values),
-            //         mapType: MapType.normal,
-            //         initialCameraPosition: kGooglePlex,
-            //         // onMapCreated: (GoogleMapController controller) {
-            //         //   //gmc = controller;
-            //         //   //    _controller.complete(controller);
-            //         // },
-            //       ),
-            //     ),
-           Stack(
-             children: [
-                  Container(
-                    height: 300,
-                    width: 300,
-                    child:GoogleMap(
-                          onMapCreated: (GoogleMapController controller)
-                                  {
-                                  _customInfoWindowController.googleMapController=controller;
-                                  },
-                          initialCameraPosition: kGooglePlex,
-                          markers: Set<Marker>.of(markers.values),
-                          onCameraMove:(postition){
-                            _customInfoWindowController.onCameraMove!();
-                          } ,
-                          onTap: (postition){
-                                   _customInfoWindowController.hideInfoWindow!();
-                          },
-           
-                                  ),
-                            
-                  ),
-
-                      CustomInfoWindow(
-                                        controller:_customInfoWindowController,
-                                        height:50,
-                                        width: 50,
-                                        offset: 35,
-                                        
-                                        ),
-
-             ],
-           ),
-                
-                
-                                    Container(
-                          height: 216.5,
-                          child: FutureBuilder<List>(
-                                      future:  SendInfoSearch(),
-
-                                       builder: (context,snapshot){
-
-                                       if (snapshot.hasData)
-                                         {
-                                          print('snapshot.data!.length');
-                                          print(snapshot.data!.length);
-                                          if(snapshot.data!.length>=1)
-                                          {
-                                              return ListView.builder(
-                                            scrollDirection: Axis.vertical,
-                                                shrinkWrap: true,
-                                                  itemCount: snapshot.data!.length,
-                                                  itemBuilder: (context, index)
-                                                  {
-                                                      LatUser1 = double.parse(snapshot.data![index]["latitude"].toString());
-                                                      LongUser1 = double.parse(snapshot.data![index]["longitude"].toString());
-                        
-                                                      final MarkerId markerId = MarkerId(snapshot.data![index]['_id'].toString());
-                                                     print(LatUser1);
-
-                                                     final Marker marker =Marker(
-                                                      
-                                                    markerId: MarkerId(index.toString()),
-                                                    position: LatLng(LatUser1, LongUser1),
-                                                    icon: BitmapDescriptor.defaultMarker,
-                                                     onTap:(){ 
-                                                      _customInfoWindowController.addInfoWindow!(
-                                                        Container(
-                                                            height: 300,
-                                                            width: 200,
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              border: Border.all(color:Colors.grey),
-                                                              borderRadius:  BorderRadius.circular(10.0),
-
-                                                            ),
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Container(
-                                                                  width: 300,
-                                                                  height: 100,
-                                                                  decoration:const BoxDecoration(
-                                                                    image: DecorationImage(
-                                                                      image: NetworkImage('https://www.mapitstudio.com/wp-content/uploads/2021/04/sieninis-medinis-pasaulio-zemelapis-su-saliu-valstybiu-pavadinimais-kelioniu-zemelapis-azuolas-map-it-studio.jpg'),
-                                                                      fit: BoxFit.fitWidth,
-                                                                      filterQuality: FilterQuality.high),
-                                                                      borderRadius: const BorderRadius.all(Radius.circular(10.0),
-                                                                      ),
-                                                                      color: Colors.red,
-                                                                  ),
-                                                                ),
-
-                                                              ],
-
-                                                            ),
-                                                        ),
-                                                        // Text('Ashraf ',style: TextStyle(fontSize:25,color: Color.fromARGB(31, 114, 3, 240))),
-                                                        LatLng(LatUser1, LongUser1),
-                                                      );
-                                                     }
-                                                     );
-
-                                                  //    myMark.add(Marker(
-                                                  //   markerId: MarkerId(index.toString()),
-                                                  //   position: LatLng(LatUser1, LongUser1),
-                                                  // ));
-                                                  markers[markerId] = marker;
-                                                
-                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
-                                                  return Text('',style: TextStyle(fontSize: 2),) ;
-                                                 return buildStatCard(snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['image'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
-                                                  },
-                                                  
-                                                );
-
-                                          }
-                                           else{
-                                                  return Center(
-                                                    child: Text('لا يوجد نتائج مطابقة',style: TextStyle(fontSize: 35,color: Color.fromARGB(255, 252, 3, 3)),),
-                                                  );
-
-                                           }
-                                       
-                                         }
-                                        
-                                      return Center(
-                                                    child: Text('جار التحميل...',style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 15, 136, 61)),),
-                                                  );
-                                // return CircularProgressIndicator(); // or some other widget
-
-                                        
-                                      }
+                            onCameraMove:(postition){
+                              _customInfoWindowController.onCameraMove!();
+                            } ,
+                         
+             
                                     ),
-              ),
+                              
+                    ),
 
 
+                                        CustomInfoWindow(
+                                          controller:_customInfoWindowController,
+                                          height:50,
+                                          width: 50,
+                                          offset: 35,
+                                          
+                                          ),
+
+
+                       Container(
+                            height: 216.5,
+                            child: FutureBuilder<List>(
+                                        future:  SendInfoSearch(),
+          
+                                         builder: (context,snapshot){
+          
+                                         if (snapshot.hasData)
+                                           {
+                                            print('snapshot.data!.length');
+                                            print(snapshot.data!.length);
+                                            if(snapshot.data!.length>=1)
+                                            {
+                                                return ListView.builder(
+                                              scrollDirection: Axis.vertical,
+                                                  shrinkWrap: true,
+                                                    itemCount: snapshot.data!.length,
+                                                    itemBuilder: (context, index)
+                                                    {
+                                                        LatUser1 = double.parse(snapshot.data![index]["latitude"].toString());
+                                                        LongUser1 = double.parse(snapshot.data![index]["longitude"].toString());
+                          
+                                                        final MarkerId markerId = MarkerId(snapshot.data![index]['_id'].toString());
+                                                       print(LatUser1);
+          
+                                                       final Marker marker =Marker(
+                                                        
+                                                      markerId: MarkerId(index.toString()),
+                                                      position: LatLng(LatUser1, LongUser1),
+                                                      icon: BitmapDescriptor.defaultMarker,
+                                                       onTap:(){ 
+                                                        _customInfoWindowController.addInfoWindow!(
+                                                          Container(
+                                                              height: 300,
+                                                              width: 200,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.white,
+                                                                border: Border.all(color:Colors.grey),
+                                                                borderRadius:  BorderRadius.circular(10.0),
+          
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Container(
+                                                                    width: 300,
+                                                                    height: 100,
+                                                                    decoration:const BoxDecoration(
+                                                                      image: DecorationImage(
+                                                                        image: NetworkImage('https://www.mapitstudio.com/wp-content/uploads/2021/04/sieninis-medinis-pasaulio-zemelapis-su-saliu-valstybiu-pavadinimais-kelioniu-zemelapis-azuolas-map-it-studio.jpg'),
+                                                                        fit: BoxFit.fitWidth,
+                                                                        filterQuality: FilterQuality.high),
+                                                                        borderRadius: const BorderRadius.all(Radius.circular(10.0),
+                                                                        ),
+                                                                        color: Colors.red,
+                                                                    ),
+                                                                  ),
+          
+                                                                ],
+          
+                                                              ),
+                                                          ),
+                                                          // Text('Ashraf ',style: TextStyle(fontSize:25,color: Color.fromARGB(31, 114, 3, 240))),
+                                                          LatLng(LatUser1, LongUser1),
+                                                        );
+                                                       }
+                                                       );
+          
+                                                    //    myMark.add(Marker(
+                                                    //   markerId: MarkerId(index.toString()),
+                                                    //   position: LatLng(LatUser1, LongUser1),
+                                                    // ));
+                                                    markers[markerId] = marker;
+                                                  
+                                                 if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
+                                                    return Text('',style: TextStyle(fontSize: 2),) ;
+                                                   return buildStatCard(snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['image'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                    },
+                                                    
+                                                  );
+          
+                                            }
+                                             else{
+                                                    return Center(
+                                                      child: Text('لا يوجد نتائج مطابقة',style: TextStyle(fontSize: 35,color: Color.fromARGB(255, 252, 3, 3)),),
+                                                    );
+          
+                                             }
+                                         
+                                           }
+                                          
+                                        return Center(
+                                                      child: Text('جار التحميل...',style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 15, 136, 61)),),
+                                                    );
+                                  // return CircularProgressIndicator(); // or some other widget
+          
+                                          
+                                        }
+                                      ),
+                ),
+
+           
 
 
                 ],
-
+            ),
+            
           );
 
 

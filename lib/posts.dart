@@ -959,9 +959,69 @@ late String downloadURL;
 
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
-       
+          if(snapshot.data["UserType"].toString()=='true')
+       {
 
-       return Stack(
+ return Stack(
+            children: <Widget>[
+          
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: screenSize.height / 18.0),
+
+
+                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
+
+                      _buildFullName(snapshot.data["name"].toString()),
+                      
+                      const SizedBox(height: 10.0),
+                   
+                   Container(
+                height: 440,
+                child: FutureBuilder<List>(
+                                      future: getPosts(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
+              ),
+                     
+          
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+
+       }
+
+
+        else
+        {
+
+ return Stack(
             children: <Widget>[
           
               SafeArea(
@@ -1026,6 +1086,9 @@ late String downloadURL;
               ),
             ],
           );
+
+        }
+      
             }
           return Container(
             

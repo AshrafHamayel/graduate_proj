@@ -897,9 +897,9 @@ Future UnsetAvailabil() async
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(4.0),
       ),
-       child: ListView(
-    scrollDirection: Axis.vertical,
-    shrinkWrap: true,
+       child: Column(
+   // scrollDirection: Axis.vertical,
+   // shrinkWrap: true,
             
             children: <Widget>[
 

@@ -185,23 +185,27 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
 
   }
 
- Future <void>setfollow() async {
+ Future <void>AddToFavorites() async {
 
-    var url = await"http://192.168.0.114:80/myProf/setFollow?frindId=$UserId&currentUser=$CurrentUser";
+    var url = await"http://192.168.0.114:80/myProf/AddToFavorites?frindId=$UserId&currentUser=$CurrentUser";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
-       print('responsebody from setfollow');
-     print(responsebody);
-    // if(responsebody['pressAttention'].toString()=='true')
-    //  pressAttention=true;
-    //  if(responsebody['pressAttention'].toString()=='false')
-    //  pressAttention=false;
     return await responsebody;
  
 
   }
 
+Future <void>RemoveFromFavourites() async {
+
+    var url = await"http://192.168.0.114:80/myProf/removeFromFavourites?frindId=$UserId&currentUser=$CurrentUser";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    return await responsebody;
+ 
+
+  }
 
 
 
@@ -313,31 +317,39 @@ var responsebody = json.decode(response.body);
     
   }
 
-  Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary) {
-
-     bool RTI=false;
+   Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary,String AVIL) {
+    
+              bool RTI=false;
             if(RT=='false'||RT=='NaN'||RT=='0')
            {
             RTI =true;
            }
-           
 
+             bool Avlia=true;
+            if(AVIL=='false')
+           {
+            Avlia =false;
+           }
+
+
+           
+               
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(4.0),
       ),
-       child: ListView(
-    scrollDirection: Axis.vertical,
-    shrinkWrap: true,
+       child: Column(
+    // scrollDirection: Axis.vertical,
+    // shrinkWrap: true,
             
             children: <Widget>[
 
-                RTI?
+             RTI?
              ListTile(
               title: Text( ' لا يمكن عرض التقييمات', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
-                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 26, 25, 25),),
+                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 255, 0, 0),),
                     subtitle: Text("لم يقم اي شخص بتقييمه بعد",style: TextStyle(fontSize: 12.5),),
                     isThreeLine: true,
                     dense: true,
@@ -345,10 +357,11 @@ var responsebody = json.decode(response.body);
 
                       
 
+
                     },
 
                 ):ListTile(
-              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 35, 207, 87), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
+              title: Text( 'التقييمات', style: const TextStyle( color: Color.fromARGB(255, 25, 0, 255), fontSize: 25.0,fontWeight:FontWeight.bold ), ),
                     leading: Icon(Icons.star,size: 50,color: Color.fromARGB(255, 204, 206, 125),),
                     subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
                     isThreeLine: true,
@@ -361,7 +374,29 @@ var responsebody = json.decode(response.body);
                     },
 
                 ),
-                
+
+
+
+              
+             Avlia?
+             ListTile(
+              title: Text( ' متاح للعمل', style: const TextStyle( color: Color.fromARGB(255, 79, 184, 85), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.add_task_rounded,size: 30,color: Color.fromARGB(255, 79, 184, 85),),
+                    subtitle: Text("انقر هنا لتغيير الحالة",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ):ListTile(
+              title: Text( 'غير متاح للعمل', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.person_off_outlined,size: 30,color: Color.fromARGB(255, 255, 0, 0),),
+                    subtitle: Text("انقر هنا لتغيير الحالة",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){ },
+
+                ),
+
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
                     leading: Icon(Icons.handyman,size: 30,color: Color.fromARGB(255, 35, 36, 17),),
@@ -411,11 +446,10 @@ var responsebody = json.decode(response.body);
       
     );
   }
-
   Widget _buildStatItem(String label, String count) {
     TextStyle _statLabelTextStyle = const TextStyle(
       color: Colors.black,
-      fontSize: 16.0,
+      fontSize: 21.0,
       fontWeight: FontWeight.w200,
     );
 
@@ -425,17 +459,29 @@ var responsebody = json.decode(response.body);
       fontWeight: FontWeight.bold,
     );
 
-    return Column(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          count,
-          style: _statCountTextStyle,
-        ),
-        Text(
+
+         Text(
           label,
           style: _statLabelTextStyle,
         ),
+
+          TextButton(
+            
+            style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 22,fontWeight:FontWeight.bold),
+              
+            ),
+            onPressed: () {
+              print('HI');
+            },
+            child:  Text(count),
+            
+          ),
+
+       
       ],
     );
   }
@@ -452,6 +498,7 @@ var responsebody = json.decode(response.body);
         children: <Widget>[
           
           _buildStatItem("المتابعون", _followers),
+           _buildStatItem("اتابعه", _followers),
         
         
           
@@ -738,30 +785,52 @@ var responsebody = json.decode(response.body);
     }
 
 
-Widget _buildButtons() {
+Widget _buildButtons(String Fav1) {
+
+     bool Fav=true;
+            if(Fav1=='true'||Fav1=='0')
+           {
+            Fav =false;
+           }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: InkWell(
+            child:Fav? InkWell(
               onTap: () => {
-                 setfollow(),
-                 setState(() => pressAttention = !pressAttention),
+                AddToFavorites().then((value) =>{
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,)), (route) => true),
+                      })
               },
               child: Container(
                 height: 40.0,
                 decoration: BoxDecoration(
                   border: Border.all(),
-                  color: pressAttention ? Color(0xFF404A5C) : Colors.blue,
+                  color:Color(0xFF404A5C),
                 ),
-                child: pressAttention ? Center(
+                child:Center(
                   child: Text( "متابعة",style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                ) :Center(
+                )
+              ),
+            ):InkWell(
+              onTap: () => {
+                RemoveFromFavourites().then((value) =>{
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,)), (route) => true),
+                      })
+              },
+              child: Container(
+                height: 40.0,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  color:Colors.blue,
+                ),
+                child:Center(
                   child: Text( "تمت المتابعة",style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -888,10 +957,10 @@ late String downloadURL;
 
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['rating'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
+                      _buildStatus(context,snapshot.data['rating'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString(),snapshot.data['Availability'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString()),
                       const SizedBox(height: 10.0),
-                      _buildButtons(),
+                      _buildButtons(snapshot.data['fav'].toString()),
                       const SizedBox(height: 8.0),
                     //  _buildSeparator2(screenSize),
                       SizedBox(
