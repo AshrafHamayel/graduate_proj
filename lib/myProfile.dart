@@ -626,8 +626,27 @@ Future sendPostToDB(String description,String imagepost ) async
 
 }
 
+//----------------------------set Availability ---------------------------------------
 
+Future setAvailabil() async
+  {
+    
+    final  url = "http://192.168.0.114:80/myProf/setAvailabil?UserId=$UserId";
+    final  response = await http.post(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+   print( 'responsebody[NT]');
+    print( responsebody['NT']);
+    return responsebody['NT'];
+  }
 
+Future UnsetAvailabil() async
+  {
+    
+    final  url = "http://192.168.0.114:80/myProf/UnsetAvailabil?UserId=$UserId";
+    final  response = await http.post(Uri.parse(url));
+    final  responsebody =  json.decode(response.body);
+    return responsebody['NT'];
+  }
 
 
 
@@ -855,13 +874,21 @@ Future sendPostToDB(String description,String imagepost ) async
   }
 
 
-  Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary) {
+  Widget _buildStatus(BuildContext context ,String RT,String Work,String city,String phoneN ,String Salary,String AVIL) {
     
               bool RTI=false;
             if(RT=='false'||RT=='NaN'||RT=='0')
            {
             RTI =true;
            }
+
+             bool Avlia=true;
+            if(AVIL=='false')
+           {
+            Avlia =false;
+           }
+
+
            
                
     return Container(
@@ -879,7 +906,7 @@ Future sendPostToDB(String description,String imagepost ) async
              RTI?
              ListTile(
               title: Text( ' لا يمكن عرض التقييمات', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
-                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 26, 25, 25),),
+                    leading: Icon(Icons.group_off_outlined,size: 30,color: Color.fromARGB(255, 255, 0, 0),),
                     subtitle: Text("لم يقم اي شخص بتقييمك بعد",style: TextStyle(fontSize: 12.5),),
                     isThreeLine: true,
                     dense: true,
@@ -905,6 +932,41 @@ Future sendPostToDB(String description,String imagepost ) async
 
                 ),
 
+
+
+              
+             Avlia?
+             ListTile(
+              title: Text( ' متاح للعمل', style: const TextStyle( color: Color.fromARGB(255, 79, 184, 85), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.add_task_rounded,size: 30,color: Color.fromARGB(255, 79, 184, 85),),
+                    subtitle: Text("انقر هنا لتغيير الحالة",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                      UnsetAvailabil().then((value) =>{
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
+                      });
+                     
+                    },
+
+                ):ListTile(
+              title: Text( 'غير متاح للعمل', style: const TextStyle( color: Color.fromARGB(255, 255, 0, 0), fontSize: 17.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.person_off_outlined,size: 30,color: Color.fromARGB(255, 255, 0, 0),),
+                    subtitle: Text("انقر هنا لتغيير الحالة",style: TextStyle(fontSize: 12.5),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                      setAvailabil().then((value) =>{
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
+                      });
+                     
+
+
+                    },
+
+                ),
 
               ListTile(
               title: Text( Work, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
@@ -1481,10 +1543,10 @@ late String downloadURL;
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
-                         buildResultRating(snapshot.data['evaluation'].toString()),
+                         buildResultRating(snapshot.data['rating'].toString()),
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['evaluation'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
+                      _buildStatus(context,snapshot.data['rating'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString(),snapshot.data['Availability'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
                       const SizedBox(height: 10.0),
                       //_buildButtons(),

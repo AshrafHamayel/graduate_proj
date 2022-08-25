@@ -883,12 +883,12 @@ late String downloadURL;
                      _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
                      _buildFullName(snapshot.data["name"].toString()),
                       _buildBio(context,snapshot.data['description'].toString()),
-                        buildResultRating(snapshot.data['evaluation'].toString()),
+                        buildResultRating(snapshot.data['rating'].toString()),
                        
 
                       _buildSeparator2(screenSize),
 
-                      _buildStatus(context,snapshot.data['evaluation'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
+                      _buildStatus(context,snapshot.data['rating'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString()),
                       _buildStatContainer(snapshot.data['followers'].toString()),
                       const SizedBox(height: 10.0),
                       _buildButtons(),

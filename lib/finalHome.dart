@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_logic_in_create_state, camel_case_types, use_key_in_widget_constructors, import_of_legacy_library_into_null_safe, deprecated_member_use, sized_box_for_whitespace, empty_catches
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:graduate_proj/workerProfile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,19 +94,42 @@ Future getNameThirdSec() async
     return responsebody['NT'];
   }
 
-//----------------------------Get Name Fourth sec ---------------------------------------
-
-Future getNameFourthSec() async
-  {
-    
-    final  url = "http://192.168.0.114:80/usersInfo/getNameFourthSec?currentUser=$currentUser";
-    final  response = await http.get(Uri.parse(url));
-    final  responsebody =  json.decode(response.body);
-    return responsebody['NT'];
-  }
 
 
 //-----------------------------Get users same sec---------------------------------------
+
+
+List shuffle(List array) {
+    var random = Random(); 
+
+   
+    if(array.length>6)
+    {
+  for (var i = 6; i > 0; i--) {
+
+    
+      var n = random.nextInt(i + 1);
+      var temp = array[i];
+      array[i] = array[n];
+      array[n] = temp;
+    }
+    return array;
+    }
+    else{
+  for (var i = array.length - 1; i > 0; i--) {
+
+    
+      var n = random.nextInt(i + 1);
+      var temp = array[i];
+      array[i] = array[n];
+      array[n] = temp;
+    }
+    return array;
+
+    }
+  
+}
+
 
 Future<List> getUsersSameSec() async
   {
@@ -114,7 +138,8 @@ Future<List> getUsersSameSec() async
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
 
-    return responsebody.reversed.toList();
+    return shuffle(responsebody.reversed.toList());
+    //return responsebody.reversed.toList();
   }
 
 //----------------------------get Users Second Sec---------------------------------------
@@ -122,20 +147,20 @@ Future<List> getUsersSameSec() async
 Future<List> getUsersSecondSec() async
   {
    
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersSecondSec";
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersSecondSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
-    return responsebody.reversed.toList();
+  return shuffle(responsebody.reversed.toList());
   }
 //-----------------------get Users Third Sec-------------------------------
 
 Future<List> getUsersThirdSec() async
   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersThirdSec";
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersThirdSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
-    return responsebody.reversed.toList();
+   return shuffle(responsebody.reversed.toList());
   }
 
 //-----------------------get Users Fourth Sec-------------------------------
@@ -143,23 +168,23 @@ Future<List> getUsersThirdSec() async
 Future<List> getUsersFourthSec() async
   {
    
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersFourthSec";
+    final  url = "http://192.168.0.114:80/usersInfo/getUsersFourthSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
-    return responsebody.reversed.toList();
+  return shuffle(responsebody.reversed.toList());
   }
 
 
-//-----------------------get Users Fifth Sec-------------------------------
+// //-----------------------get Users Fifth Sec-------------------------------
 
-Future<List> getUsersFifthhSec() async
-  {
+// Future<List> getUsersFifthhSec() async
+//   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersFifthhSec";
-    final  response = await http.get(Uri.parse(url));
-    final  responsebody = json.decode(response.body) as List<dynamic>;
-    return responsebody.reversed.toList();
-  }
+//     final  url = "http://192.168.0.114:80/usersInfo/getUsersFifthhSec";
+//     final  response = await http.get(Uri.parse(url));
+//     final  responsebody = json.decode(response.body) as List<dynamic>;
+//     return responsebody.reversed.toList();
+//   }
 
 
 
@@ -538,7 +563,7 @@ Future<List> getUsersFifthhSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                      style: TextStyle(fontSize: 22, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -557,20 +582,38 @@ Future<List> getUsersFifthhSec() async
 
                                        if (snapshot.hasData)
                                          {
-                                           
-                                         return ListView.builder(
+                                           if(snapshot.data!.length>7){
+                                           return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                                 shrinkWrap: true,
-                                                  itemCount: snapshot.data!.length,
+                                                  itemCount: 7,
                                                   itemBuilder: (context, index)
                                                   {
-                                                 if(snapshot.data![index]["UserType"].toString()=='true')
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
+                                           }
+                                           else{
+                                      return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+
+                                           }
+                                      
                                          }
                                         
                                      return Text(' ...جار التحميل '); // or some other widget
@@ -591,7 +634,7 @@ Future<List> getUsersFifthhSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                      style: TextStyle(fontSize: 22, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -611,18 +654,37 @@ Future<List> getUsersFifthhSec() async
                                        if (snapshot.hasData)
                                          {
                                            
-                                         return ListView.builder(
+                                           if(snapshot.data!.length>7){
+                                           return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: 7,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                           }
+                                           else{
+                                      return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
-                                                  { 
-                                                    if(snapshot.data![index]["UserType"].toString()=='true')
+                                                  {
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
-                                     
+
+                                                
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
+
+                                           }
                                          }
                                         
                                      return Text(' ...جار التحميل '); // or some other widget
@@ -643,7 +705,7 @@ Future<List> getUsersFifthhSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 25, color: Colors.white),
+                                                      style: TextStyle(fontSize: 22, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -663,17 +725,37 @@ Future<List> getUsersFifthhSec() async
                                        if (snapshot.hasData)
                                          {
                                            
-                                         return ListView.builder(
+                                          if(snapshot.data!.length>7){
+                                           return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: 7,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                           }
+                                           else{
+                                      return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                      if(snapshot.data![index]["UserType"].toString()=='true')
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
+
+                                           }
                                          }
                                         
                                      return Text(' ...جار التحميل '); // or some other widget
@@ -686,24 +768,7 @@ Future<List> getUsersFifthhSec() async
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: FutureBuilder(
-                                      future: getNameFourthSec(),
-                                      builder: (context,snapshot){
-
-                                       if (snapshot.hasData)
-                                         {
-                                           
-                                         return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 25, color: Colors.white),
-                                                    );
-                                                                            }
-                                        
-                                     return Text(' ...جار التحميل '); // or some other widget
-                                // return CircularProgressIndicator(); // or some other widget
-
-                                        
-                                      }
-                                    ),
+                child: Text('أخرى ',style: TextStyle(fontSize: 22, color: Colors.white)),
               ),
               Container(
                 height: 202,
@@ -714,17 +779,37 @@ Future<List> getUsersFifthhSec() async
                                        if (snapshot.hasData)
                                          {
                                            
-                                         return ListView.builder(
+                                          if(snapshot.data!.length>7){
+                                           return ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                  itemCount: 7,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
+                                                  return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                  },
+                                                );
+                                           }
+                                           else{
+                                      return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                                 shrinkWrap: true,
                                                   itemCount: snapshot.data!.length,
                                                   itemBuilder: (context, index)
                                                   {
-                                      if(snapshot.data![index]["UserType"].toString()=='true')
+                                               if(snapshot.data![index]["UserType"].toString()=='true'||snapshot.data![index]['_id'].toString()==currentUser||snapshot.data![index]["Availability"].toString()=='false')
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
+
+                                                
                                                 return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
                                                   },
                                                 );
+
+                                           }
                                          }
                                         
                                      return Text(' ...جار التحميل '); // or some other widget
@@ -735,39 +820,7 @@ Future<List> getUsersFifthhSec() async
                                     ),
               ),
               Divider(color: Colors.white),
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text('مهن اخرى متنوعة',style: TextStyle(fontSize: 25, color: Colors.white), ),
-              ),
-              Container(
-                height: 202,
-                child:FutureBuilder<List>(
-                                      future: getUsersFifthhSec(),
-                                      builder: (context,snapshot){
-
-                                       if (snapshot.hasData)
-                                         {
-                                           
-                                         return ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                                shrinkWrap: true,
-                                                  itemCount: snapshot.data!.length,
-                                                  itemBuilder: (context, index)
-                                                  {
-                                      if(snapshot.data![index]["UserType"].toString()=='true')
-                                                  return Text('',style: TextStyle(fontSize: 2),) ;
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
-                                                  },
-                                                );
-                                         }
-                                        
-                                     return Text(' ...جار التحميل '); // or some other widget
-                                // return CircularProgressIndicator(); // or some other widget
-
-                                        
-                                      }
-                                    ),
-              ),
+            
               SizedBox(
                 height: 10,
               )

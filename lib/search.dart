@@ -475,7 +475,7 @@ final NameWorker = TextEditingController();
                                   );
                                 },
                               ),
-                              _buildcheckbox(checkedClosest, 'ترتيب حسب الاقرب الي'),
+                              _buildcheckbox(checkedClosest, 'ترتيب حسب الاعلى تقييما'),
                             ],
                           ),
                         );

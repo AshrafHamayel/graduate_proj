@@ -59,7 +59,7 @@ class _AddUserInfo extends State<AddUser_Info> {
     required this.currentUser,
   
   });
-  
+    
       late final ControllerWork = TextEditingController();
       late final ControllerDescription = TextEditingController();
       late final ControllerPhoneNumber = TextEditingController();
@@ -111,7 +111,7 @@ Future getPer() async {
   }
 
 
- Future CreatUser(String Work, String Description, String PhoneNumber ,String Salary,String City )async {
+ Future CreatUser(String Work, String Description, String PhoneNumber ,String Salary )async {
 
 
   print('lat');
@@ -135,7 +135,7 @@ Future getPer() async {
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل الاجرة اليومية رجاءً')) );
 
-                      else  if(City+"--"=="--")
+                      else  if(dropdownvalue+"--"=="--")
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل المدينة رجاءً')) );
 
@@ -143,7 +143,7 @@ Future getPer() async {
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/addInfoUser?UserId=$currentUser&Work=$Work&Description=$Description&PhoneNumber=$PhoneNumber&Salary=$Salary&City=$City&&LAT=$lat&LONG=$long";
+       var url = "http://192.168.0.114:80/signUp/addInfoUser?UserId=$currentUser&Work=$Work&Description=$Description&PhoneNumber=$PhoneNumber&Salary=$Salary&City=$dropdownvalue&&LAT=$lat&LONG=$long";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -268,10 +268,11 @@ else{
                 
                     
               buildTextField("..., نوع العمل : بناء ,  دهان  , قصارة , بليط", "ex@gmail.com", false ,ControllerWork),
-               buildTextField("صف نفسك", "الاسم", false ,ControllerDescription),
+              buildTextField("صف نفسك", "الاسم", false ,ControllerDescription),
               buildTextField(" رقم الهاتف", "********", false , ControllerPhoneNumber),
               buildTextField(" الاجرة اليومية بالشيكل", "********", false , ControllerSalary),
-              buildTextField(" ادخل مكان سكنك", "********", false , ControllerCity),
+            //  buildTextField(" ادخل مكان سكنك", "********", false , ControllerCity),
+              buildDrop(ControllerCity),
 
          
          Text( 'رجاءا قم بتفعيل خاصية GPS لحفظ موقعك', textDirection: TextDirection.rtl, style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 34, 1, 155)),),
@@ -359,10 +360,10 @@ else{
                   RaisedButton(
                     onPressed: () async{
 
-
+                      
                    
                     
-                       await CreatUser(ControllerWork.text,ControllerDescription.text,ControllerPhoneNumber.text,ControllerSalary.text,ControllerCity.text);
+                       await CreatUser(ControllerWork.text,ControllerDescription.text,ControllerPhoneNumber.text,ControllerSalary.text);
 
                     },
                     color: Colors.green,
@@ -392,8 +393,60 @@ else{
     );
   }
 
+late String dropdownvalue ;
 
+  Widget buildDrop(TextEditingController contr){
+    var items = [
+	'اختر مدينة',
+	'القدس',
+	'حيفا',
+	'يافا',
+	'الخليل',
+  'بيت لحم',
+  'نابلس',
+  'غزة',
+  'أريحا',
+  'نابلس',
+  'طولكرم',
+  'رام الله',
+  '	جنين',
+  'طوباس',
+  '	قلقيلية',
+  '	سلفيت',
+];
 
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: DropdownButtonFormField(
+           decoration: InputDecoration( border: const OutlineInputBorder(),),
+          // Initial Value
+          value: 'اختر مدينة',
+          
+          // Down Arrow Icon
+          icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 42,
+        
+          
+          // Array list of items
+          items: items.map((String items) {
+            return DropdownMenuItem(
+            value: items,
+            
+            child: Text(items,style: TextStyle(fontSize: 18),),
+            );
+          }).toList(),
+          // After selecting the desired option,it will
+          // change button value to selected value
+          onChanged: (String? newValue) {
+            setState(() {
+            dropdownvalue = newValue!;
+          
+            });
+          },
+     menuMaxHeight: 500,
+          ),
+    );
+  }
 
   Widget buildTextField(String labelText, String placeholder, bool isTextFields ,TextEditingController myController ) 
   
