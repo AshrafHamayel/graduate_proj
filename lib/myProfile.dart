@@ -13,6 +13,8 @@ import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
+import 'Tenders.dart';
+import 'complaint.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,7 +98,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                 ),
                
                  ListTile(
-                    title: Text("تغيير نوع العمل "),
+                    title: Text("تغيير نوع العمل ",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.work),
                     subtitle: Text("change work"),
                     isThreeLine: true,
@@ -104,17 +106,22 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                     onTap: (){},
 
                 ),
+                SizedBox(height: 20,),
                  ListTile(
-                    title: Text(" تقديم شكوى "),
+                    title: Text(" تقديم شكوى ",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.drafts_sharp),
                     subtitle: Text(" Make a complaint"),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
+                    onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => myComplaint(UserId:UserId)));
+                    },
 
                 ),
+                  SizedBox(height: 20,),
+
               ListTile(
-                    title: Text("  موقعي "),
+                    title: Text("  تحديث موقعي ",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.edit_location_alt_sharp),
                     subtitle: Text(" My location"),
                     isThreeLine: true,
@@ -122,8 +129,24 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                     onTap: (){},
 
                 ),
+               SizedBox(height: 20,),
+
+                 ListTile(
+                    title: Text("العطاءات",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.grading_outlined),
+                    subtitle: Text("مناقصات و عطاءات في مجال عملك"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                               
+                        Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId)));
+                    },
+
+                ),
+                SizedBox(height: 20,),
+
                ListTile(
-                    title: Text("الاعدادات"),
+                    title: Text("الاعدادات",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.settings),
                     subtitle: Text("Settings"),
                     isThreeLine: true,

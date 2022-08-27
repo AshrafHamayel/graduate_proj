@@ -68,8 +68,7 @@ class workerProfile extends StatelessWidget {
               Icons.arrow_forward,
               color: Colors.green,
             ),
-            onPressed: () {  Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
+            onPressed: () { Navigator.pop(context);
             },
           ),
         ],

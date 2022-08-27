@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations, sized_box_for_whitespace
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations, sized_box_for_whitespace, sort_child_properties_last
 
 import 'dart:convert';
 import 'dart:io';
@@ -34,14 +34,17 @@ class UsersInMap extends StatelessWidget {
   late final Map<MarkerId, Marker> markers;
   late final String currentUser;
   late final  CameraPosition  kGooglePlex ;
-
+  late final CustomInfoWindowController customInfoWindowController;
+  late final bool mapVis;
     UsersInMap
     ({
     
    required this.markers,
     required this.currentUser,
     required this.kGooglePlex,
-    
+    required this.customInfoWindowController,
+    required this.mapVis,
+
 
   });
   
@@ -61,7 +64,8 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
         markers:markers, 
          currentUser:currentUser,
          kGooglePlex:kGooglePlex,
-    
+    customInfoWindowController:customInfoWindowController,
+    mapVis:mapVis,
 
       ),
     
@@ -93,12 +97,17 @@ class UsersInMap_Page extends StatefulWidget {
   late final Map<MarkerId, Marker> markers;
   late final String currentUser;
   late final  CameraPosition  kGooglePlex ;
+    late final CustomInfoWindowController customInfoWindowController;
+  late final bool mapVis;
+
     UsersInMap_Page
     ({
  required this.markers,
     required this.currentUser,
     required this.kGooglePlex,
-    
+   required this.customInfoWindowController,
+    required this.mapVis,
+
 
   });
   
@@ -107,6 +116,9 @@ class UsersInMap_Page extends StatefulWidget {
          markers:markers, 
          currentUser:currentUser,
          kGooglePlex:kGooglePlex,
+     customInfoWindowController:customInfoWindowController,
+    mapVis:mapVis,
+
          );
 }
 
@@ -116,22 +128,19 @@ class _UsersInMap extends State<UsersInMap_Page> {
  late final Map<MarkerId, Marker> markers;
   late final String currentUser;
   late final  CameraPosition  kGooglePlex ;
+    late final CustomInfoWindowController customInfoWindowController;
+  late final bool mapVis;
+
     _UsersInMap
     ({
      required this.markers,
     required this.currentUser,
     required this.kGooglePlex,
-    
+     required this.customInfoWindowController,
+        required this.mapVis,
+
 
   });
-
-
-
-  final Storage storage=Storage();
-
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-
 
   Widget _buildSeparator2(Size screenSize)
    {
@@ -144,81 +153,42 @@ class _UsersInMap extends State<UsersInMap_Page> {
   }
 
 
-
-
-Future<List> SendInfoSearch() async
-  { 
-    final  url = "http://192.168.0.114:80/search/getResultSearch?currentUser=$currentUser";
-    final  response = await http.get(Uri.parse(url));
-    final  responsebody =  json.decode(response.body) as List<dynamic>;
-
-    return responsebody.reversed.toList();
-
-  }
-
-
-
-
-
-  Future <void>getInfo() async {
-
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$currentUser";
-
-    var response = await http.get(Uri.parse(url));
-    var responsebody = json.decode(response.body);
-  
-
-    return await responsebody;
- 
-
-  }
-CustomInfoWindowController _customInfoWindowController=CustomInfoWindowController();
 late String downloadURL;
 
   @override
-
-  
-void initState(){
-  super.initState();
-}
-
-
   Widget build(BuildContext context) {
        
                  
                      return Scaffold(
-                         body: Stack(
-                              children: [
-                                           Container(
-                                              height: 100,
-                                              width: 100,
-                                              child:GoogleMap(
-                                         initialCameraPosition: kGooglePlex,
-                                         markers: Set<Marker>.of(markers.values),
-                                          onTap: (postition){ _customInfoWindowController.hideInfoWindow!();},
-                                         onMapCreated: (GoogleMapController controller) {_customInfoWindowController.googleMapController=controller;},
-                                         onCameraMove:(postition){ _customInfoWindowController.onCameraMove!();},
-                         
-                                               ), 
-
-                                           ),
-                                      
-                              
-                                        CustomInfoWindow(
-                                          controller:_customInfoWindowController,
-                                          height:50,
-                                          width: 50,
-                                          offset: 35,
+                  
+                              body:Visibility(
+                                child: Column(
+                                  children: [
+                                      Container(
+                                        height:MediaQuery.of(context).size.height *0.63,
+                                        width: MediaQuery.of(context).size.width,
+                                        child:   GoogleMap(
+                                           initialCameraPosition: kGooglePlex,
+                                           markers: Set<Marker>.of(markers.values),
+                                            onTap: (postition){ customInfoWindowController.hideInfoWindow!();},
+                                           onMapCreated: (GoogleMapController controller) {customInfoWindowController.googleMapController=controller;},
+                                           onCameraMove:(postition){ customInfoWindowController.onCameraMove!();},
                                           
-                                                        ),
-
-           
-
-                                          ],
-          
-
-
-                                    ),
+                                             ),
+                                      ),
+                                    SizedBox(height: 15 ,),
+                                              CustomInfoWindow(
+                                            controller:customInfoWindowController,
+                                       height:MediaQuery.of(context).size.height *0.20,
+                                        width: MediaQuery.of(context).size.width *0.95,
+                                            offset: 40, ),
+                              
+                                  ],
+                                ),
+                             //   visible: mapVis,
+                              )
+                             
+                                        
                
             
                                     );

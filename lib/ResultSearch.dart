@@ -270,6 +270,107 @@ Future<List> SendInfoSearch() async
 }
 
 
+ Widget buildStatCardOnMap(String nameUser,String WorkUser,String ImageUserURL, String UserId,String currentUser) {
+
+        return  FutureBuilder<String>(
+      future: storage.downloadURL(ImageUserURL),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                             if (snapshot.hasData)
+                             {
+                                String UserImage=snapshot.data!.toString();
+                                return  Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Row(
+                    textDirection: TextDirection.rtl,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+
+                       
+                          Container(
+                            height: 55,
+                            width: 55,
+                            child:CircleAvatar(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.green,
+                              backgroundImage: NetworkImage(UserImage),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                             Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children:  <Widget>[
+                              Text(
+                                nameUser,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                WorkUser,
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: FlatButton(
+                          onPressed: () {
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
+                          },
+                          color: Color.fromARGB(255, 51, 54, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'تواصل ',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+                                
+                            }
+                            else 
+                                                    {
+                                                      return Text('بانتظار التحميل ...');
+                                                        //return CircularProgressIndicator();
+                                                    }
+
+                        }
+
+ );
+                        
+ 
+}
+
+
+
   Future <void>getInfo() async {
 
     var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$currentUser";
@@ -289,11 +390,16 @@ late String downloadURL;
 
   @override
 
-  
-void initState(){
-  super.initState();
-}
+  var myIcon;
+   var WorkerIcon;
 
+bool mapVis=false;
+void initState() {
+          mapVis=!mapVis;
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(35, 35)), 'images/pp.png').then((onValue) { myIcon = onValue; });
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(30, 30)), 'images/Workerr.png').then((onValue1) { WorkerIcon = onValue1; });
+
+ }
 
   Widget build(BuildContext context) {
        
@@ -329,12 +435,12 @@ void initState(){
                                                     
                                                      onTap:(){ 
                                                       _customInfoWindowController.addInfoWindow!(
-                                                        Text('Ashraf ',style: TextStyle(fontSize:25,color: Color.fromARGB(31, 114, 3, 240))),
+                                                        Text('هذا انت  ',style: TextStyle(fontSize:30,color: Color.fromARGB(20, 7, 3, 247))),
                                                         LatLng(LatUser, LongUser),
                                                       );
                                                      },
                                                      
-                                                     icon:BitmapDescriptor.defaultMarker,
+                                                     icon:myIcon,
                                                      );
 
                                                  markers[MymarkerId] = myMark;
@@ -345,46 +451,8 @@ void initState(){
           return  Column(
           
                 children: [
-
-            // Container(
-            //           height: 300,
-            //           width: 350,
-            //           child:
-            //                     GoogleMap(
-                           
-            //                 initialCameraPosition: kGooglePlex,
-            //                 markers: Set<Marker>.of(markers.values),
-            //                    onTap: (postition){
-            //                          _customInfoWindowController.hideInfoWindow!();
-            //                 },
-
-            //                  onMapCreated: (GoogleMapController controller)
-            //                         {
-            //                         _customInfoWindowController.googleMapController=controller;
-            //                         },
-
-
-            //                 onCameraMove:(postition){
-            //                   _customInfoWindowController.onCameraMove!();
-            //                 } ,
-                         
-             
-            //                         ),
-                              
-            //         ),
-
-
-//                                         CustomInfoWindow(
-//                                           controller:_customInfoWindowController,
-//                                           height:50,
-//                                           width: 50,
-//                                           offset: 35,
-                                          
-//                                           ),
-
-// ///
                        Container(
-                            height: 510,
+                            height: 530,
                             child: FutureBuilder<List>(
                                         future:  SendInfoSearch(),
           
@@ -405,7 +473,7 @@ void initState(){
                                                         LatUser1 = double.parse(snapshot.data![index]["latitude"].toString());
                                                         LongUser1 = double.parse(snapshot.data![index]["longitude"].toString());
                           
-                                                        final MarkerId markerId = MarkerId(snapshot.data![index]['_id'].toString());
+                                                        final MarkerId markerId = MarkerId(snapshot.data![index]['name'].toString());
                                                        print(LatUser1);
           
                                                        final Marker marker =Marker(
@@ -414,61 +482,43 @@ void initState(){
                                                       position: LatLng(LatUser1, LongUser1),
                                                       icon: BitmapDescriptor.defaultMarker,
                                                          onTap:(){ 
-      //                                                     AlertDialog(
-      //   title: const Text('AlertDialog Title'),
-      //   content: SingleChildScrollView(
-      //     child: ListBody(
-      //       children: const <Widget>[
-      //         Text('This is a demo alert dialog.'),
-      //         Text('Would you like to approve of this message?'),
-      //       ],
-      //     ),
-      //   ),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: const Text('Approve'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
-    
-  
-                                                        _customInfoWindowController.addInfoWindow!(
-                                                          Container(
-                                                              height: 500,
-                                                              width: 500,
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.white,
-                                                                border: Border.all(color:Colors.grey),
-                                                                borderRadius:  BorderRadius.circular(10.0),
+                                                      _customInfoWindowController.addInfoWindow!(
+                                                        
+                                   buildStatCardOnMap(snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['image'].toString(),snapshot.data![index]['_id'].toString(),currentUser),
+
+                                                          // Container(
+                                                          //    height:MediaQuery.of(context).size.height *0.15,
+                                                          //    width: MediaQuery.of(context).size.width,
+                                                          //     decoration: BoxDecoration(
+                                                          //       color: Colors.white,
+                                                          //       border: Border.all(color:Colors.grey),
+                                                          //       borderRadius:  BorderRadius.circular(10.0),
           
-                                                              ),
-                                                              child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  Container(
-                                                                    width: 500,
-                                                                    height: 500,
-                                                                    decoration:const BoxDecoration(
-                                                                      image: DecorationImage(
-                                                                        image: NetworkImage('https://www.mapitstudio.com/wp-content/uploads/2021/04/sieninis-medinis-pasaulio-zemelapis-su-saliu-valstybiu-pavadinimais-kelioniu-zemelapis-azuolas-map-it-studio.jpg'),
-                                                                        fit: BoxFit.fitWidth,
-                                                                        filterQuality: FilterQuality.high),
-                                                                        borderRadius: const BorderRadius.all(Radius.circular(10.0),
-                                                                        ),
-                                                                        color: Colors.red,
-                                                                    ),
-                                                                  ),
+                                                          //     ),
+                                                          //     child: Column(
+                                                          //       mainAxisAlignment: MainAxisAlignment.start,
+                                                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                                                          //       children: [
+                                                          //         Container(
+                                                          //           height:MediaQuery.of(context).size.height *0.15,
+                                                          //          width: MediaQuery.of(context).size.width,
+                                                          //           decoration:const BoxDecoration(
+                                                          //             image: DecorationImage(
+                                                          //               image: NetworkImage('https://www.mapitstudio.com/wp-content/uploads/2021/04/sieninis-medinis-pasaulio-zemelapis-su-saliu-valstybiu-pavadinimais-kelioniu-zemelapis-azuolas-map-it-studio.jpg'),
+                                                          //               fit: BoxFit.fitWidth,
+                                                          //               filterQuality: FilterQuality.high),
+                                                          //               borderRadius: const BorderRadius.all(Radius.circular(10.0),
+                                                          //               ),
+                                                          //               color: Colors.red,
+                                                          //           ),
+                                                          //         ),
           
-                                                                ],
+                                                          //       ],
           
-                                                              ),
-                                                          ),
+                                                          //     ),
+                                                          // ),
                                                           LatLng(LatUser1, LongUser1),
-                                                        );
+                                                       );
                                                        }
                                                        );
           
@@ -502,24 +552,33 @@ void initState(){
                                         }
                                       ),
                 ),
-
+ SizedBox(height: 20,),
                 Row(
                   children: [
 
-    SizedBox(width: 60,),
-           
+    SizedBox(width:10,),
+              
+Text('اضغط هنا للعرض على الخريطة',style: TextStyle(fontSize: 20),),
+Text('  >',style: TextStyle(fontSize: 24,color: Color.fromARGB(255, 65, 67, 73)),),
+    SizedBox(width:20,),
+
         FloatingActionButton(
-         backgroundColor: Color.fromARGB(255, 66, 64, 64),
-        child: Icon(Icons.search,color: Color.fromARGB(255, 255, 255, 255),size: 25,),
+         backgroundColor: Color.fromARGB(255, 82, 133, 241),
+        child: Icon(Icons.map,color: Color.fromARGB(255, 255, 255, 255),size: 25,),
         onPressed: (){
            Navigator.push(context, MaterialPageRoute(builder: (context)=>UsersInMap(
            
            markers:markers,
           currentUser:currentUser,
           kGooglePlex:kGooglePlex,
+        customInfoWindowController:_customInfoWindowController,
+        mapVis:mapVis,
+
            )));
         },
       ),
+
+      
                   ],
                 )
           
