@@ -134,7 +134,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                  ListTile(
                     title: Text("العطاءات",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.grading_outlined),
-                    subtitle: Text("مناقصات و عطاءات في مجال عملك"),
+                    subtitle: Text("مناقصات و عطاءات"),
                     isThreeLine: true,
                     dense: true,
                     onTap: (){

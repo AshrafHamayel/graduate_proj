@@ -166,7 +166,17 @@ Future sendToDB(String imagePath) async {
     );
   }
 
-
+          List<String> typeOfWork =
+   [
+    ' البناء بشكل عام ',
+    '  التميديات الكهربائية و الصحية ',
+    'الدهان و ديكورات الجبصين ',
+    ' البلاط',
+    ' منسق حدائق و جنائن ',
+    ' القرميد و ديكوراته',
+    ' صيانة و تصليح',
+    ' ما يخص المركبات',
+  ];
 
   Future<List> getPosts() async {
 
@@ -179,7 +189,167 @@ Future sendToDB(String imagePath) async {
  
 
   }
+ late File _file;
+  
 
+late File _fileComit;
+String imageName='null';
+
+Future<void> showcamera(BuildContext context)async{
+
+return await showDialog(context: context, 
+builder: (context){
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+    children: [
+              const SizedBox(height: 20),
+
+       Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+           var pickedImage = await imagepicker.getImage(source: ImageSource.camera);
+            if (pickedImage != null) {
+      _fileComit = File(pickedImage.path);
+       imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+   
+
+       print(imageName);
+       storage.uploadImagesComits(path,imageName).then((value) =>
+       {
+ Navigator.of(context).pop(),
+       
+       }
+       );
+   
+
+    } 
+    else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Image not selected'))
+      );
+      
+    }
+              return;
+ 
+          }, 
+          icon: Icon(Icons.camera_alt_outlined),  //icon data for elevated button
+          label: Text("اللتقاط صورة ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 143, 140, 140)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+
+          Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+              children:<Widget>[
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+               child:ElevatedButton.icon(
+
+           onPressed: ()async{
+             var pickedImage = await imagepicker.getImage(source: ImageSource.gallery);
+              if (pickedImage != null) {
+      _fileComit = File(pickedImage.path);
+       imageName=pickedImage.path.split("/").last;
+       final path =pickedImage.path;
+
+   
+
+       print(imageName);
+       storage.uploadImagesComits(path,imageName).then((value) =>
+       {
+
+        Navigator.of(context).pop(),
+         
+       
+       }
+       );
+   
+
+    } else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(' لم يتم اختيار الصورة'))
+      );
+      
+    }
+    return;
+           
+          }, 
+          icon: Icon(Icons.image),  //icon data for elevated button
+          label: Text(" اختر من المعرض ",style:TextStyle(fontSize: 17),), //label text 
+          style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 70, 6, 245)),
+                padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12)),
+
+              ),
+
+
+                  ) 
+            ),
+          ]
+          ),
+    ],
+  )
+  
+  
+  )
+  
+  ),
+
+);
+}
+
+);
+}
+
+
+Future sendComitToDB(String description,String imageComit ) async 
+{
+
+             var url = "http://192.168.0.114:80/addComplaint/newcomplaint?UserId=$UserId&description=$description&imageComplaint=$imageComit";
+            var response = await http.post(Uri.parse(url));
+            var responsebody = json.decode(response.body);
+
+              if (responsebody['NT']=='done')
+       {
+       ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text(' تم حفظ الشكوى')) );
+       }
+
+       else{
+
+               ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لم يتم حفظ الشكوى')) );
+
+           }
+
+
+
+}
+
+  final imagepicker = ImagePicker();
 
 
   Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
@@ -395,7 +565,231 @@ Future sendToDB(String imagePath) async {
          
   }
 
+Future<void> showCominet(BuildContext context)async{
 
+return await showDialog(context: context, 
+builder: (context){
+
+return AlertDialog(
+
+
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+
+      Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+       
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width * 0.60,
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  image:FileImage(_fileComit),
+                  child: InkWell(
+                    onTap: () {
+                    
+                          
+                    },
+                    // child: const Align(
+                    //   child: Padding(
+                    //     padding: EdgeInsets.fromLTRB(10, 140, 50, 10),
+                    //     child: Text(
+                    //       '',
+                    //       style: TextStyle(
+                    //           fontWeight: FontWeight.w900,
+                    //           color: Colors.white70,
+                    //           fontSize: 20),
+                    //     ),
+                    //   ),
+                    // ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+    ],
+  )
+  
+  
+  )
+  
+  ),
+  actions:<Widget> [
+TextButton(
+  onPressed: (){  
+                Navigator.of(context).pop();
+       }, 
+       
+       child: Text("موافق",style:const TextStyle( color: Color.fromARGB(255, 22, 0, 216), fontSize: 17.0,),))
+  ],
+);
+}
+
+);
+}
+
+    final TextEditingController  MyTenders = TextEditingController();
+
+ Widget _buildTenders() {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        child: Card(
+          child: Column(
+            children:  <Widget>[
+          Card(
+            color: Color.fromARGB(255, 220, 248, 217),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextField(
+                maxLines: 3, //or null 
+                decoration: InputDecoration.collapsed(hintText: "اضف وصف"),
+                controller:MyTenders ,
+              ),
+            )
+          )
+        ]
+          ),
+        ),
+      ),
+    );
+  }
+Widget _buildComit() {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        height: 67,
+        width: 150,
+        child: Card(
+          child: Column(
+            children: <Widget>[
+            
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    left: BorderSide(
+                                        color: Colors.grey.withOpacity(0.3)),
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                           
+                          ))),
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                          
+                          )))
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: InkWell(
+                          onTap: () {
+
+                                  showcamera(context).then((value) =>
+                                        {
+
+                                          showCominet(context),
+
+                                        });
+                           
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey.withOpacity(.3)))),
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.camera_alt_rounded,
+                                  color: Color.fromARGB(255, 126, 207, 131),
+                                ),
+                                Padding(padding: EdgeInsets.only(right: 10)),
+                                Text(
+                                  ' اضف صورة',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 15, 10, 10), fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          )))
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+Widget _buildButtons() {
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal:25.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child:InkWell(
+              onTap: () => {
+                   
+       sendComitToDB(MyTenders.text,imageName).then((value) =>
+       {
+
+       Navigator.pop(context),
+
+        })
+
+       
+
+              },
+              child: Container(
+                height: 50.0,
+              
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  color:Color(0xFF404A5C),
+                ),
+                child:Center(
+                  child: Text( "طرح العطاء",style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.5,
+                    ),
+                  ),
+                )
+              ),
+            ),
+          ),
+          const SizedBox(width: 10.0),
+        ],
+      ),
+    );
+  }
 
   @override
 
@@ -419,6 +813,78 @@ Future sendToDB(String imagePath) async {
        {
          
     String nm=snapshot.data["name"].toString();
+                    if(snapshot.data["UserType"].toString()=='true')
+                    {
+ return Stack(
+            children: <Widget>[
+          
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: screenSize.height / 18.0),
+
+                      Text('مرحبا بك في صفحة العطاءات',style: TextStyle(fontSize: 24,color: Color.fromARGB(255, 32, 7, 255)),),
+                      _buildSeparator2(screenSize),
+
+                       _buildTenders(),
+                       _buildComit(),
+                     const SizedBox(height: 20.0),
+                     _buildButtons(),
+
+                      SizedBox(
+                        height: 10,
+                      ),
+
+
+
+                   Container(
+                height: 440,
+                child: FutureBuilder<List>(
+                                      future: getPosts(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                         return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
+              ),
+                     
+          
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+
+                  }
+
+
+
+
+
+
+
+
+                  else{
 
  return Stack(
             children: <Widget>[
@@ -473,6 +939,9 @@ Future sendToDB(String imagePath) async {
               ),
             ],
           );
+
+                  }
+
 
       
       
