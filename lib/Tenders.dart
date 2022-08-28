@@ -13,6 +13,7 @@ import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
+import 'TendersResult.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -165,22 +166,115 @@ Future sendToDB(String imagePath) async {
       margin: const EdgeInsets.only(top: 4.0),
     );
   }
+late String dropdownvalueCity='اختر مدينة' ;
+ late  final ControlleCity = TextEditingController();
 
-          List<String> typeOfWork =
-   [
-    ' البناء بشكل عام ',
-    '  التميديات الكهربائية و الصحية ',
-    'الدهان و ديكورات الجبصين ',
+  Widget buildDropCity(TextEditingController contr){
+    var items = [
+	'اختر مدينة',
+	'القدس',
+	'حيفا',
+	'يافا',
+	'الخليل',
+  'بيت لحم',
+  'نابلس',
+  'غزة',
+  'أريحا',
+  'نابلس',
+  'طولكرم',
+  'رام الله',
+  '	جنين',
+  'طوباس',
+  '	قلقيلية',
+  '	سلفيت',
+];
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: DropdownButtonFormField(
+           decoration: InputDecoration( border: const OutlineInputBorder(),),
+          // Initial Value
+          value: dropdownvalueCity,
+          
+          // Down Arrow Icon
+          icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 18,
+        
+          
+          // Array list of items
+          items: items.map((String items) {
+            return DropdownMenuItem(
+            value: items,
+            
+            child: Text(items,style: TextStyle(fontSize: 18),),
+            );
+          }).toList(),
+          // After selecting the desired option,it will
+          // change button value to selected value
+          onChanged: (String? newValue) {
+            setState(() {
+            dropdownvalueCity = newValue!;
+          
+            });
+          },
+     menuMaxHeight: 500,
+          ),
+    );
+  }
+
+late String dropdownvalueWork ='اختر مجال العمل';
+ late  final ControlleWork = TextEditingController();
+  Widget buildDropWork(TextEditingController contr){
+    var items = [
+	'اختر مجال العمل',
+ ' البناء بشكل عام ',
+    'التميديات الكهربائية و الصحية',
+    'الدهان و ديكورات الجبصين',
     ' البلاط',
-    ' منسق حدائق و جنائن ',
-    ' القرميد و ديكوراته',
+    ' منسق حدائق و جنائن',
+    'القرميد و ديكوراته',
     ' صيانة و تصليح',
     ' ما يخص المركبات',
-  ];
+];
 
-  Future<List> getPosts() async {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: DropdownButtonFormField(
+           decoration: InputDecoration( border: const OutlineInputBorder(),),
+          // Initial Value
+          value: dropdownvalueWork,
+         
+          
+          // Down Arrow Icon
+          icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 18,
+        
+          
+          // Array list of items
+          items: items.map((String items) {
+            return DropdownMenuItem(
+            value: items,
+            
+            child: Text(items,style: TextStyle(fontSize: 18),),
+            );
+          }).toList(),
+          // After selecting the desired option,it will
+          // change button value to selected value
+          onChanged: (String? newValue) {
+            setState(() {
+            dropdownvalueWork = newValue!;
+          
+            });
+          },
+     menuMaxHeight: 500,
+          ),
+    );
+  }
 
-    final  url = "http://192.168.0.114:80/addPost/allPosts?UserId=$UserId";
+
+  Future<List> getTenders() async {
+
+    final  url = "http://192.168.0.114:80/addTenders/myTenders?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -189,6 +283,21 @@ Future sendToDB(String imagePath) async {
  
 
   }
+
+    Future<List> getTendersForWorker() async {
+
+    final  url = "http://192.168.0.114:80/addTenders/getTendersForWorker?UserId=$UserId";
+
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
+
+    return responsebody.reversed.toList();
+ 
+
+  }
+
+
+
  late File _file;
   
 
@@ -224,7 +333,7 @@ return AlertDialog(
    
 
        print(imageName);
-       storage.uploadImagesComits(path,imageName).then((value) =>
+       storage.uploadFile(path,imageName).then((value) =>
        {
  Navigator.of(context).pop(),
        
@@ -276,7 +385,7 @@ return AlertDialog(
    
 
        print(imageName);
-       storage.uploadImagesComits(path,imageName).then((value) =>
+       storage.uploadFile(path,imageName).then((value) =>
        {
 
         Navigator.of(context).pop(),
@@ -328,20 +437,20 @@ return AlertDialog(
 Future sendComitToDB(String description,String imageComit ) async 
 {
 
-             var url = "http://192.168.0.114:80/addComplaint/newcomplaint?UserId=$UserId&description=$description&imageComplaint=$imageComit";
+             var url = "http://192.168.0.114:80/addTenders/newtenders?UserId=$UserId&description=$description&imageComplaint=$imageComit&sectionTenders=$dropdownvalueWork&CityTenders=$dropdownvalueCity";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
               if (responsebody['NT']=='done')
        {
        ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar( content: Text(' تم حفظ الشكوى')) );
+                      const SnackBar( content: Text('تم نشر العطاء')) );
        }
 
        else{
 
                ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar( content: Text('لم يتم حفظ الشكوى')) );
+                      const SnackBar( content: Text('لم يتم حفظ العطاء')) );
 
            }
 
@@ -351,12 +460,11 @@ Future sendComitToDB(String description,String imageComit ) async
 
   final imagepicker = ImagePicker();
 
-
-  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+  Widget _buildStatTenders(String nameUser,String description,String ImageUserURL, String ImageTenders ,String Sec,String city,String DateTenders,String _idTen) {
 
 
                       return  FutureBuilder<String>(
-                        future: storage.downloadURLPost(ImageURL),
+                        future: storage.downloadURL(ImageTenders),
                         builder: (BuildContext context, AsyncSnapshot <String>snapshot)
                         {
                             if (snapshot.hasData)
@@ -376,18 +484,19 @@ Future sendComitToDB(String description,String imageComit ) async
                                   
   return Container(
     margin: const EdgeInsets.all(10.0),
-    color: Color.fromARGB(255, 239, 245, 237),
+    color: Color.fromARGB(255, 247, 231, 181),
      width: MediaQuery.of(context).size.width * 0.95,
-    height: MediaQuery.of(context).size.height * 0.68,
+    height: MediaQuery.of(context).size.height * 0.75,
     child: Column(
       children: [
           ListTile(
-                leading:CircleAvatar(
+                leading:CircleAvatar
+                (
                 radius: 45, // Image radius
                 backgroundImage: NetworkImage(UserPostURL),
               ),
                         
-                        title: Container(child: Text(namePost,style: TextStyle(fontSize: 18),)),
+                        title: Container(child: Text(nameUser,style: TextStyle(fontSize: 18),)),
                         trailing: IconButton(
                             onPressed: () {
                               
@@ -395,14 +504,37 @@ Future sendComitToDB(String description,String imageComit ) async
                             icon: Icon(Icons.more_vert_outlined)
                             ),
                         isThreeLine: true,
-                        subtitle: Text(DatePost),
+                        subtitle: Text(DateTenders),
                       ),
 
 
+ _buildSeparator2(MediaQuery.of(context).size),
+Row( 
+               children:  [
+                
+                  const SizedBox(width: 30.0),
+                Text('مجال العطاء : $Sec',  style: TextStyle(color: Color.fromARGB(255, 64, 64, 65), fontSize: 13, ),
+            ),
+               ],
+            ),
+
+ const SizedBox(width: 20.0),
+Row( 
+               children:  [
+                
+                  const SizedBox(width: 30.0),
+                Text('مدينة العطاء : $city',  style: TextStyle(color: Color.fromARGB(255, 64, 64, 65), fontSize: 13, ),
+            ),
+               ],
+            ),
+
+
+ _buildSeparator2(MediaQuery.of(context).size),
          Row( 
                children:  [
+
                   const SizedBox(width: 30.0),
-                Text(description,  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
+                Text('الوصف : $description',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
             ),
                ],
             ),
@@ -432,9 +564,9 @@ Future sendComitToDB(String description,String imageComit ) async
       ),
      
 
-       Row(
+                    Row(
                         children: <Widget>[
-                          Expanded(
+                            Expanded(
                             child: Container(
                               decoration: BoxDecoration(
                                   border: Border(
@@ -445,7 +577,10 @@ Future sendComitToDB(String description,String imageComit ) async
                                 children: <Widget>[
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TendersResult( TendersId:_idTen,currentUser:UserId)), (route) => false);
+
+                                      },
                                       child: Container(
                                         decoration: BoxDecoration(
                                             border: Border(
@@ -460,17 +595,17 @@ Future sendComitToDB(String description,String imageComit ) async
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              color: Color.fromARGB(255, 114, 111, 111),
+                                              Icons.group_add_rounded,
+                                              color: Color.fromARGB(255, 129, 180, 127),
                                             ),
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 10)),
                                             Text(
-                                              '$Nlike اعجبني' ,
+                                             'عرض المتقدمين للعطاء',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                 color: Color.fromARGB(255, 36, 33, 33),
+                                                 color: Color.fromARGB(255, 0, 0, 0),
                                                   fontSize: 15),
                                             ),
                                           ],
@@ -480,48 +615,6 @@ Future sendComitToDB(String description,String imageComit ) async
                                   )
                                 ],
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: InkWell(
-                                        onTap: () {
-
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(.3)))),
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.thumb_down_alt_outlined,
-                                                  color: Color.fromARGB(255, 114, 111, 111),
-
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10)),
-                                              Text(
-                                                ' $NDisLike  لم يعجبني',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(255, 36, 33, 33),
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                        ))),
-                              ],
                             ),
                           ),
                         ],
@@ -564,6 +657,203 @@ Future sendComitToDB(String description,String imageComit ) async
                               
          
   }
+
+
+ Future <void>AddToApplicants(String Tid) async
+  {
+
+    var url = await"http://192.168.0.114:80/addTenders/AddToApplicants?TendersId=$Tid&currentUser=$UserId";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    return await responsebody;
+ 
+
+  }
+
+
+ Widget _buildStatTendersForWorker(String nameUser,String description,String ImageUserURL, String ImageTenders ,String DateTenders,String _idTen) {
+
+
+                      return  FutureBuilder<String>(
+                        future: storage.downloadURL(ImageTenders),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String ImageURLPost=snapshot.data!.toString();
+
+
+
+                       return  FutureBuilder<String>(
+                        future: storage.downloadURL(ImageUserURL),
+                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
+                        {
+                            if (snapshot.hasData)
+                             {
+                                String UserPostURL=snapshot.data!.toString();
+
+                                  
+  return Container(
+    margin: const EdgeInsets.all(10.0),
+    color: Color.fromARGB(255, 194, 194, 194),
+     width: MediaQuery.of(context).size.width * 0.95,
+    height: MediaQuery.of(context).size.height * 0.70,
+    child: Column(
+      children: [
+          ListTile(
+                leading:CircleAvatar
+                (
+                radius: 45, // Image radius
+                backgroundImage: NetworkImage(UserPostURL),
+              ),
+                        
+                        title: Container(child: Text(nameUser,style: TextStyle(fontSize: 18),)),
+                        trailing: IconButton(
+                            onPressed: () {
+                              
+                            },
+                            icon: Icon(Icons.more_vert_outlined)
+                            ),
+                        isThreeLine: true,
+                        subtitle: Text(DateTenders),
+                      ),
+
+
+
+
+
+
+         Row( 
+               children:  [
+
+                  const SizedBox(width: 30.0),
+                Text('الوصف : $description',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 15, ),
+            ),
+               ],
+            ),
+
+
+       Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24), ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Ink.image(
+              image: NetworkImage(ImageURLPost),
+            //  colorFilter: ColorFilters.greyscale,
+              child: InkWell(
+                onTap: () {},
+              ),
+             width: MediaQuery.of(context).size.width * 0.86,
+    height: MediaQuery.of(context).size.height * 0.4195,
+              fit: BoxFit.cover,
+            ),
+            
+          ],
+        ),
+        
+      ),
+     
+
+                    Row(
+                        children: <Widget>[
+                            Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      left: BorderSide(
+                                          color:
+                                              Colors.grey.withOpacity(0.3)))),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+            AddToApplicants(_idTen).then((value) =>{
+                   Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId))),
+                      });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                    color: Color.fromARGB(255, 158, 158, 158)
+                                                        .withOpacity(.3)))),
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.widgets_rounded,
+                                              color: Color.fromARGB(255, 245, 128, 124),
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10)),
+                                            Text(
+                                             'تقديم للعطاء',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                 color: Color.fromARGB(255, 0, 0, 0),
+                                                  fontSize: 15),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    
+                     _buildSeparator2(MediaQuery.of(context).size),
+
+
+      ]
+
+  ),
+  );
+   
+                            } 
+                                                   
+                                                   
+                                                   
+                                                    else 
+                                                    {
+                                                      return Text('بانتظار التحميل ...');
+                                                        //return CircularProgressIndicator();
+                                                    }
+                                                },  
+                                              );
+
+
+
+
+
+
+
+                               
+                            } 
+                                                    else 
+                                                    {
+                                                        return Text(' ');
+                                                    }
+                                                },  
+                                              );
+                              
+         
+  }
+
+
 
 Future<void> showCominet(BuildContext context)async{
 
@@ -760,7 +1050,8 @@ Widget _buildButtons() {
        sendComitToDB(MyTenders.text,imageName).then((value) =>
        {
 
-       Navigator.pop(context),
+    Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId))),
+
 
         })
 
@@ -830,6 +1121,10 @@ Widget _buildButtons() {
                        _buildTenders(),
                        _buildComit(),
                      const SizedBox(height: 20.0),
+                     buildDropWork(ControlleWork),
+                   const SizedBox(height: 20.0),
+
+                     buildDropCity(ControlleCity),
                      _buildButtons(),
 
                       SizedBox(
@@ -837,11 +1132,12 @@ Widget _buildButtons() {
                       ),
 
 
+             Text('العطاءات التي قمت بطرحها',style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 252, 89, 89)),),
 
                    Container(
                 height: 440,
                 child: FutureBuilder<List>(
-                                      future: getPosts(),
+                                      future: getTenders(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -854,7 +1150,7 @@ Widget _buildButtons() {
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                         return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                         return _buildStatTenders(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imageTenders'].toString(),snapshot.data![index]['Section'].toString(),snapshot.data![index]['CityTenders'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }
@@ -895,18 +1191,20 @@ Widget _buildButtons() {
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
 
-                      Text('يمكنك هنا مشاهدة العطاءات المطروحة',style: TextStyle(fontSize: 24,color: Color.fromARGB(255, 32, 7, 255)),),
+                      Text('يمكنك هنا مشاهدة العطاءات المطروحة',style: TextStyle(fontSize: 22,color: Color.fromARGB(255, 32, 7, 255)),),
+                    Text('التي تخص مدينتك و مجال عملك',style: TextStyle(fontSize: 22,color: Color.fromARGB(255, 32, 7, 255)),),
+
                       _buildSeparator2(screenSize),
-                    
+                      
                       
 
                       SizedBox(
                         height: 10,
                       ),
                    Container(
-                height: 440,
+                height: 500,
                 child: FutureBuilder<List>(
-                                      future: getPosts(),
+                                      future: getTendersForWorker(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -919,7 +1217,7 @@ Widget _buildButtons() {
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                         return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                         return _buildStatTendersForWorker(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imageTenders'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }
