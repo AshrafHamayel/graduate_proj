@@ -406,9 +406,7 @@ late String downloadURL;
                       SizedBox(height: screenSize.height / 18.0),
 
 
-                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
-
-                     _buildFullName(snapshot.data["name"].toString()),
+                    
                      
                       _buildSeparator2(screenSize),
                       const SizedBox(height: 20.0),

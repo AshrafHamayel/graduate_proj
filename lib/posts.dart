@@ -483,19 +483,9 @@ Future sendPostToDB(String description,String imagepost ) async
 
               if (responsebody['NT']=='done')
        {
-           await firestore.collection('users').doc(UserId).collection('Posts').doc(UserId).set({
-     
-      'name':responsebody['name'].toString(),
-      'uid':responsebody['id'].toString(),
-      'imageuser':responsebody['imageuser'].toString(),
-      'imagepost':responsebody['imagepost'].toString(),
-      'description':responsebody['description'].toString(),
-      'numberLike':responsebody['numberLike'].toString(),
-      'date':DateTime.now(),
-      'numberDisLike':responsebody['numberDisLike'].toString(),
-
-      
-    }); 
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text(' تم حفظ المنشور')) );
          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,)), (route) => false);
 
        }
@@ -971,15 +961,10 @@ late String downloadURL;
                     children: <Widget>[
                       SizedBox(height: screenSize.height / 18.0),
 
-
-                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
-
-                      _buildFullName(snapshot.data["name"].toString()),
-                      
                       const SizedBox(height: 10.0),
                    
                    Container(
-                height: 440,
+                  height:MediaQuery.of(context).size.height * 0.75,
                 child: FutureBuilder<List>(
                                       future: getPosts(),
                                       builder: (context,snapshot){
@@ -1028,30 +1013,15 @@ late String downloadURL;
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: screenSize.height / 18.0),
-
-
-                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
-
-                      _buildFullName(snapshot.data["name"].toString()),
-                      
                      
-
-                     
-                      const SizedBox(height: 10.0),
-                      //_buildButtons(),
-                      const SizedBox(height: 8.0),
-                    //  _buildSeparator2(screenSize),
-                      SizedBox(
-                        height: 10,
-                      ),
+                  
                       _buildpost(),
 
                       SizedBox(
                         height: 10,
                       ),
                    Container(
-                height: 440,
+                height:MediaQuery.of(context).size.height * 0.75,
                 child: FutureBuilder<List>(
                                       future: getPosts(),
                                       builder: (context,snapshot){

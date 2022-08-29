@@ -748,8 +748,18 @@ late String downloadURL;
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
        
+                   if(snapshot.data["UserType"].toString()=='true')
+       {
 
-       return Stack(
+          return Center(
+            child:   Text('لا يمكنك تقييم مستخدم غير عامل',style: TextStyle(fontSize: 20),),
+          );
+       }
+
+
+       else{
+
+ return Stack(
             children: <Widget>[
           
               SafeArea(
@@ -760,10 +770,6 @@ late String downloadURL;
                       SizedBox(height: screenSize.height / 18.0),
 
 
-                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
-
-                     _buildFullName(snapshot.data["name"].toString()),
-                     
                       _buildSeparator2(screenSize),
                       const SizedBox(height: 20.0),
                        Text('قم بتقييم هذا الشخص اولا ثم اضف تعليق ',style: TextStyle(fontSize: 18),),
@@ -821,6 +827,8 @@ late String downloadURL;
               ),
             ],
           );
+       }
+      
             }
           return Center(      
                   child:  Text('  '),

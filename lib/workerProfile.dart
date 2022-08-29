@@ -987,20 +987,7 @@ late String downloadURL;
 
 
              
-             ListTile(
-              title: Text( 'الاشخاص الذين قمت بتقييمهم', style: const TextStyle( color: Color.fromARGB(255, 14, 11, 46), fontSize: 16.0,fontWeight:FontWeight.bold ), ),
-                    leading: Icon(Icons.star,size: 30,color: Color.fromARGB(255, 125, 167, 141),),
-                    subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){
-
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => true);
-
-
-                    },
-
-                ),
+            
 
            
                  ListTile(

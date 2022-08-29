@@ -623,19 +623,10 @@ Future sendPostToDB(String description,String imagepost ) async
 
               if (responsebody['NT']=='done')
        {
-           await firestore.collection('users').doc(UserId).collection('Posts').doc(UserId).set({
-     
-      'name':responsebody['name'].toString(),
-      'uid':responsebody['id'].toString(),
-      'imageuser':responsebody['imageuser'].toString(),
-      'imagepost':responsebody['imagepost'].toString(),
-      'description':responsebody['description'].toString(),
-      'numberLike':responsebody['numberLike'].toString(),
-      'date':DateTime.now(),
-      'numberDisLike':responsebody['numberDisLike'].toString(),
+ 
+       ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text(' تم حفظ المنشور')) );
 
-      
-    }); 
          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
 
        }

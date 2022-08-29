@@ -108,14 +108,16 @@ Future getPer() async {
   }
 
 
- Future CreatUser(String Description,String City )async {
+ Future CreatUser(String Description,String City,String PhoneNumber )async {
 
 
               
                       if(Description+"--"=="--")
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل الوصف رجاءً')) );
-
+                  else if(PhoneNumber+"--"=="--")
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('ادخل رقم الهاتف رجاءً')) );
                       else  if(dropdownvalue+"--"=="--")
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل المدينة رجاءً')) );
@@ -124,7 +126,7 @@ Future getPer() async {
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$dropdownvalue&&LAT=$lat&LONG=$long";
+       var url = "http://192.168.0.114:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$dropdownvalue&&LAT=$lat&LONG=$long&PhoneNumber=$PhoneNumber";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -162,6 +164,7 @@ else{
 
     
   }
+      late final ControllerPhoneNumber = TextEditingController();
 
 
   late String dropdownvalue ;
@@ -272,6 +275,7 @@ else{
                     
           
                buildTextField("اضف وصف لصفحتك  ", "الاسم", false ,ControllerDescription),
+                buildTextField(" رقم الهاتف", "********", false , ControllerPhoneNumber),
              buildDrop(ControllerCity),
 
          
@@ -295,7 +299,7 @@ else{
 
                    
                     
-                       await CreatUser(ControllerDescription.text,ControllerCity.text);
+                       await CreatUser(ControllerDescription.text,ControllerCity.text,ControllerPhoneNumber.text);
 
                     },
                     style: ElevatedButton.styleFrom( shape: RoundedRectangleBorder(
