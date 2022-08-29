@@ -484,7 +484,7 @@ Future sendComitToDB(String description,String imageComit ) async
                                   
   return Container(
     margin: const EdgeInsets.all(10.0),
-    color: Color.fromARGB(255, 247, 231, 181),
+    color: Color.fromARGB(31, 160, 160, 160),
      width: MediaQuery.of(context).size.width * 0.95,
     height: MediaQuery.of(context).size.height * 0.75,
     child: Column(
@@ -937,7 +937,7 @@ TextButton(
           child: Column(
             children:  <Widget>[
           Card(
-            color: Color.fromARGB(255, 220, 248, 217),
+            color: Colors.white70,
             child: Padding(
               padding: EdgeInsets.all(8.0),
               child: TextField(

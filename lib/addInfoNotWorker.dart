@@ -116,7 +116,7 @@ Future getPer() async {
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل الوصف رجاءً')) );
 
-                      else  if(City+"--"=="--")
+                      else  if(dropdownvalue+"--"=="--")
                           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text('ادخل المدينة رجاءً')) );
 
@@ -124,7 +124,7 @@ Future getPer() async {
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$City&&LAT=$lat&LONG=$long";
+       var url = "http://192.168.0.114:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$dropdownvalue&&LAT=$lat&LONG=$long";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -162,6 +162,63 @@ else{
 
     
   }
+
+
+  late String dropdownvalue ;
+
+  Widget buildDrop(TextEditingController contr){
+    var items = [
+	'اختر مدينة',
+	'القدس',
+	'حيفا',
+	'يافا',
+	'الخليل',
+  'بيت لحم',
+  'نابلس',
+  'غزة',
+  'أريحا',
+  'نابلس',
+  'طولكرم',
+  'رام الله',
+  '	جنين',
+  'طوباس',
+  '	قلقيلية',
+  '	سلفيت',
+];
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: DropdownButtonFormField(
+           decoration: InputDecoration( border: const OutlineInputBorder(),),
+          // Initial Value
+          value: 'اختر مدينة',
+          
+          // Down Arrow Icon
+          icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 42,
+        
+          
+          // Array list of items
+          items: items.map((String items) {
+            return DropdownMenuItem(
+            value: items,
+            
+            child: Text(items,style: TextStyle(fontSize: 18),),
+            );
+          }).toList(),
+          // After selecting the desired option,it will
+          // change button value to selected value
+          onChanged: (String? newValue) {
+            setState(() {
+            dropdownvalue = newValue!;
+          
+            });
+          },
+     menuMaxHeight: 500,
+          ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +272,7 @@ else{
                     
           
                buildTextField("اضف وصف لصفحتك  ", "الاسم", false ,ControllerDescription),
-              buildTextField(" ادخل مكان سكنك", "********", false , ControllerCity),
+             buildDrop(ControllerCity),
 
          
          Text( 'رجاءا قم بتفعيل خاصية GPS لحفظ موقعك', textDirection: TextDirection.rtl, style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 34, 1, 155)),),

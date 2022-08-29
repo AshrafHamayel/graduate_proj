@@ -955,6 +955,77 @@ late String downloadURL;
   
  
 
+  Widget _buildStatusNotWorker(BuildContext context,String city) {
+    
+        
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+       child: ListView(
+    scrollDirection: Axis.vertical,
+    shrinkWrap: true,
+            
+            children: <Widget>[
+
+               ListTile(
+              title: Text( 'هذا الحساب للمستخدين الغير عمال', style: const TextStyle( color: Color.fromARGB(255, 120, 173, 241), fontSize: 15.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.admin_panel_settings,size: 25,color: Color.fromARGB(255, 56, 56, 100),),
+                    subtitle: Text("  ",style: TextStyle(fontSize: 16),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => true);
+
+
+                    },
+
+                ),
+
+
+             
+             ListTile(
+              title: Text( 'الاشخاص الذين قمت بتقييمهم', style: const TextStyle( color: Color.fromARGB(255, 14, 11, 46), fontSize: 16.0,fontWeight:FontWeight.bold ), ),
+                    leading: Icon(Icons.star,size: 30,color: Color.fromARGB(255, 125, 167, 141),),
+                    subtitle: Text(" عرض سجل التقييمات",style: TextStyle(fontSize: 16),),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings(UserId:UserId)), (route) => true);
+
+
+                    },
+
+                ),
+
+           
+                 ListTile(
+              title: Text(city, style: const TextStyle( color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.w300, ), ),
+                    leading: Icon(Icons.location_pin,size: 30,color: Color.fromARGB(255, 8, 20, 187),),
+                    subtitle: Text(" مكان السكن "),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){},
+
+                ),
+
+            
+
+
+            ])
+       
+       
+        
+      
+      
+      
+    );
+  }
+
 
 
   @override
@@ -981,9 +1052,48 @@ late String downloadURL;
            
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
-       
+                if(snapshot.data["UserType"].toString()=='true')
+       {
 
-       return Stack(
+ return Stack(
+            children: <Widget>[
+          
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: screenSize.height / 18.0),
+
+                       
+                     _buildProfileImage(context,snapshot.data["image"].toString(),snapshot.data["Type"].toString()),
+                     _buildFullName(snapshot.data["name"].toString()),
+                      _buildBio(context,snapshot.data['description'].toString()),
+                     
+                      _buildSeparator2(screenSize),
+                      _buildStatusNotWorker(context,snapshot.data['city'].toString()),
+
+                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
+                      const SizedBox(height: 10.0),
+                      _buildButtons(snapshot.data['fav'].toString()),
+                      const SizedBox(height: 8.0),
+                    //  _buildSeparator2(screenSize),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+       }
+       else{
+
+         return Stack(
             children: <Widget>[
           
               SafeArea(
@@ -1053,6 +1163,9 @@ late String downloadURL;
               ),
             ],
           );
+       }
+
+      
             }
           return Container(
             

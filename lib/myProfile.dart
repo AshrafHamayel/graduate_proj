@@ -1605,7 +1605,7 @@ late String downloadURL;
 
                       _buildStatusNotWorker(context,snapshot.data['city'].toString()),
 
-                      _buildStatContainerNotWorker(snapshot.data['Ifollow'].toString()),
+                       _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
                      
                   
                     ],
