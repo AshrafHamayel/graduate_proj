@@ -578,6 +578,8 @@ Row(
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
+                                        
+
                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TendersResult( TendersId:_idTen,currentUser:UserId)), (route) => false);
 
                                       },

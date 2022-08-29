@@ -15,7 +15,9 @@ import 'Chats/screens/chat_screen.dart';
 import 'Chats/screens/home_screen.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
+import 'ResultFollow.dart';
 import 'SettingsPage.dart';
+import 'complaint.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,29 +100,14 @@ class workerProfile extends StatelessWidget {
                     subtitle: Text(" Make a complaint"),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
-
-                ),
-              ListTile(
-                    title: Text("  موقعي "),
-                    leading: Icon(Icons.edit_location_alt_sharp),
-                    subtitle: Text(" My location"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
-               ListTile(
-                    title: Text("الاعدادات"),
-                    leading: Icon(Icons.settings),
-                    subtitle: Text("Settings"),
-                    isThreeLine: true,
-                    dense: true,
                     onTap: (){
-                       Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SettingsPage()));
-                    },
+
+                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => myComplaint(UserId:CurrentUser)));    
+                            },
+
                 ),
+              
+               
          
 
             ],
@@ -205,6 +192,9 @@ var responsebody = json.decode(response.body);
  
 
   }
+
+
+
 
 
 
@@ -446,7 +436,10 @@ var responsebody = json.decode(response.body);
     );
   }
   Widget _buildStatItem(String label, String count) {
-    TextStyle _statLabelTextStyle = const TextStyle(
+
+    if(label=='المتابعون'){
+
+ TextStyle _statLabelTextStyle = const TextStyle(
       color: Colors.black,
       fontSize: 21.0,
       fontWeight: FontWeight.w200,
@@ -474,7 +467,11 @@ var responsebody = json.decode(response.body);
               
             ),
             onPressed: () {
-              print('HI');
+              
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'followers',CurrentUser:CurrentUser,
+)), (route) => false);
+
+              
             },
             child:  Text(count),
             
@@ -483,9 +480,56 @@ var responsebody = json.decode(response.body);
        
       ],
     );
+    }
+    else{
+
+       TextStyle _statLabelTextStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 21.0,
+      fontWeight: FontWeight.w200,
+    );
+
+    TextStyle _statCountTextStyle = const TextStyle(
+      color: Colors.black54,
+      fontSize: 24.0,
+      fontWeight: FontWeight.bold,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+
+         Text(
+          label,
+          style: _statLabelTextStyle,
+        ),
+
+          TextButton(
+            
+            style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 22,fontWeight:FontWeight.bold),
+              
+            ),
+            onPressed: () {
+              
+                            
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'Ifollow',CurrentUser:CurrentUser,
+)), (route) => false);
+
+              
+            },
+            child:  Text(count,style: TextStyle( color: Color.fromARGB(134, 14, 109, 1),),),
+            
+          ),
+
+       
+      ],
+    );
+    }
+   
   }
 
-  Widget _buildStatContainer(String _followers ) {
+  Widget _buildStatContainer(String _followers,String Ifollow ) {
     return Container(
       height: 60.0,
       margin: const EdgeInsets.only(top: 8.0),
@@ -497,7 +541,8 @@ var responsebody = json.decode(response.body);
         children: <Widget>[
           
           _buildStatItem("المتابعون", _followers),
-           _buildStatItem("اتابعه", _followers),
+
+           _buildStatItem("يُتابعه", Ifollow),
         
         
           
@@ -957,7 +1002,7 @@ late String downloadURL;
                       _buildSeparator2(screenSize),
 
                       _buildStatus(context,snapshot.data['rating'].toString(),snapshot.data['work'].toString(),snapshot.data['city'].toString(),snapshot.data['phoneNumber'].toString(),snapshot.data['Salary'].toString(),snapshot.data['Availability'].toString()),
-                      _buildStatContainer(snapshot.data['followers'].toString()),
+                      _buildStatContainer(snapshot.data['followers'].toString(),snapshot.data['Ifollow'].toString()),
                       const SizedBox(height: 10.0),
                       _buildButtons(snapshot.data['fav'].toString()),
                       const SizedBox(height: 8.0),

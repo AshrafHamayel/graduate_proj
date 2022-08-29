@@ -12,6 +12,7 @@ import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
+import 'ResultFollow.dart';
 import 'SettingsPage.dart';
 import 'Tenders.dart';
 import 'complaint.dart';
@@ -1041,10 +1042,13 @@ Future UnsetAvailabil() async
     );
   }
 
-  Widget _buildStatItem(String label, String count) {
-    TextStyle _statLabelTextStyle = const TextStyle(
+ Widget _buildStatItem(String label, String count) {
+
+    if(label=='المتابعون'){
+
+ TextStyle _statLabelTextStyle = const TextStyle(
       color: Colors.black,
-      fontSize: 16.0,
+      fontSize: 21.0,
       fontWeight: FontWeight.w200,
     );
 
@@ -1054,21 +1058,83 @@ Future UnsetAvailabil() async
       fontWeight: FontWeight.bold,
     );
 
-    return Column(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          count,
-          style: _statCountTextStyle,
-        ),
-        Text(
+
+         Text(
           label,
           style: _statLabelTextStyle,
         ),
+
+          TextButton(
+            
+            style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 22,fontWeight:FontWeight.bold),
+              
+            ),
+            onPressed: () {
+              
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'followers',CurrentUser:UserId,
+)), (route) => false);
+
+              
+            },
+            child:  Text(count),
+            
+          ),
+
+       
       ],
     );
-  }
+    }
+    else{
 
+       TextStyle _statLabelTextStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 21.0,
+      fontWeight: FontWeight.w200,
+    );
+
+    TextStyle _statCountTextStyle = const TextStyle(
+      color: Colors.black54,
+      fontSize: 24.0,
+      fontWeight: FontWeight.bold,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+
+         Text(
+          label,
+          style: _statLabelTextStyle,
+        ),
+
+          TextButton(
+            
+            style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 22,fontWeight:FontWeight.bold),
+              
+            ),
+            onPressed: () {
+              
+                            
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'Ifollow',CurrentUser:UserId,
+)), (route) => false);
+
+              
+            },
+            child:  Text(count,style: TextStyle( color: Color.fromARGB(134, 14, 109, 1),),),
+            
+          ),
+
+       
+      ],
+    );
+    }
+   
+  }
 
  Widget _buildStatContainerNotWorker(String _Ifollow) {
     return Container(
