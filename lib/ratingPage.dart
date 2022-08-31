@@ -50,20 +50,24 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       body: Rating_Page( UserId:UserId,FrindId:FrindId,),
     
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
         elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => HomeScreen()));
-            },
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('التقييم'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
       
@@ -126,6 +130,7 @@ double rating=1;
                 initialRating: rating,
                 minRating: 1,
                 itemSize: 50,
+                allowHalfRating: true,
                 itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
                 updateOnDrag: true,
                 onRatingUpdate:(rating) => setState(() { this.rating = rating; }),
@@ -477,6 +482,7 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
                   RatingBar.builder(
                 initialRating: Rating1,
                 itemSize: 25,
+                allowHalfRating: true,
                 itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
                 updateOnDrag: true,
                 onRatingUpdate:(rating) {},

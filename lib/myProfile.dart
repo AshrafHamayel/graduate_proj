@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, unused_import, use_key_in_widget_constructors, library_private_types_in_public_api, camel_case_types, deprecated_member_use, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, file_names, depend_on_referenced_packages, prefer_typing_uninitialized_variables, duplicate_ignore, avoid_print, unnecessary_string_interpolations, unused_label
 
 import 'dart:convert';
 import 'dart:io';
@@ -28,6 +28,7 @@ import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart';
 import '../models/postModel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:like_button/like_button.dart';
 class myProfile extends StatelessWidget {
   late final String UserId;
     myProfile
@@ -551,7 +552,7 @@ return AlertDialog(
                 child: Ink.image(
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width * 0.41,
-                  height: MediaQuery.of(context).size.height * 0.14,
+                  height: MediaQuery.of(context).size.height * 0.13,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -1303,11 +1304,31 @@ Future UnsetAvailabil() async
  
 
   }
+ Future <bool>AddLike(String idPost) async {
+
+    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    bool t=true;
+    return  t;
+ 
+
+  }
 
 
+  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String DatePost, String postID) {
+                        var LikesNumber =0;
 
-  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
 
+                          if(Nlike.length>3)
+                          {
+                          final NN = Nlike.split(',');
+                          LikesNumber = int.parse(NN.length.toString());
+                          }
+                          
+
+                         bool IsFind=Nlike.contains(UserId);
 
                       return  FutureBuilder<String>(
                         future: storage.downloadURLPost(ImageURL),
@@ -1330,7 +1351,7 @@ Future UnsetAvailabil() async
                                   
   return Container(
     margin: const EdgeInsets.all(10.0),
-    color: Color.fromARGB(255, 239, 245, 237),
+    color: Color.fromARGB(255, 255, 255, 255),
      width: MediaQuery.of(context).size.width * 0.95,
     height: MediaQuery.of(context).size.height * 0.68,
     child: Column(
@@ -1372,8 +1393,10 @@ Future UnsetAvailabil() async
             Ink.image(
               image: NetworkImage(ImageURLPost),
             //  colorFilter: ColorFilters.greyscale,
+              // ignore: sort_child_properties_last
               child: InkWell(
-                onTap: () {},
+                onTap: (){}
+               
               ),
              width: MediaQuery.of(context).size.width * 0.86,
     height: MediaQuery.of(context).size.height * 0.4195,
@@ -1385,99 +1408,25 @@ Future UnsetAvailabil() async
         
       ),
      
-
-       Row(
+                     
+                      Row(
                         children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      left: BorderSide(
-                                          color:
-                                              Colors.grey.withOpacity(0.3)))),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                top: BorderSide(
-                                                    color: Color.fromARGB(255, 158, 158, 158)
-                                                        .withOpacity(.3)))),
-                                        padding: EdgeInsets.all(10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              color: Color.fromARGB(255, 114, 111, 111),
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 10)),
-                                            Text(
-                                              '$Nlike اعجبني' ,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                 color: Color.fromARGB(255, 36, 33, 33),
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                          SizedBox(width: 30,),
+                            LikeButton(
+                               size: 36,
+                               likeCount: LikesNumber,
+                                onTap:(hhh)=>AddLike(postID),
+                                   likeBuilder: (hh) {
+                                                  return Icon(
+                                                    Icons.thumb_up_alt,
+                                                    color: IsFind ? Color.fromARGB(255, 6, 42, 245) : Colors.grey,
+                                                    size: 36,
+                                                  );
+                                                },
                             ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: InkWell(
-                                        onTap: () {
-
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(.3)))),
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.thumb_down_alt_outlined,
-                                                  color: Color.fromARGB(255, 114, 111, 111),
-
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10)),
-                                              Text(
-                                                ' $NDisLike  لم يعجبني',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(255, 36, 33, 33),
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                        ))),
-                              ],
-                            ),
-                          ),
+                            SizedBox(width: 18,),
+                            IsFind ?   Text('اعجبك',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 16, ),):
+                                       Text('اعجبني',  style: TextStyle(color: Color.fromARGB(255, 85, 84, 84), fontSize: 14, ), ),
                         ],
                       ),
                     
@@ -1533,6 +1482,7 @@ Future UnsetAvailabil() async
                 return RatingBar.builder(
                 initialRating: Rea,
                 minRating: 1,
+                allowHalfRating: true,
                 itemSize: 25,
                 itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
                 updateOnDrag: true,
@@ -1545,6 +1495,7 @@ Future UnsetAvailabil() async
 
   }
   
+
 
 late String downloadURL;
 
@@ -1656,7 +1607,7 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['Like'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }

@@ -563,7 +563,7 @@ Future<List> getUsersFourthSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 22, color: Colors.white),
+                                                      style: TextStyle(fontSize: 20, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -634,7 +634,7 @@ Future<List> getUsersFourthSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 22, color: Colors.white),
+                                                      style: TextStyle(fontSize: 20, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -705,7 +705,7 @@ Future<List> getUsersFourthSec() async
                                          {
                                            
                                          return Text(snapshot.data.toString() ,
-                                                      style: TextStyle(fontSize: 22, color: Colors.white),
+                                                      style: TextStyle(fontSize: 20, color: Colors.white),
                                                     );
                                                                             }
                                         
@@ -768,7 +768,7 @@ Future<List> getUsersFourthSec() async
               Divider(color: Colors.white),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 15, 10, 0),
-                child: Text('أخرى ',style: TextStyle(fontSize: 22, color: Colors.white)),
+                child: Text('أخرى ',style: TextStyle(fontSize: 20, color: Colors.white)),
               ),
               Container(
                 height: 202,

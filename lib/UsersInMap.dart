@@ -29,7 +29,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../models/postModel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:custom_info_window/custom_info_window.dart';
-
+bool mapVis1=true;
 class UsersInMap extends StatelessWidget {
   late final Map<MarkerId, Marker> markers;
   late final String currentUser;
@@ -54,9 +54,10 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
 
   }
-  
+
+
   @override
-  
+ 
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
@@ -69,22 +70,26 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
       ),
     
-      appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+      appBar:  AppBar(
         elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SearchWorker(currentUser:currentUser)));
-            },
+        leading: IconButton(
+          onPressed: () {
+
+            mapVis1=false;
+           Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('النتائج على الخريطة'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
     ),
@@ -156,6 +161,12 @@ class _UsersInMap extends State<UsersInMap_Page> {
 late String downloadURL;
 
   @override
+     void initState() 
+    {
+    mapVis1=true;
+    super.initState();
+    
+  }
   Widget build(BuildContext context) {
        
                  
@@ -185,7 +196,7 @@ late String downloadURL;
                               
                                   ],
                                 ),
-                             //   visible: mapVis,
+                               visible: mapVis1,
                               )
                              
                                         

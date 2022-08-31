@@ -4,9 +4,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
@@ -14,6 +17,7 @@ import 'Chats/models/user_model.dart';
 import 'Chats/screens/chat_screen.dart';
 import 'Chats/screens/home_screen.dart';
 import 'EditProfile.dart';
+import 'MapTwoUser.dart';
 import 'Ratings.dart';
 import 'ResultFollow.dart';
 import 'SettingsPage.dart';
@@ -48,32 +52,23 @@ class workerProfile extends StatelessWidget {
       body: workerProfile_Page( UserId:UserId, CurrentUser:CurrentUser),
     
       appBar: AppBar(
-        
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
         elevation: 1,
-        // leading: IconButton(
-        //   icon: const Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.green,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => MyApp()),
-        //     );
-        //   },
-        // ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () { Navigator.pop(context);
-            },
+        leading: IconButton(
+          onPressed: () {
+           Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('العمال'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 //Directionality 
       drawer: Drawer(
@@ -151,6 +146,9 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
    required this.CurrentUser,
   }); 
 
+late  CameraPosition  kGooglePlex;
+ late final PointLatLng myPos;
+  late final PointLatLng FrindPos;
  late bool pressAttention=true;
 
   Future <void>getInfo() async {
@@ -402,7 +400,16 @@ var responsebody = json.decode(response.body);
                     subtitle: Text(" المدينة "),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
+                    onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTwoUser(
+                                      
+                                      FrindPos:FrindPos,
+                                      currentUser:CurrentUser,
+                                      kGooglePlex:kGooglePlex,
+                                      myPos:myPos,
+
+                                      )));
+                    },
 
                 ),
  ListTile(
@@ -941,6 +948,7 @@ late String downloadURL;
                 return RatingBar.builder(
                 initialRating: Rea,
                 minRating: 1,
+                allowHalfRating: true,
                 itemSize: 25,
                 itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
                 updateOnDrag: true,
@@ -1039,6 +1047,28 @@ late String downloadURL;
            
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
+
+
+                                            var LatUser = double.parse(snapshot.data["CurrentUserLat"].toString());
+                                            var LongUser = double.parse(snapshot.data["CurrentUserLong"].toString());
+                                            myPos = PointLatLng(LatUser, LongUser);
+
+                                           var  LatUser1 = double.parse(snapshot.data["latitude"].toString());
+                                           var  LongUser1 = double.parse(snapshot.data["longitude"].toString());
+                                            FrindPos = PointLatLng(LatUser1, LongUser1);
+
+                                            kGooglePlex = CameraPosition(
+                                            target: LatLng(LatUser, LongUser),
+                                              zoom: 12,
+                                            );
+                                      
+  
+                                                    
+
+
+
+
+
                 if(snapshot.data["UserType"].toString()=='true')
        {
 
@@ -1079,7 +1109,7 @@ late String downloadURL;
           );
        }
        else{
-
+          
          return Stack(
             children: <Widget>[
           

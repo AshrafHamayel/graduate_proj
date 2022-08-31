@@ -115,101 +115,6 @@ class _RatingsPage extends State<Ratings_Page> {
 
 
 
-Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
-    if(Type=='Google')
-    {
-       return Center(
-      child: Stack(
-        children: [
-          Container(
-            width: 130,
-            height: 130,
-            decoration: BoxDecoration(
-                border: Border.all(
-                    width: 4, color: Theme.of(context).scaffoldBackgroundColor),
-                boxShadow: [
-                  BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.1),
-                      offset: const Offset(0, 10))
-                ],
-                shape: BoxShape.circle,
-                image:  DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage("$imagee")
-                        )),
-          ),
-
-        ],
-      ),
-    );
-    }
-    
-       else{
- 
-                      return  FutureBuilder<String>(
-                        future: storage.downloadURL(imagee),
-                        builder: (BuildContext context, AsyncSnapshot <String>snapshot)
-                        {
-                            if (snapshot.hasData)
-                             {
-                                String NewUrl=snapshot.data!.toString();
-
-                                return  Center(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: 130,
-                                    height: 130,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 4, color: Theme.of(context).scaffoldBackgroundColor),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              spreadRadius: 2,
-                                              blurRadius: 10,
-                                              color: Colors.black.withOpacity(0.1),
-                                              offset: const Offset(0, 10))
-                                        ],
-                                        shape: BoxShape.circle,
-                                        image:  DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage("$NewUrl")
-                                                )),
-                                  ),
-                                  
-                                ],
-                              ),
-                            );
-                      } 
-                                                    else 
-                                                    {
-                                                        return CircularProgressIndicator();
-                                                    }
-                                                },  
-                                              );
-                              
-    }
-   
-  }
-
-  Widget _buildFullName( String _fullName) {
-    TextStyle _nameTextStyle = const TextStyle(
-      color: Colors.black,
-      fontSize: 30.0,
-      fontWeight: FontWeight.w700,
-    );
-
-         return Text(
-      _fullName,
-      style: _nameTextStyle,
-    );
-    
-  }
-
-
- 
 
 
   Widget _buildSeparator2(Size screenSize)
@@ -291,6 +196,7 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
                   RatingBar.builder(
                 initialRating: Rating1,
                 itemSize: 25,
+                allowHalfRating: true,
                 itemBuilder: (context, _) =>Icon(Icons.star,color: Colors.amber,) ,
                 updateOnDrag: true,
                 onRatingUpdate:(rating) {},

@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:like_button/like_button.dart';
 import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
@@ -47,23 +48,25 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
     child: Scaffold(
       body: Posts_Page( UserId:UserId,),
     
-      appBar: AppBar(
-        
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+      appBar:  AppBar(
         elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+        leading: IconButton(
+          onPressed: () {
+           Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => MyApp()));
-            },
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('المنشورات'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
     ),
@@ -411,7 +414,7 @@ return AlertDialog(
                 child: Ink.image(
                   fit: BoxFit.fill,
                   width: MediaQuery.of(context).size.width * 0.41,
-                  height: MediaQuery.of(context).size.height * 0.14,
+                  height: MediaQuery.of(context).size.height * 0.13,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -699,7 +702,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
 
 
-  Future<List> getPosts() async {
+  Future<List> getPostsGeneral() async {
 
     final  url = "http://192.168.0.114:80/addPost/allPosts?UserId=$UserId";
 
@@ -712,9 +715,46 @@ Future sendPostToDB(String description,String imagepost ) async
   }
 
 
+    Future<List> getPostsFollowers() async {
 
-  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+    final  url = "http://192.168.0.114:80/addPost/getPostsFollowers?UserId=$UserId";
 
+    final  response = await http.get(Uri.parse(url));
+    final  responsebody = json.decode(response.body) as List<dynamic>;
+
+    return responsebody.reversed.toList();
+ 
+
+  }
+
+
+
+
+ Future <bool>AddLike(String idPost) async {
+
+    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    bool t=true;
+    return  t;
+ 
+
+  }
+
+
+  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String DatePost, String postID) {
+   var LikesNumber =0;
+
+
+                          if(Nlike.length>3)
+                          {
+                          final NN = Nlike.split(',');
+                          LikesNumber = int.parse(NN.length.toString());
+                          }
+                          
+
+                         bool IsFind=Nlike.contains(UserId);
 
                       return  FutureBuilder<String>(
                         future: storage.downloadURLPost(ImageURL),
@@ -737,7 +777,7 @@ Future sendPostToDB(String description,String imagepost ) async
                                   
   return Container(
     margin: const EdgeInsets.all(10.0),
-    color: Color.fromARGB(255, 239, 245, 237),
+    color: Color.fromARGB(255, 255, 255, 255),
      width: MediaQuery.of(context).size.width * 0.95,
     height: MediaQuery.of(context).size.height * 0.68,
     child: Column(
@@ -792,99 +832,25 @@ Future sendPostToDB(String description,String imagepost ) async
         
       ),
      
-
-       Row(
+             
+                      Row(
                         children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      left: BorderSide(
-                                          color:
-                                              Colors.grey.withOpacity(0.3)))),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                top: BorderSide(
-                                                    color: Color.fromARGB(255, 158, 158, 158)
-                                                        .withOpacity(.3)))),
-                                        padding: EdgeInsets.all(10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              color: Color.fromARGB(255, 114, 111, 111),
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 10)),
-                                            Text(
-                                              '$Nlike اعجبني' ,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                 color: Color.fromARGB(255, 36, 33, 33),
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                          SizedBox(width: 30,),
+                            LikeButton(
+                               size: 36,
+                               likeCount: LikesNumber,
+                                onTap:(hhh)=>AddLike(postID),
+                                   likeBuilder: (hh) {
+                                                  return Icon(
+                                                    Icons.thumb_up_alt,
+                                                    color: IsFind ? Color.fromARGB(255, 6, 42, 245) : Colors.grey,
+                                                    size: 36,
+                                                  );
+                                                },
                             ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: InkWell(
-                                        onTap: () {
-
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(.3)))),
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.thumb_down_alt_outlined,
-                                                  color: Color.fromARGB(255, 114, 111, 111),
-
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10)),
-                                              Text(
-                                                ' $NDisLike  لم يعجبني',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(255, 36, 33, 33),
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                        ))),
-                              ],
-                            ),
-                          ),
+                            SizedBox(width: 18,),
+                            IsFind ?   Text('اعجبك',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 16, ),):
+                                       Text('اعجبني',  style: TextStyle(color: Color.fromARGB(255, 85, 84, 84), fontSize: 14, ), ),
                         ],
                       ),
                     
@@ -927,6 +893,140 @@ Future sendPostToDB(String description,String imagepost ) async
   }
 
 
+
+   Future <void>GeneralPosts() async {
+
+    var url = await"http://192.168.0.114:80/addPost/GeneralPosts?currentUser=$UserId";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    return await responsebody;
+ 
+
+  }
+
+Future <void>FollowersPosts() async {
+
+    var url = await"http://192.168.0.114:80/addPost/FollowersPosts?currentUser=$UserId";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    return await responsebody;
+ 
+
+  }
+
+
+
+
+Widget _buildButtons(String Stat) {
+
+     bool Fav=true;
+            if(Stat=='general')
+           {
+            Fav =false;
+           }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child:Fav? InkWell(
+              onTap: () => {
+
+                GeneralPosts().then((value) =>{
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId)), (route) => true), })
+
+              },
+              child:  Container(
+                height: 40.0,
+               width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                //  border: Border.all(),
+                  color:Color.fromARGB(239, 255, 251, 251),
+                ),
+                child:Center(
+                  child: Row(
+                    children: [
+                      SizedBox(width: 120,),
+                      Text( "عام",style: TextStyle(
+                   
+                       color: Color.fromARGB(255, 128, 127, 127),
+                     fontWeight: FontWeight.w600,
+                      fontSize: 13
+                    ),
+                  ),
+                         Text( "  /  ",style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    ),
+                  ),
+
+                  Text( "اتابعه",style: TextStyle(
+                       color: Color.fromARGB(255, 20, 2, 180),
+                     
+                       fontWeight: FontWeight.bold,
+                       fontSize: 20
+                    ),
+                  ),
+                    ],
+                    
+                  )
+                ),
+              ),
+            ):InkWell(
+              onTap: () => {
+
+                FollowersPosts().then((value) =>{
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId)), (route) => true), })
+
+              },
+              child: Container(
+                height: 40.0,
+               width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                //  border: Border.all(),
+                  color:Color.fromARGB(239, 255, 251, 251),
+                ),
+                child:Center(
+                  child: Row(
+                    children: [
+                      SizedBox(width: 120,),
+                      Text( "عام",style: TextStyle(
+                      color: Color.fromARGB(255, 20, 2, 180),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                         Text( "  /  ",style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    ),
+                  ),
+
+                  Text( "اتابعه",style: TextStyle(
+                      color: Color.fromARGB(255, 128, 127, 127),
+                      fontWeight: FontWeight.w600,
+                       fontSize: 13
+                    ),
+                  ),
+                    ],
+                    
+                  )
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10.0),
+        
+        ],
+      ),
+    );
+  }
+
 late String downloadURL;
 
   @override
@@ -936,7 +1036,7 @@ late String downloadURL;
     Size screenSize = MediaQuery.of(context).size;
     
 
-
+        
          return Container (
       
       child: Scaffold(
@@ -949,7 +1049,10 @@ late String downloadURL;
 
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
-          if(snapshot.data["UserType"].toString()=='true')
+
+           if(snapshot.data["TypePosts"].toString()=='general')
+       {
+     if(snapshot.data["UserType"].toString()=='true')
        {
 
  return Stack(
@@ -959,14 +1062,131 @@ late String downloadURL;
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: screenSize.height / 18.0),
+                      
+                       _buildButtons('general'),
+                     
+                   Container(
+                  height:MediaQuery.of(context).size.height * 0.75,
+                child: FutureBuilder<List>(
+                                      future: getPostsGeneral(),
+                                      builder: (context,snapshot){
 
-                      const SizedBox(height: 10.0),
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['Like'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
+              ),
+                     
+          
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+
+       }
+
+
+        else
+        {
+
+ return Stack(
+            children: <Widget>[
+          
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                     
+                    _buildButtons('general'),
+                     SizedBox(
+                        height:10,
+                      ),
+                      _buildpost(),
+
+                      SizedBox(
+                        height: 10,
+                      ),
+                   Container(
+                height:MediaQuery.of(context).size.height * 0.75,
+                child: FutureBuilder<List>(
+                                      future: getPostsGeneral(),
+                                      builder: (context,snapshot){
+
+                                       if (snapshot.hasData)
+                                         {
+                                           
+                                         return ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
+                                                  itemBuilder: (context, index)
+                                                  {
+                                     
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['Like'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
+                                                  },
+                                                );
+                                         }
+                                        
+                                     return Text(' ...جار التحميل '); // or some other widget
+                                // return CircularProgressIndicator(); // or some other widget
+
+                                        
+                                      }
+                                    ),
+              ),
+                     
+          
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+
+        }
+
+       }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+     else{
+
+
+  if(snapshot.data["UserType"].toString()=='true')
+       {
+
+ return Stack(
+            children: <Widget>[
+          
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                       _buildButtons('Followers'),
+                    
                    
                    Container(
                   height:MediaQuery.of(context).size.height * 0.75,
                 child: FutureBuilder<List>(
-                                      future: getPosts(),
+                                      future: getPostsFollowers(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -1014,7 +1234,10 @@ late String downloadURL;
                   child: Column(
                     children: <Widget>[
                      
-                  
+                    _buildButtons('Followers'),
+                     SizedBox(
+                        height: 10,
+                      ),
                       _buildpost(),
 
                       SizedBox(
@@ -1023,7 +1246,7 @@ late String downloadURL;
                    Container(
                 height:MediaQuery.of(context).size.height * 0.75,
                 child: FutureBuilder<List>(
-                                      future: getPosts(),
+                                      future: getPostsFollowers(),
                                       builder: (context,snapshot){
 
                                        if (snapshot.hasData)
@@ -1058,6 +1281,13 @@ late String downloadURL;
           );
 
         }
+
+
+
+
+
+
+     }
       
             }
           return Container(

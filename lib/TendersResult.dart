@@ -52,23 +52,24 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       body: TendersResult_Page( TendersId:TendersId,currentUser:currentUser,
 ),
     
-      appBar: AppBar(
-        
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+      appBar:  AppBar(
         elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
-            },
+        leading: IconButton(
+          onPressed: () {
+           Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('العطاءات'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
     ),

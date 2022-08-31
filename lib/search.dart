@@ -149,7 +149,7 @@ final NameWorker = TextEditingController();
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
-            Text('العمال'),
+            Text('البحث'),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
@@ -475,7 +475,7 @@ final NameWorker = TextEditingController();
                                   );
                                 },
                               ),
-                              _buildcheckbox(checkedClosest, 'ترتيب حسب الاعلى تقييما'),
+                            //  _buildcheckbox(checkedClosest, 'ترتيب حسب الاعلى تقييما'),
                             ],
                           ),
                         );
@@ -517,34 +517,34 @@ final NameWorker = TextEditingController();
                 ],
               ),
               SizedBox(height: 10),
-                  Container(
-                height: 360.0,
-                width: double.infinity,
-                child: Carousel(
-                  boxFit: BoxFit.cover,
-                  autoplay: true,
-                  autoplayDuration: Duration(seconds: 10),
-                  dotSize: 3.0,
-                  dotBgColor: Color.fromARGB(255, 142, 245, 173).withOpacity(0.2),
-                  dotIncreasedColor: Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
-                  dotPosition: DotPosition.bottomCenter,
-                  showIndicator: true,
-                  images: [
-                    Image.asset(
-                      "images/p1.png",
-                      fit: BoxFit.cover,
-                    ),
-                    Image.asset(
-                      "images/aboutus.png",
-                      fit: BoxFit.cover,
-                    ),
-                    Image.asset(
-                      "images/contact2.png",
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
-              ),
+              //     Container(
+              //   height: 360.0,
+              //   width: double.infinity,
+              //   child: Carousel(
+              //     boxFit: BoxFit.cover,
+              //     autoplay: true,
+              //     autoplayDuration: Duration(seconds: 10),
+              //     dotSize: 3.0,
+              //     dotBgColor: Color.fromARGB(255, 142, 245, 173).withOpacity(0.2),
+              //     dotIncreasedColor: Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
+              //     dotPosition: DotPosition.bottomCenter,
+              //     showIndicator: true,
+              //     images: [
+              //       Image.asset(
+              //         "images/p1.png",
+              //         fit: BoxFit.cover,
+              //       ),
+              //       Image.asset(
+              //         "images/aboutus.png",
+              //         fit: BoxFit.cover,
+              //       ),
+              //       Image.asset(
+              //         "images/contact2.png",
+              //         fit: BoxFit.cover,
+              //       ),
+              //     ],
+              //   ),
+              // ),
                                 
             ],
           ),

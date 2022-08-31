@@ -68,22 +68,25 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
     closest:closest,
       ),
     
-      appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+      appBar:  AppBar(
         elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => SearchWorker(currentUser:currentUser)));
-            },
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.green,
           ),
-        ],
+        ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('نتائج البحث'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
     ),
@@ -335,7 +338,7 @@ Future<List> SendInfoSearch() async
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: FlatButton(
                           onPressed: () {
-
+                                  
                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
                           },
                           color: Color.fromARGB(255, 51, 54, 50),

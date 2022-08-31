@@ -27,19 +27,24 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   Widget build(BuildContext context) {
     var _curIndex = 2;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar:  AppBar(
         elevation: 1,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => MyApp()));
+           Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.green,
           ),
         ),
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('الاعدادات'),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
