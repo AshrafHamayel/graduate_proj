@@ -67,16 +67,6 @@ class _AddUserInfo extends State<AddUser_Info> {
      late  final ControllerCity = TextEditingController();
 
 
-//   var UserId;
-
-// Future<String> getUserId() async {
-//   SharedPreferences   preferences = await SharedPreferences.getInstance();
-//     UserId = await preferences.getString("UserId");
-//     print (' UID from _AddUserInfo :');
-//   print(preferences.getString("UserId"));
-
-//      return UserId;
-//   }
   final Storage storage=Storage();
 Future getPer() async {
     bool ser;
@@ -181,42 +171,7 @@ else{
 
     
   }
-//  List<bool?> checked = [false, false, false, false, false, false, false, false];
-//   List<String> typeOfWork = [
-//     "مجال عملي",
-//     "البناء بشكل عام ",
-//     "الدهان و الجبصين",
-//     "اعمال الحدائق",
-//     "التمديدات الصحية و الكهرابئية",
-//     "القريمد و الديكور",
-//     " تصليح و صيانة امور متنوعة",
-//      " صيانة و غسيل مركبات ",
-   
-//   ];
 
-  // cities? _city = cities.everywhere;
-  // Widget _buildcheckbox(bool? chked, String worktype, int Li) {
-  //   return StatefulBuilder(
-  //     builder: ((context, setState) {
-  //       return CheckboxListTile(
-  //         controlAffinity: ListTileControlAffinity.leading,
-  //         title: Text(
-  //           worktype,
-  //           textDirection: TextDirection.rtl,
-  //         ),
-  //         value: chked,
-  //         onChanged: (v) {
-  //           setState(
-  //             () {
-  //               chked = v;
-  //             },
-  //           );
-  //           checked[Li] = chked;
-  //         },
-  //       );
-  //     }),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
       getPer();
@@ -278,78 +233,6 @@ else{
          Text( 'رجاءا قم بتفعيل خاصية GPS لحفظ موقعك', textDirection: TextDirection.rtl, style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 34, 1, 155)),),
 
 
-
-
-                // ListTile(
-                //                 leading: Icon(Icons.app_registration_rounded),
-                //                 title: Text(
-                //                   'رجاءا اختر الامور التي تهتم بها',
-                //                   textDirection: TextDirection.rtl,
-                //                 ),
-                //                 onTap: () {
-                //                   showModalBottomSheet(
-                //                     enableDrag: true,
-                //                     isDismissible: true,
-                //                     shape: RoundedRectangleBorder(
-                //                       borderRadius: BorderRadius.only(
-                //                         topLeft: Radius.circular(24),
-                //                         topRight: Radius.circular(24),
-                //                       ),
-                //                     ),
-                //                     barrierColor: Colors.grey.withOpacity(0.2),
-                //                     context: context,
-                //                     builder: (context) => Column(
-                //                       mainAxisSize: MainAxisSize.min,
-                //                       children: <Widget>[
-                //                         SizedBox(
-                //                           height: 8,
-                //                         ),
-                //                         Container(
-                //                             height: 3.0,
-                //                             width: 40.0,
-                //                             color: Color(0xFF32335C)),
-                //                         Container(
-                //                           decoration: BoxDecoration(
-                //                             border: Border(
-                //                               bottom: BorderSide(
-                //                                 color:
-                //                                     Colors.grey.withOpacity(.3),
-                //                               ),
-                //                             ),
-                //                           ),
-                //                           child: Row(
-                //                             children: [
-                //                               SizedBox(
-                //                                 width: 30,
-                //                               ),
-                //                               Text(
-                //                                 ' اختر اهتماماتك',
-                //                                 style: TextStyle(
-                //                                   fontSize: 15,
-                //                                 ),
-                //                               ),
-                //                             ],
-                //                           ),
-                //                         ),
-                //                         Padding(
-                //                           padding: EdgeInsets.all(10),
-                //                         ),
-                //                         Column(
-                //                           children: [
-                //                             for (int i = 0; i < 8; i++)
-                //                               _buildcheckbox(checked[i], typeOfWork[i], i),
-                //                           ],
-                //                         ),
-                //                       ],
-                //                     ),
-                //                   );
-                //                 },
-                //               ),
-
-
-
-
-
               const SizedBox(
                 height: 35,
               ),
@@ -390,7 +273,8 @@ else{
     );
   }
 
-late String dropdownvalue ;
+
+  late String dropdownvalue ;
 
   Widget buildDrop(TextEditingController contr){
     var items = [
@@ -403,7 +287,6 @@ late String dropdownvalue ;
   'نابلس',
   'غزة',
   'أريحا',
-  'نابلس',
   'طولكرم',
   'رام الله',
   '	جنين',
@@ -444,6 +327,7 @@ late String dropdownvalue ;
           ),
     );
   }
+
 
   Widget buildTextField(String labelText, String placeholder, bool isTextFields ,TextEditingController myController ) 
   

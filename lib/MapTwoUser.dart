@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graduate_proj/search.dart';
@@ -33,19 +34,17 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 
 class MapTwoUser extends StatelessWidget {
-  late final PointLatLng FrindPos;
+
   late final String currentUser;
-  late final  CameraPosition  kGooglePlex ;
-  late final PointLatLng myPos;
+    late final String UserId;
+
 
     MapTwoUser
     ({
     
-   required this.FrindPos,
+   required this.UserId,
     required this.currentUser,
-    required this.kGooglePlex,
-    required this.myPos,
-
+ 
 
 
   });
@@ -57,19 +56,27 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
   }
 
- 
+ @override
+ void initState() {
+    
+   
+ }
   
+
+  
+ 
+
+
+
   @override
   
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
       body: MapTwoUser_Page(
-        FrindPos:FrindPos, 
+        UserId:UserId, 
          currentUser:currentUser,
-         kGooglePlex:kGooglePlex,
-         myPos:myPos,
-
+      
       ),
     
       appBar: AppBar(
@@ -96,46 +103,31 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 }
 
 class MapTwoUser_Page extends StatefulWidget {
-  late final PointLatLng FrindPos;
-  late final String currentUser;
-  late final  CameraPosition  kGooglePlex ;
-  late final PointLatLng myPos;
+   late final String currentUser;
+    late final String UserId;
 
     MapTwoUser_Page
     ({
- required this.FrindPos,
+   required this.UserId,
     required this.currentUser,
-    required this.kGooglePlex,
-     required this.myPos,
 
   });
   
   @override
   _MapTwoUser createState() => _MapTwoUser(
-         FrindPos:FrindPos, 
+    UserId:UserId, 
          currentUser:currentUser,
-         kGooglePlex:kGooglePlex,
-        myPos:myPos,
-
          );
 }
 
 class _MapTwoUser extends State<MapTwoUser_Page> {
-
-
-  late final PointLatLng FrindPos;
-
   late final String currentUser;
-  late final  CameraPosition  kGooglePlex ;
-  late final PointLatLng myPos;
+    late final String UserId;
 
     _MapTwoUser
     ({
-     required this.FrindPos,
+        required this.UserId,
     required this.currentUser,
-    required this.kGooglePlex,
-        required this.myPos,
-
 
   });
 
@@ -151,7 +143,7 @@ class _MapTwoUser extends State<MapTwoUser_Page> {
 
 
 late String downloadURL;
- String Distan='جار الحساب';
+ String Distan=' ';
 
  String googleAPiKey = "AIzaSyASqMc9scA2BjTQqyKjBkWSwMNqR6mDBmQ";
   List<LatLng> polylineCoordinates = [];
@@ -159,12 +151,13 @@ Map<PolylineId, Polyline> polylines = {};
   PolylinePoints polylinePoints = PolylinePoints();
 
 
-    getPolyline() async {
+    getPolyline(PointLatLng myPos, PointLatLng FrindPos) async {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
-      myPos!,
+      myPos,
+       
+       PointLatLng(FrindPos.latitude,FrindPos.longitude),
       
-      PointLatLng(FrindPos.latitude,FrindPos.longitude),
       travelMode: TravelMode.driving,
     );
 
@@ -234,6 +227,19 @@ Map<PolylineId, Polyline> polylines = {};
 
 CustomInfoWindowController customInfoWindowController=CustomInfoWindowController();
 
+ Future <void>getPos() async {
+
+    var url = await"http://192.168.0.114:80/myProf/posCurrentFrind?frindId=$UserId&currentUser=$currentUser";
+
+    var response = await http.get(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+print('responsebody Map====');
+    print(responsebody);
+       return await responsebody;
+ 
+
+  }
+
   @override
 
   Widget build(BuildContext context) {
@@ -243,18 +249,48 @@ CustomInfoWindowController customInfoWindowController=CustomInfoWindowController
 void initState() {
         
     BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(35, 35)), 'images/pp.png').then((onValue) { myIcon = onValue; });
+        
 
 
  }      
-          Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+
+  late PointLatLng myPos;
+  late PointLatLng FrindPos;
+
+          
+                     return Scaffold(
+        
+         body: FutureBuilder(
+                     future:getPos() ,
+                     
+       builder: (BuildContext context, AsyncSnapshot snapshot) 
+   {   
+           
+       if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
+       {
+                                                    var   LatUser1 = double.parse(snapshot.data["CurrentUserLat"].toString());
+                                                   var     LongUser1 = double.parse(snapshot.data["CurrentUserLong"].toString());
+
+                                                   var   LatUser2 = double.parse(snapshot.data["FrindUserLat"].toString());
+                                                   var     LongUser2 = double.parse(snapshot.data["FrindUserLong"].toString());
+
+                                                            CameraPosition  kGooglePlex = CameraPosition(
+                                                            target: LatLng(LatUser1, LongUser1),
+                                                            zoom: 12,
+                                                          );
+
+                                                         myPos = PointLatLng(LatUser1, LongUser1);
+                                                        FrindPos = PointLatLng(LatUser2, LongUser2);
+                                                      Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
                                                      final MarkerId MymarkerId = MarkerId(currentUser);
                                                       final Marker myMark =Marker(
                                                       markerId: MarkerId(currentUser),
-                                                      position: LatLng(myPos.latitude, myPos.longitude),
+                                                      position: LatLng(LatUser1,LongUser1),
                                                    onTap:(){ 
                                                       customInfoWindowController.addInfoWindow!(
                                                         Text('هذا انت  ',style: TextStyle(fontSize:30,color: Color.fromARGB(20, 7, 3, 247))),
-                                                       LatLng(myPos.latitude, myPos.longitude),
+                                                       LatLng(LatUser1,LongUser1),
                                                       );
                                                      },
                                                      
@@ -270,59 +306,68 @@ void initState() {
                                                        final Marker marker =Marker(
                                                         
                                                       markerId: MarkerId('worker point'),
-                                                      position: LatLng(FrindPos.latitude, FrindPos.longitude),
+                                                      position: LatLng(LatUser2,LongUser2),
                                                       icon: BitmapDescriptor.defaultMarker,
                                                          onTap:(){ 
                                                       customInfoWindowController.addInfoWindow!(
                                                       Text('هذا الشخص الاخر',style: TextStyle(fontSize:30,color: Color.fromARGB(20, 7, 3, 247))),
-                                                       LatLng(FrindPos.latitude, FrindPos.longitude),
+                                                      LatLng(LatUser2,LongUser2),
                                                        );
                                                        }
                                                        );
           
                                                   
                                                     markers[markerId] = marker;
-                                                  
-               
-                 getPolyline();
-                     return Scaffold(
-                  
-                              body:Column(
-                                  children: [
-                               Container(
-                                        height:MediaQuery.of(context).size.height *0.1,
-                                        width: MediaQuery.of(context).size.width,
-                                        child: Text('      المسافة  بينكم = $Distan       ',style: TextStyle(fontSize: 25,color: Colors.indigo),),
-                                      ),
-
-                                      Container(
-                                        height:MediaQuery.of(context).size.height *0.67,
-                                        width: MediaQuery.of(context).size.width,
-                                        child:   GoogleMap(
-                                           initialCameraPosition: kGooglePlex,
-                                           markers: Set<Marker>.of(markers.values),
-                                            onTap: (postition){ customInfoWindowController.hideInfoWindow!();},
-                                           onMapCreated: (GoogleMapController controller) {customInfoWindowController.googleMapController=controller;},
-                                           onCameraMove:(postition){ customInfoWindowController.onCameraMove!();},
-                                          
-                                             ),
-                                      ),
-                                    // SizedBox(height: 15 ,),
-                                    //           CustomInfoWindow(
-                                    //         controller:customInfoWindowController,
-                                    //    height:MediaQuery.of(context).size.height *0.12,
-                                    //     width: MediaQuery.of(context).size.width *0.95,
-                                    //         offset: 40, ),
+                             return ListView(
+                                children: 
+                                      [Column(
+                                        children: [
+                                         FlatButton(  
+                                                child: Text('جد الطريق و المسافة ', style: TextStyle(fontSize: 20.0),),  
+                                                color: Color.fromARGB(255, 114, 114, 114),  
+                                                textColor: Colors.white,  
+                                                onPressed: () {   getPolyline(myPos,FrindPos);},  
+                                              ), 
+                                   Container(
+                                              height:37,
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Text('         المسافة  بينكم = $Distan       ',style: TextStyle(fontSize: 25,color: Colors.indigo),),
+                                            ),
+                                
+                                            Container(
+                                              height:MediaQuery.of(context).size.height *0.67,
+                                              width: MediaQuery.of(context).size.width,
+                                              child:   GoogleMap(
+                                                 initialCameraPosition: kGooglePlex,
+                                                 markers: Set<Marker>.of(markers.values),
+                                                                     polylines: Set<Polyline>.of(polylines.values),
                               
-                                  ],
-                                ),
-                           
-                            
-                             
-                                        
-               
-            
-                                    );
+                                                  onTap: (postition){ customInfoWindowController.hideInfoWindow!();},
+                                                 onMapCreated: (GoogleMapController controller) {customInfoWindowController.googleMapController=controller;},
+                                                 onCameraMove:(postition){ customInfoWindowController.onCameraMove!();},
+                                                
+                                                   ),
+                                            ),
+                                          SizedBox(height: 15 ,),
+                                                    CustomInfoWindow(
+                                                  controller:customInfoWindowController,
+                                             height:MediaQuery.of(context).size.height *0.12,
+                                              width: MediaQuery.of(context).size.width *0.95,
+                                                  offset: 40, ),
+                                              
+                                      ]),
+                                    ],
+                              );
+       
+
+      
+            }
+          return CircularProgressIndicator();
+          
+          
+         },
+        ),
+      );
 
 
        
@@ -332,5 +377,6 @@ void initState() {
     
    
   }
+
 
 

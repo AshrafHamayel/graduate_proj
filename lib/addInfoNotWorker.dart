@@ -170,6 +170,7 @@ else{
   late String dropdownvalue ;
 
   Widget buildDrop(TextEditingController contr){
+    
     var items = [
 	'اختر مدينة',
 	'القدس',
@@ -180,7 +181,6 @@ else{
   'نابلس',
   'غزة',
   'أريحا',
-  'نابلس',
   'طولكرم',
   'رام الله',
   '	جنين',

@@ -99,15 +99,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
                 ),
                
-                 ListTile(
-                    title: Text("تغيير نوع العمل ",style: TextStyle(fontSize: 18),),
-                    leading: Icon(Icons.work),
-                    subtitle: Text("change work"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
+             
                 SizedBox(height: 20,),
                  ListTile(
                     title: Text(" تقديم شكوى ",style: TextStyle(fontSize: 18),),

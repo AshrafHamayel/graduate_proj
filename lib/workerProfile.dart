@@ -12,6 +12,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:like_button/like_button.dart';
 import 'package:path/path.dart'as Path;
 import 'Chats/models/user_model.dart';
 import 'Chats/screens/chat_screen.dart';
@@ -146,10 +147,7 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
    required this.CurrentUser,
   }); 
 
-late  CameraPosition  kGooglePlex;
- late final PointLatLng myPos;
-  late final PointLatLng FrindPos;
- late bool pressAttention=true;
+
 
   Future <void>getInfo() async {
 
@@ -401,14 +399,7 @@ var responsebody = json.decode(response.body);
                     isThreeLine: true,
                     dense: true,
                     onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTwoUser(
-                                      
-                                      FrindPos:FrindPos,
-                                      currentUser:CurrentUser,
-                                      kGooglePlex:kGooglePlex,
-                                      myPos:myPos,
-
-                                      )));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTwoUser(currentUser:CurrentUser, UserId:UserId)));
                     },
 
                 ),
@@ -600,10 +591,31 @@ var responsebody = json.decode(response.body);
  
 }
 
+ Future <bool>AddLike(String idPost) async {
+
+    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+
+    var response = await http.post(Uri.parse(url));
+var responsebody = json.decode(response.body);
+    bool t=true;
+    return  t;
+ 
+
+  }
 
 
-  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String NDisLike,String DatePost) {
+  Widget _buildStatPosts(String namePost,String description,String ImageUserURL, String ImageURL ,String Nlike,String DatePost, String postID) {
+               var LikesNumber =0;
 
+
+                          if(Nlike.length>3)
+                          {
+                          final NN = Nlike.split(',');
+                          LikesNumber = int.parse(NN.length.toString());
+                          }
+                          
+
+                         bool IsFind=Nlike.contains(UserId);
 
                       return  FutureBuilder<String>(
                         future: storage.downloadURLPost(ImageURL),
@@ -681,104 +693,27 @@ var responsebody = json.decode(response.body);
         
       ),
      
-
        Row(
                         children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      left: BorderSide(
-                                          color:
-                                              Colors.grey.withOpacity(0.3)))),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-
-
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                top: BorderSide(
-                                                    color: Color.fromARGB(255, 158, 158, 158)
-                                                        .withOpacity(.3)))),
-                                        padding: EdgeInsets.all(10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.thumb_up_alt_outlined,
-                                              color: Color.fromARGB(255, 114, 111, 111),
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 10)),
-                                            Text(
-                                              '$Nlike اعجبني' ,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                 color: Color.fromARGB(255, 36, 33, 33),
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                          SizedBox(width: 30,),
+                            LikeButton(
+                               size: 36,
+                               likeCount: LikesNumber,
+                                onTap:(hhh)=>AddLike(postID),
+                                   likeBuilder: (hh) {
+                                                  return Icon(
+                                                    Icons.thumb_up_alt,
+                                                    color: IsFind ? Color.fromARGB(255, 6, 42, 245) : Colors.grey,
+                                                    size: 36,
+                                                  );
+                                                },
                             ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: InkWell(
-                                        onTap: () {
-
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.grey
-                                                          .withOpacity(.3)))),
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.thumb_down_alt_outlined,
-                                                  color: Color.fromARGB(255, 114, 111, 111),
-
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 10)),
-                                              Text(
-                                                ' $NDisLike  لم يعجبني',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Color.fromARGB(255, 36, 33, 33),
-                                                    fontSize: 15),
-                                              ),
-                                            ],
-                                          ),
-                                        ))),
-                              ],
-                            ),
-                          ),
+                            SizedBox(width: 18,),
+                            IsFind ?   Text('اعجبك',  style: TextStyle(fontWeight: FontWeight.bold,color: Color.fromARGB(255, 22, 7, 7), fontSize: 16, ),):
+                                       Text('اعجبني',  style: TextStyle(color: Color.fromARGB(255, 85, 84, 84), fontSize: 14, ), ),
                         ],
                       ),
+                    
                     
                      _buildSeparator2(MediaQuery.of(context).size),
 
@@ -1040,33 +975,9 @@ late String downloadURL;
                      
        builder: (BuildContext context, AsyncSnapshot snapshot) 
    {   
-
-
-           print('snapshot :-');
-           print(snapshot.data);
            
        if(snapshot.connectionState==ConnectionState.done&&snapshot.hasData)
        {
-
-
-                                            var LatUser = double.parse(snapshot.data["CurrentUserLat"].toString());
-                                            var LongUser = double.parse(snapshot.data["CurrentUserLong"].toString());
-                                            myPos = PointLatLng(LatUser, LongUser);
-
-                                           var  LatUser1 = double.parse(snapshot.data["latitude"].toString());
-                                           var  LongUser1 = double.parse(snapshot.data["longitude"].toString());
-                                            FrindPos = PointLatLng(LatUser1, LongUser1);
-
-                                            kGooglePlex = CameraPosition(
-                                            target: LatLng(LatUser, LongUser),
-                                              zoom: 12,
-                                            );
-                                      
-  
-                                                    
-
-
-
 
 
                 if(snapshot.data["UserType"].toString()=='true')
@@ -1159,7 +1070,7 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                               return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['numberLike'].toString(),snapshot.data![index]['numberDisLike'].toString(),snapshot.data![index]['date'].toString(),);
+                                                return _buildStatPosts(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagepost'].toString(),snapshot.data![index]['Like'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }
