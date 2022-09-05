@@ -37,6 +37,8 @@ class ResultSearch extends StatelessWidget {
   late final String Work;
   late final String City;
     late final String closest;
+                  late final String name;
+   late final String UrlImage;
 
     ResultSearch
     ({
@@ -45,6 +47,8 @@ class ResultSearch extends StatelessWidget {
     required this.Work,
     required this.City,
       required this.closest,
+            required this.name,
+    required this.UrlImage,
   
   });
   
@@ -66,24 +70,16 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
     Work:Work,
     City:City,
     closest:closest,
+    name:name,
+        UrlImage:UrlImage,
       ),
     
       appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SearchWorker(currentUser:currentUser)));
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
+        elevation: 3,
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
-            Text('نتائج البحث'),
+            Text('النتائج'),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
@@ -102,6 +98,8 @@ class ResultSearch_Page extends StatefulWidget {
   late final String Work;
   late final String City;
    late final String closest;
+                 late final String name;
+   late final String UrlImage;
     ResultSearch_Page
     ({
     required this.currentUser,
@@ -109,6 +107,8 @@ class ResultSearch_Page extends StatefulWidget {
     required this.Work,
     required this.City,
      required this.closest,
+           required this.name,
+    required this.UrlImage,
   });
   
   @override
@@ -118,6 +118,8 @@ class ResultSearch_Page extends StatefulWidget {
     Work:Work,
     City:City,
     closest:closest,
+    name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -129,6 +131,8 @@ class _ResultSearch extends State<ResultSearch_Page> {
   late final String Work;
   late final String City;
    late final String closest;
+                 late final String name;
+   late final String UrlImage;
     _ResultSearch
     ({
     required this.currentUser,
@@ -136,6 +140,8 @@ class _ResultSearch extends State<ResultSearch_Page> {
     required this.Work,
     required this.City,
     required this.closest,
+          required this.name,
+    required this.UrlImage,
   
   });
 
@@ -162,7 +168,7 @@ class _ResultSearch extends State<ResultSearch_Page> {
 
 Future<List> SendInfoSearch() async
   { 
-    final  url = "http://192.168.0.114:80/search/getResultSearch?currentUser=$currentUser&nameWorker=$NameWorker&work=$Work&city=$City&closest=$closest";
+    final  url = "http://172.19.32.48:80/search/getResultSearch?currentUser=$currentUser&nameWorker=$NameWorker&work=$Work&city=$City&closest=$closest";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
 
@@ -239,7 +245,8 @@ Future<List> SendInfoSearch() async
                         child: FlatButton(
                           onPressed: () {
 
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,name:name,
+        UrlImage:UrlImage,)), (route) => true);
                           },
                           color: Color.fromARGB(255, 51, 54, 50),
                           shape: RoundedRectangleBorder(
@@ -339,7 +346,8 @@ Future<List> SendInfoSearch() async
                         child: FlatButton(
                           onPressed: () {
                                   
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,name:name,
+        UrlImage:UrlImage,)), (route) => true);
                           },
                           color: Color.fromARGB(255, 51, 54, 50),
                           shape: RoundedRectangleBorder(
@@ -376,7 +384,7 @@ Future<List> SendInfoSearch() async
 
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$currentUser";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$currentUser";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);

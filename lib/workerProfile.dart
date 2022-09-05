@@ -38,10 +38,15 @@ import '../models/postModel.dart';
 class workerProfile extends StatelessWidget {
   late final String UserId;
    late final String CurrentUser;
+
+             late final String name;
+   late final String UrlImage;
     workerProfile
     ({
     required this.UserId,
    required this.CurrentUser,
+       required this.name,
+    required this.UrlImage,
   });
   
  
@@ -50,68 +55,16 @@ class workerProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: workerProfile_Page( UserId:UserId, CurrentUser:CurrentUser),
+      body: workerProfile_Page( UserId:UserId, CurrentUser:CurrentUser,
+      name:name,
+        UrlImage:UrlImage,),
     
-      appBar: AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-           Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
-        title: Row(
-          textDirection: TextDirection.rtl,
-          children: [
-            Text('العمال'),
-          ],
-        ),
+      appBar:  AppBar(
+        elevation: 3,
+        title:Text('صفحة العامل'),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
-//Directionality 
-      drawer: Drawer(
-        
-          child: ListView(
-            
-            children: <Widget>[
-              
-                UserAccountsDrawerHeader(accountName: Text(' ',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
-                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
 
-                 decoration:BoxDecoration(
-                  color: Color.fromARGB(255, 2, 20, 3),
-                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
-
-                 ),
-
-                ),
-               
-               
-                 ListTile(
-                    title: Text(" تقديم شكوى "),
-                    leading: Icon(Icons.drafts_sharp),
-                    subtitle: Text(" Make a complaint"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){
-
-                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => myComplaint(UserId:CurrentUser)));    
-                            },
-
-                ),
-              
-               
-         
-
-            ],
-
-          ),
-
-
-      ),
     ),
     
     );
@@ -122,36 +75,47 @@ class workerProfile_Page extends StatefulWidget {
 
  late final String UserId;
    late final String CurrentUser;
+                 late final String name;
+   late final String UrlImage;
     workerProfile_Page
     ({
     required this.UserId,
    required this.CurrentUser,
+         required this.name,
+    required this.UrlImage,
   });
   
   @override
   _WorkerProfilePage createState() => _WorkerProfilePage(
     UserId:UserId,
    CurrentUser:CurrentUser,
+   name:name,
+  UrlImage:UrlImage,
   );
 }
      late UserModel Frind;
     late UserModel currentUser1;
+
 class _WorkerProfilePage extends State<workerProfile_Page> {
 
    
-      late final String UserId;
-       late final String CurrentUser;
+   late final String UserId;
+   late final String CurrentUser;
+  late final String name;
+   late final String UrlImage;
     _WorkerProfilePage
     ({
     required this.UserId,
    required this.CurrentUser,
+         required this.name,
+    required this.UrlImage,
   }); 
 
 
 
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/frindProf?frindId=$UserId&currentUser=$CurrentUser";
+    var url = await"http://172.19.32.48:80/myProf/frindProf?frindId=$UserId&currentUser=$CurrentUser";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -169,7 +133,7 @@ class _WorkerProfilePage extends State<workerProfile_Page> {
 
  Future <void>AddToFavorites() async {
 
-    var url = await"http://192.168.0.114:80/myProf/AddToFavorites?frindId=$UserId&currentUser=$CurrentUser";
+    var url = await"http://172.19.32.48:80/myProf/AddToFavorites?frindId=$UserId&currentUser=$CurrentUser";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -180,7 +144,7 @@ var responsebody = json.decode(response.body);
 
 Future <void>RemoveFromFavourites() async {
 
-    var url = await"http://192.168.0.114:80/myProf/removeFromFavourites?frindId=$UserId&currentUser=$CurrentUser";
+    var url = await"http://172.19.32.48:80/myProf/removeFromFavourites?frindId=$UserId&currentUser=$CurrentUser";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -466,10 +430,7 @@ var responsebody = json.decode(response.body);
             ),
             onPressed: () {
               
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'followers',CurrentUser:CurrentUser,
-)), (route) => false);
-
-              
+    
             },
             child:  Text(count),
             
@@ -510,10 +471,7 @@ var responsebody = json.decode(response.body);
             ),
             onPressed: () {
               
-                            
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'Ifollow',CurrentUser:CurrentUser,
-)), (route) => false);
-
+      
               
             },
             child:  Text(count,style: TextStyle( color: Color.fromARGB(134, 14, 109, 1),),),
@@ -582,7 +540,7 @@ var responsebody = json.decode(response.body);
 
   Future<List> getUserPosts() async {
 
-    final  url = "http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addPost/myPosts?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -593,7 +551,7 @@ var responsebody = json.decode(response.body);
 
  Future <bool>AddLike(String idPost) async {
 
-    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+    var url = await"http://172.19.32.48:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -787,7 +745,8 @@ Widget _buildButtons(String Fav1) {
             child:Fav? InkWell(
               onTap: () => {
                 AddToFavorites().then((value) =>{
-                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,)), (route) => true),
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,name:name,
+        UrlImage:UrlImage,)), (route) => true),
                       })
               },
               child: Container(
@@ -807,7 +766,8 @@ Widget _buildButtons(String Fav1) {
             ):InkWell(
               onTap: () => {
                 RemoveFromFavourites().then((value) =>{
-                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,)), (route) => true),
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:CurrentUser,name:name,
+        UrlImage:UrlImage,)), (route) => true),
                       })
               },
               child: Container(
@@ -839,6 +799,8 @@ Widget _buildButtons(String Fav1) {
                               friendName: Frind.name,
                                friendImage: Frind.image,
                                friendToken: Frind.token,
+                                  name:name,
+                                 UrlImage:UrlImage,
                                ))),
 
 
@@ -1053,12 +1015,13 @@ late String downloadURL;
                       ),
 
 
-
+ 
                       Container(
-                height: 440,
+                height: 470,
                 child: FutureBuilder<List>(
                                       future: getUserPosts(),
-                                      builder: (context,snapshot){
+                                      builder: (context,snapshot){    
+
 
                                        if (snapshot.hasData)
                                          {
@@ -1075,9 +1038,7 @@ late String downloadURL;
                                                 );
                                          }
                                         
-                                     return  Text('  '); // or some other widget
-                                // return CircularProgressIndicator(); // or some other widget
-
+                                     return  Text('  ');
                                         
                                       }
                                     ),

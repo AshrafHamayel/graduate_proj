@@ -2,7 +2,13 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:graduate_proj/signIn.dart';
 import 'package:graduate_proj/workerProfile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -10,6 +16,9 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart'as Path;
+import 'SettingsPage.dart';
+import 'Tenders.dart';
+import 'complaint.dart';
 import 'storage_sercice.dart';
 import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
@@ -20,9 +29,13 @@ class home_Page extends StatelessWidget {
 
  
  late final String currentUser;
+   late final String name;
+   late final String UrlImage;
     home_Page
     ({
     required this.currentUser,
+          required this.name,
+    required this.UrlImage,
   
   });
 
@@ -66,7 +79,7 @@ class home_Page extends StatelessWidget {
 Future getNameUserSec() async
   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/userSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/userSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body);
     return responsebody['NT'];
@@ -77,7 +90,7 @@ Future getNameUserSec() async
 Future getNameSecandSec() async
   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/getNameSecandSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/getNameSecandSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body);
     return responsebody['NT'];
@@ -88,7 +101,7 @@ Future getNameSecandSec() async
 Future getNameThirdSec() async
   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/getNameThirdSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/getNameThirdSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body);
     return responsebody['NT'];
@@ -134,7 +147,7 @@ List shuffle(List array) {
 Future<List> getUsersSameSec() async
   {
    
-    final  url = "http://192.168.0.114:80/usersInfo/usersSameSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/usersSameSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
 
@@ -147,7 +160,7 @@ Future<List> getUsersSameSec() async
 Future<List> getUsersSecondSec() async
   {
    
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersSecondSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/getUsersSecondSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody =  json.decode(response.body) as List<dynamic>;
   return shuffle(responsebody.reversed.toList());
@@ -157,7 +170,7 @@ Future<List> getUsersSecondSec() async
 Future<List> getUsersThirdSec() async
   {
     
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersThirdSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/getUsersThirdSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
    return shuffle(responsebody.reversed.toList());
@@ -168,56 +181,182 @@ Future<List> getUsersThirdSec() async
 Future<List> getUsersFourthSec() async
   {
    
-    final  url = "http://192.168.0.114:80/usersInfo/getUsersFourthSec?currentUser=$currentUser";
+    final  url = "http://172.19.32.48:80/usersInfo/getUsersFourthSec?currentUser=$currentUser";
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
   return shuffle(responsebody.reversed.toList());
   }
 
 
-// //-----------------------get Users Fifth Sec-------------------------------
+  
+    out() async {
+SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
 
-// Future<List> getUsersFifthhSec() async
-//   {
+
+  }
+  Future getPer(context) async {
+    bool ser;
+    LocationPermission per;
+    ser = await Geolocator.isLocationServiceEnabled();
+    if (ser == false) {
+      // ignore: avoid_single_cascade_in_expression_statements
+      AwesomeDialog(
+          context: context,
+          //  title: Text("services"),
+          body: Text("S not enabled"))
+        ..show();
+    }
+    per = await Geolocator.requestPermission();
+    if (per == LocationPermission.denied)
+      per = await Geolocator.requestPermission();
+
+    return per;
+  }
+
+
+
+  late Position myP;
+  double? lat, long;
+
+  Future<void> getLatAndLong() async {
+    myP = await Geolocator.getCurrentPosition().then((value) => value);
+    lat = myP.latitude;
+    long = myP.longitude;
     
-//     final  url = "http://192.168.0.114:80/usersInfo/getUsersFifthhSec";
-//     final  response = await http.get(Uri.parse(url));
-//     final  responsebody = json.decode(response.body) as List<dynamic>;
-//     return responsebody.reversed.toList();
-//   }
+   
+  }
+  Future <void>setPos() async {
 
+    var url = await"http://172.19.32.48:80/myProf/setNewPos?UserId=$currentUser&LAT=$lat&LONG=$long";
 
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+  
 
+    return await responsebody;
+ 
 
+  }
+
+  
   @override
   Widget build(BuildContext context) {
+           getPer(context);
+  getLatAndLong();
     return MaterialApp(
       home: Scaffold(
         extendBody: true,
         backgroundColor: Colors.black.withOpacity(0.6),
         appBar: AppBar(
-          title: Text("Work Book"),
+          title: Text("WorkBook"),
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-          leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         ),
         endDrawer: Drawer(
-          backgroundColor: Color.fromARGB(255, 66, 64, 64),
+        
           child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                accountName: Text("لاسم"),
-                accountEmail: Text("الايميل"),
-                currentAccountPicture: CircleAvatar(
-                  child: Icon(Icons.person),
-                ),
-                decoration: BoxDecoration(),
-              ),
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 18,color: Color.fromARGB(255, 243, 243, 243)),), accountEmail: Text(name,style:TextStyle(fontSize: 20,color: Color.fromARGB(255, 243, 243, 243)),),
 
-              // DrawerHeader(child: Image(image: AssetImage("images/logo.jpg"))),
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage(UrlImage),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+             
+                SizedBox(height: 20,),
+                 ListTile(
+                    title: Text(" تقديم شكوى ",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.drafts_sharp),
+                    subtitle: Text(" Make a complaint"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => myComplaint(UserId:currentUser)));
+                    },
+
+                ),
+                  SizedBox(height: 20,),
+
+              
+              ListTile(
+                    title: Text("  تحديث موقعي ",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.edit_location_alt_sharp),
+                    subtitle: Text(" My location"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                                   setPos().then((value) =>{
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('تم تحديث الموقع')) ),
+                      });
+
+
+                    },
+
+                ),
+               SizedBox(height: 20,),
+
+                 ListTile(
+                    title: Text("العطاءات",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.grading_outlined),
+                    subtitle: Text("مناقصات و عطاءات"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                               
+                        Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:currentUser,name:name,
+                   UrlImage:UrlImage,)));
+                    },
+
+                ),
+                SizedBox(height: 20,),
+
+               ListTile(
+                    title: Text("الاعدادات",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.settings),
+                    subtitle: Text("Settings"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                       Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage()));
+                    },
+                ),
+              Center(
+              child: OutlinedButton(
+                
+                onPressed: () async {
+                              out();
+                             await GoogleSignIn().signOut();
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0))),
+                ),
+                child: const Text("تسجيل الخروج",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+              ),
+            )
+
+
             ],
+
           ),
-        ),
+
+
+      ),
         body: Directionality(
           textDirection: TextDirection.rtl,
           child: ListView(
@@ -593,7 +732,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
                                            }
@@ -608,7 +747,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
 
@@ -665,7 +804,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
                                            }
@@ -680,7 +819,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
 
@@ -736,7 +875,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
                                            }
@@ -751,7 +890,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
 
@@ -790,7 +929,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
                                            }
@@ -805,7 +944,7 @@ Future<List> getUsersFourthSec() async
                                                   return Text('',style: TextStyle(fontSize: 2),) ;
 
                                                 
-                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser);
+                                                return buildCard(context,snapshot.data![index]['image'].toString(),snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['_id'].toString(),currentUser,name,UrlImage);
                                                   },
                                                 );
 
@@ -832,8 +971,8 @@ Future<List> getUsersFourthSec() async
   }
 }
   final Storage storage=Storage();
-  
-Widget buildCard(BuildContext context ,String ImageUser ,String NameUser,String WorkUser,String IdUser,String currentUser) {
+
+Widget buildCard(BuildContext context ,String ImageUser ,String NameUser,String WorkUser,String IdUser,String currentUser,String name,String UrlImage) {
 
 return FutureBuilder<String>(
                         future: storage.downloadURL(ImageUser),
@@ -898,7 +1037,8 @@ return FutureBuilder<String>(
                                               onPressed: () {
 
                                         
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:IdUser , CurrentUser:currentUser,)), (route) => true);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:IdUser , CurrentUser:currentUser,name:name,
+                                  UrlImage:UrlImage,)), (route) => true);
 
 
                                               },

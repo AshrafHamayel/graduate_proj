@@ -126,7 +126,7 @@ Future getPer() async {
 else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
-       var url = "http://192.168.0.114:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$dropdownvalue&&LAT=$lat&LONG=$long&PhoneNumber=$PhoneNumber";
+       var url = "http://172.19.32.48:80/signUp/addNotWorkerInfo?UserId=$currentUser&Description=$Description&City=$dropdownvalue&&LAT=$lat&LONG=$long&PhoneNumber=$PhoneNumber";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -229,23 +229,12 @@ else{
   getLatAndLong();
     return Scaffold(
 
-      appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-       elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-
-            Navigator.pop(context,
-              MaterialPageRoute(builder: (context) => SignIn()));
-          },
+      appBar:AppBar(
+          title: Text("بناء الملف الشخصي"),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         ),
-       
-      ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
         child: GestureDetector(

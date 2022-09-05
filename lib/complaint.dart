@@ -48,21 +48,11 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       body: myComplaint_Page( UserId:UserId,),
     
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen()));
-            },
-          ),
-        ],
-      ),
+          title: Text("الشكاوي"),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+        ),
 
       
     ),
@@ -98,7 +88,7 @@ class _myComplaint extends State<myComplaint_Page> {
  
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -160,7 +150,7 @@ return AlertDialog(
     {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Image not selected'))
+          content: Text('  لم يتم تحديد الصورة'))
       );
       
     }
@@ -255,7 +245,7 @@ return AlertDialog(
 Future sendComitToDB(String description,String imageComit ) async 
 {
 
-             var url = "http://192.168.0.114:80/addComplaint/newcomplaint?UserId=$UserId&description=$description&imageComplaint=$imageComit";
+             var url = "http://172.19.32.48:80/addComplaint/newcomplaint?UserId=$UserId&description=$description&imageComplaint=$imageComit";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -460,7 +450,7 @@ TextButton(
               padding: EdgeInsets.all(8.0),
               child: TextField(
                 maxLines: 10, //or null 
-                decoration: InputDecoration.collapsed(hintText: " ادخل وصف بسيط هنا"),
+                decoration: InputDecoration.collapsed(hintText: " ادخل وصف  هنا"),
                 controller:MyComplaint ,
               ),
             )
@@ -574,8 +564,6 @@ late String downloadURL;
             }
           return Center(      
                   child:  Text('  '),
-
-
                   );
           
           

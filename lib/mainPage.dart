@@ -17,10 +17,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class mainPage extends StatefulWidget {
    late final String currentUser;
-   
+      late final String name;
+   late final String UrlImage;
+
     mainPage
     ({
     required this.currentUser,
+    required this.name,
+    required this.UrlImage,
   
   });
 
@@ -29,16 +33,21 @@ class mainPage extends StatefulWidget {
     
     return _mainState(
       currentUser:currentUser,
+       name:name,
+        UrlImage:UrlImage,
     );
   }
 }
 
 class _mainState extends State<mainPage> {
-
-  late final String currentUser;
+   late final String currentUser;
+      late final String name;
+   late final String UrlImage;
     _mainState
     ({
     required this.currentUser,
+    required this.name,
+    required this.UrlImage,
   
   });
   var _currentIndex = 2;
@@ -83,22 +92,31 @@ class _mainState extends State<mainPage> {
     if (_currentIndex == 2) {
       return home_Page(
         currentUser:currentUser,
+        name:name,
+        UrlImage:UrlImage,
       );
     } else if (_currentIndex == 4) {
         return myProfile(
            UserId:currentUser,
+           name:name,
+        UrlImage:UrlImage,
         );
     }
      else if (_currentIndex == 3) 
      {
-     return HomeScreen( );
+     return HomeScreen( name:name,
+        UrlImage:UrlImage,);
     
     } 
     
     else if (_currentIndex == 1) {
-      return Post(UserId:currentUser,);
+      return Post(UserId:currentUser,name:name,UrlImage:UrlImage,);
     } else if (_currentIndex == 0) {
-      return SearchWorker(currentUser:currentUser);
+      return SearchWorker(currentUser:currentUser,
+         name:name,
+        UrlImage:UrlImage,
+      
+      );
     } else {
       return Container();
     }

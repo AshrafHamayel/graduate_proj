@@ -53,7 +53,7 @@ class _MessageTextFieldState extends State<MessageTextField> {
            Expanded(child: TextField(
              controller: _controller,
               decoration: InputDecoration(
-                labelText:"Type your Message",
+                labelText:"ادخل نص الرسالة",
                 fillColor: Colors.grey[100],
                 filled: true,
                 border: OutlineInputBorder(

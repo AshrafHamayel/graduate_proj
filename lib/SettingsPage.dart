@@ -27,23 +27,8 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   Widget build(BuildContext context) {
     var _curIndex = 2;
     return Scaffold(
-      appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-           Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
-        title: Row(
-          textDirection: TextDirection.rtl,
-          children: [
-            Text('الاعدادات'),
-          ],
-        ),
+      appBar:   AppBar(
+        elevation: 3,
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(

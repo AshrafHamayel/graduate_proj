@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart' ;
@@ -27,9 +28,41 @@ class MyApp extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
     if( UserId !=null)
     {
-      return mainPage(
-        currentUser:UserId,
-      );
+
+
+
+  return FutureBuilder(
+                  future: FirebaseFirestore.instance.collection('users').doc(UserId).get(),
+                  builder: (context,AsyncSnapshot asyncSnapshot){
+                    if(asyncSnapshot.hasData)
+                      {
+                      var current = asyncSnapshot.data;
+                      return   mainPage(
+                                            currentUser:UserId,
+                                            name:current['name'],
+                                            UrlImage:current['image'],
+                                 );
+
+
+                      }
+                    return  Row(
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Material(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+               
+              ],
+          
+        );
+                  },
+
+                );
+   
     }
     else
     {

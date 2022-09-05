@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart'as Path;
@@ -31,9 +33,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:like_button/like_button.dart';
 class myProfile extends StatelessWidget {
   late final String UserId;
+                late final String name;
+   late final String UrlImage;
     myProfile
     ({
     required this.UserId,
+          required this.name,
+    required this.UrlImage,
   
   });
   
@@ -43,36 +49,70 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
 
   }
+
+  Future getPer(context) async {
+    bool ser;
+    LocationPermission per;
+    ser = await Geolocator.isLocationServiceEnabled();
+    if (ser == false) {
+      // ignore: avoid_single_cascade_in_expression_statements
+      AwesomeDialog(
+          context: context,
+          //  title: Text("services"),
+          body: Text("S not enabled"))
+        ..show();
+    }
+    per = await Geolocator.requestPermission();
+    if (per == LocationPermission.denied)
+      per = await Geolocator.requestPermission();
+
+    return per;
+  }
+
+
+
+  late Position myP;
+  double? lat, long;
+
+  Future<void> getLatAndLong() async {
+    myP = await Geolocator.getCurrentPosition().then((value) => value);
+    lat = myP.latitude;
+    long = myP.longitude;
+    
+   
+  }
+  Future <void>setPos() async {
+
+    var url = await"http://172.19.32.48:80/myProf/setNewPos?UserId=$UserId&LAT=$lat&LONG=$long";
+
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+  
+
+    return await responsebody;
+ 
+
+  }
+
   
   @override
   
   Widget build(BuildContext context) {
+       getPer(context);
+  getLatAndLong();
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: UserProfile_Page( UserId:UserId,),
+      body: UserProfile_Page( UserId:UserId,name:name,
+        UrlImage:UrlImage,),
     
-      appBar: AppBar(
-        
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-        elevation: 1,
-        // leading: IconButton(
-        //   icon: const Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.green,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => MyApp()),
-        //     );
-        //   },
-        // ),
+      appBar:  AppBar(
+        elevation: 3,
+        title:Text('الملف الشخصي'),
         actions: [
           IconButton(
             icon: Icon(
               Icons.arrow_forward,
-              color: Colors.green,
+              color: Color.fromARGB(255, 254, 255, 254),
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -80,6 +120,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             },
           ),
         ],
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 //Directionality
       drawer: Drawer(
@@ -88,18 +129,18 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
             
             children: <Widget>[
               
-                UserAccountsDrawerHeader(accountName: Text(' ',style:TextStyle(fontSize: 20),), accountEmail: Text(''),
-                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 18,color: Color.fromARGB(255, 243, 243, 243)),), accountEmail: Text(name,style:TextStyle(fontSize: 20,color: Color.fromARGB(255, 243, 243, 243)),),
+                 // currentAccountPicture: CircleAvatar(child:  Icon(Icons.add_task,size: 20,)),
 
                  decoration:BoxDecoration(
                   color: Color.fromARGB(255, 2, 20, 3),
-                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
+                  image: DecorationImage(image: NetworkImage(UrlImage),fit: BoxFit.cover),
 
                  ),
 
                 ),
                
-             
+               
                 SizedBox(height: 20,),
                  ListTile(
                     title: Text(" تقديم شكوى ",style: TextStyle(fontSize: 18),),
@@ -114,13 +155,22 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                 ),
                   SizedBox(height: 20,),
 
+              
               ListTile(
                     title: Text("  تحديث موقعي ",style: TextStyle(fontSize: 18),),
                     leading: Icon(Icons.edit_location_alt_sharp),
                     subtitle: Text(" My location"),
                     isThreeLine: true,
                     dense: true,
-                    onTap: (){},
+                    onTap: (){
+                                   setPos().then((value) =>{
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('تم تحديث الموقع')) ),
+                      });
+
+
+                    },
 
                 ),
                SizedBox(height: 20,),
@@ -133,7 +183,8 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                     dense: true,
                     onTap: (){
                                
-                        Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId)));
+                        Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId,name:name,
+        UrlImage:UrlImage,)));
                     },
 
                 ),
@@ -185,14 +236,19 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 class UserProfile_Page extends StatefulWidget {
 
     late final String UserId;
+                  late final String name;
+   late final String UrlImage;
     UserProfile_Page
     ({
     required this.UserId,
-  
+        required this.name,
+    required this.UrlImage,
   });
   @override
   _UserProfilePage createState() => _UserProfilePage(
     UserId:UserId,
+    name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -200,40 +256,21 @@ class _UserProfilePage extends State<UserProfile_Page> {
 
 
       late final String UserId;
+                    late final String name;
+   late final String UrlImage;
     _UserProfilePage
     ({
     required this.UserId,
+          required this.name,
+    required this.UrlImage,
   
   }); 
 
   
 
-// Widget buildd(BuildContext context) 
-// {
-//   return FutureBuilder(
-//     future: getEamil(),
-//     builder: (context, snapshot) {
-      
-//       if (snapshot.hasData) {
-        
-//         return UserId;
-//       }
-//       return CircularProgressIndicator(); // or some other widget
-//     },
-//   );
-// }
-// Future<String> getEamil() async {
-//   SharedPreferences   preferences = await SharedPreferences.getInstance();
-//     UserId = await preferences.getString("UserId");
-//     print (' UID from home muProfile :');
-//   print(preferences.getString("UserId"));
-
-//      return UserId;
-//   }
-
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -285,7 +322,8 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value) =>{
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false),
         }),
 
        }
@@ -337,7 +375,8 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false);
         }),
 
        }
@@ -543,8 +582,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.41,
-                  height: MediaQuery.of(context).size.height * 0.13,
+                  width: MediaQuery.of(context).size.width * 0.38,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -597,7 +636,7 @@ TextButton(onPressed: (){
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://192.168.0.114:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
+             var url = "http://172.19.32.48:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -610,7 +649,7 @@ Future sendToDB(String imagePath) async {
 Future sendPostToDB(String description,String imagepost ) async 
 {
 
-             var url = "http://192.168.0.114:80/addPost/newPost?UserId=$UserId&description=$description&imagepost=$imagepost";
+             var url = "http://172.19.32.48:80/addPost/newPost?UserId=$UserId&description=$description&imagepost=$imagepost";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -620,7 +659,8 @@ Future sendPostToDB(String description,String imagepost ) async
        ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text(' تم حفظ المنشور')) );
 
-         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false);
 
        }
 
@@ -639,7 +679,7 @@ Future sendPostToDB(String description,String imagepost ) async
 Future setAvailabil() async
   {
     
-    final  url = "http://192.168.0.114:80/myProf/setAvailabil?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/myProf/setAvailabil?UserId=$UserId";
     final  response = await http.post(Uri.parse(url));
     final  responsebody =  json.decode(response.body);
    print( 'responsebody[NT]');
@@ -650,7 +690,7 @@ Future setAvailabil() async
 Future UnsetAvailabil() async
   {
     
-    final  url = "http://192.168.0.114:80/myProf/UnsetAvailabil?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/myProf/UnsetAvailabil?UserId=$UserId";
     final  response = await http.post(Uri.parse(url));
     final  responsebody =  json.decode(response.body);
     return responsebody['NT'];
@@ -953,7 +993,8 @@ Future UnsetAvailabil() async
                     onTap: (){
 
                       UnsetAvailabil().then((value) =>{
-                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false),
                       });
                      
                     },
@@ -967,7 +1008,8 @@ Future UnsetAvailabil() async
                     onTap: (){
 
                       setAvailabil().then((value) =>{
-                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false),
+                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false),
                       });
                      
 
@@ -1059,7 +1101,8 @@ Future UnsetAvailabil() async
             ),
             onPressed: () {
               
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'followers',CurrentUser:UserId,
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'followers',CurrentUser:UserId,name:name,
+        UrlImage:UrlImage,
 )), (route) => false);
 
               
@@ -1104,7 +1147,8 @@ Future UnsetAvailabil() async
             onPressed: () {
               
                             
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'Ifollow',CurrentUser:UserId,
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>FollowResult(UserId:UserId,Type:'Ifollow',CurrentUser:UserId,name:name,
+        UrlImage:UrlImage,
 )), (route) => false);
 
               
@@ -1287,7 +1331,7 @@ Future UnsetAvailabil() async
 
   Future<List> getUserPosts() async {
 
-    final  url = "http://192.168.0.114:80/addPost/myPosts?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addPost/myPosts?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -1298,7 +1342,7 @@ Future UnsetAvailabil() async
   }
  Future <bool>AddLike(String idPost) async {
 
-    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+    var url = await"http://172.19.32.48:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -1584,7 +1628,7 @@ late String downloadURL;
                         height: 10,
                       ),
                             Container(
-                height: 400,
+                height: 490,
                 child: FutureBuilder<List>(
                                       future: getUserPosts(),
                                       builder: (context,snapshot){

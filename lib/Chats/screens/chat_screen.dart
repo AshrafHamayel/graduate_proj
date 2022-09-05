@@ -17,6 +17,8 @@ class ChatScreen extends StatelessWidget {
   final String friendName;
   final String friendImage;
     final String friendToken;
+              late final String name;
+   late final String UrlImage;
 
   ChatScreen({
     required this.currentUser,
@@ -24,6 +26,8 @@ class ChatScreen extends StatelessWidget {
     required this.friendName,
     required this.friendImage,
     required this.friendToken,
+        required this.name,
+    required this.UrlImage,
 
   });
 
@@ -44,18 +48,7 @@ class ChatScreen extends StatelessWidget {
                 radius: 22, // Image radius
                 backgroundImage: NetworkImage(friendImage),
               ),
-            // ClipRRect(
-            //               borderRadius: BorderRadius.circular(120),
-            //               child: CachedNetworkImage(
-            //                 imageUrl:friendImage,
-            //                 placeholder: (conteext,url)=>CircularProgressIndicator(),
-            //                 errorWidget: (context,url,error)=>Icon(Icons.error,),
-            //                 height: 44,
-            //                 width: 44,
-            //               ),
-            //             ),
-           
-           
+      
           ],
         ),
 
@@ -67,11 +60,13 @@ class ChatScreen extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.arrow_forward,
-              color: Colors.green,
+              color: Color.fromARGB(255, 254, 255, 254),
             ),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen()));
+                  builder: (BuildContext context) => HomeScreen(
+                    name:name,
+                   UrlImage:UrlImage,)));
             },
           ),
         ],
@@ -107,7 +102,8 @@ class ChatScreen extends StatelessWidget {
                     dense: true,
                     onTap: (){
 
-                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,)), (route) => false);
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,name:name,
+        UrlImage:UrlImage,)), (route) => false);
 
                     },
 
@@ -157,7 +153,8 @@ class ChatScreen extends StatelessWidget {
                     dense: true,
                     onTap: (){
 
-                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,)), (route) => false);
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:friendId , CurrentUser:currentUser.uid,name:name,
+        UrlImage:UrlImage,)), (route) => false);
 
                     },
 
@@ -215,7 +212,7 @@ class ChatScreen extends StatelessWidget {
                      if(snapshot.data.docs.length < 1){
                       
                        return Center(
-                         child: Text("Say Hi"),
+                         child: Text("ابدأ المحادثة الان"),
                        );
                      }
                      return ListView.builder(

@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:like_button/like_button.dart';
@@ -14,6 +16,8 @@ import 'Chats/models/user_model.dart';
 import 'EditProfile.dart';
 import 'Ratings.dart';
 import 'SettingsPage.dart';
+import 'Tenders.dart';
+import 'complaint.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,9 +32,13 @@ import '../models/postModel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class Post extends StatelessWidget {
   late final String UserId;
+        late final String name;
+   late final String UrlImage;
     Post
     ({
     required this.UserId,
+        required this.name,
+    required this.UrlImage,
   
   });
   
@@ -40,35 +48,190 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
 
   }
+    Future getPer(context) async {
+    bool ser;
+    LocationPermission per;
+    ser = await Geolocator.isLocationServiceEnabled();
+    if (ser == false) {
+      // ignore: avoid_single_cascade_in_expression_statements
+      AwesomeDialog(
+          context: context,
+          //  title: Text("services"),
+          body: Text("S not enabled"))
+        ..show();
+    }
+    per = await Geolocator.requestPermission();
+    if (per == LocationPermission.denied)
+      per = await Geolocator.requestPermission();
+
+    return per;
+  }
+
+
+
+  late Position myP;
+  double? lat, long;
+
+  Future<void> getLatAndLong() async {
+    myP = await Geolocator.getCurrentPosition().then((value) => value);
+    lat = myP.latitude;
+    long = myP.longitude;
+    
+   
+  }
+  Future <void>setPos() async {
+
+    var url = await"http://172.19.32.48:80/myProf/setNewPos?UserId=$UserId&LAT=$lat&LONG=$long";
+
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+  
+
+    return await responsebody;
+ 
+
+  }
+
   
   @override
   
   Widget build(BuildContext context) {
+           getPer(context);
+  getLatAndLong();
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: Posts_Page( UserId:UserId,),
+
+      body: Posts_Page(
+         UserId:UserId,  
+         name:name,
+        UrlImage:UrlImage,),
     
-      appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-           Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
-        title: Row(
-          textDirection: TextDirection.rtl,
+      appBar:   AppBar(
+        
+        elevation: 3,
+       title: Row(
           children: [
-            Text('المنشورات'),
+             SizedBox(width: 20,),
+            Text('المنشورات',style: TextStyle(fontSize: 20),),
+           SizedBox(width: 12,),
+     
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+         actions:<Widget> [
+IconButton(
+  onPressed: (){  
+               Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MyApp()));
+       }, 
+       
+           icon: Icon(Icons.arrow_forward)
+)
+            ],
       ),
+  drawer: Drawer(
+        
+          child: ListView(
+            
+            children: <Widget>[
+              
+                UserAccountsDrawerHeader(accountName: Text('',style:TextStyle(fontSize: 18,color: Color.fromARGB(255, 243, 243, 243)),), accountEmail: Text(name,style:TextStyle(fontSize: 20,color: Color.fromARGB(255, 243, 243, 243)),),
 
+                 decoration:BoxDecoration(
+                  color: Color.fromARGB(255, 2, 20, 3),
+                  image: DecorationImage(image: NetworkImage(UrlImage),fit: BoxFit.cover),
+
+                 ),
+
+                ),
+               
+             
+                SizedBox(height: 20,),
+                 ListTile(
+                    title: Text(" تقديم شكوى ",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.drafts_sharp),
+                    subtitle: Text(" Make a complaint"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => myComplaint(UserId:UserId)));
+                    },
+
+                ),
+                  SizedBox(height: 20,),
+
+              
+              ListTile(
+                    title: Text("  تحديث موقعي ",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.edit_location_alt_sharp),
+                    subtitle: Text(" My location"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                                   setPos().then((value) =>{
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('تم تحديث الموقع')) ),
+                      });
+
+
+                    },
+
+                ),
+               SizedBox(height: 20,),
+
+                 ListTile(
+                    title: Text("العطاءات",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.grading_outlined),
+                    subtitle: Text("مناقصات و عطاءات"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                               
+                        Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId,name:name,
+        UrlImage:UrlImage,)));
+                    },
+
+                ),
+                SizedBox(height: 20,),
+
+               ListTile(
+                    title: Text("الاعدادات",style: TextStyle(fontSize: 18),),
+                    leading: Icon(Icons.settings),
+                    subtitle: Text("Settings"),
+                    isThreeLine: true,
+                    dense: true,
+                    onTap: (){
+                       Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage()));
+                    },
+                ),
+              Center(
+              child: OutlinedButton(
+                
+                onPressed: () async {
+                              out();
+                             await GoogleSignIn().signOut();
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0))),
+                ),
+                child: const Text("تسجيل الخروج",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+              ),
+            )
+
+
+            ],
+
+          ),
+
+
+      ),
     ),
     
     );
@@ -78,14 +241,20 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 class Posts_Page extends StatefulWidget {
 
     late final String UserId;
+          late final String name;
+   late final String UrlImage;
     Posts_Page
     ({
     required this.UserId,
+        required this.name,
+    required this.UrlImage,
   
   });
   @override
   _PostsPage createState() => _PostsPage(
     UserId:UserId,
+      name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -93,16 +262,20 @@ class _PostsPage extends State<Posts_Page> {
 
 
       late final String UserId;
+            late final String name;
+   late final String UrlImage;
     _PostsPage
     ({
     required this.UserId,
+        required this.name,
+    required this.UrlImage,
   
   }); 
 
 
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -154,7 +327,7 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value) =>{
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,)), (route) => false),
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,name:name,UrlImage:UrlImage,)), (route) => false),
         }),
 
        }
@@ -206,7 +379,7 @@ return AlertDialog(
         
          
         sendToDB(imageName).then((value){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,)), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,name:name, UrlImage:UrlImage,)), (route) => false);
         }),
 
        }
@@ -413,8 +586,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.41,
-                  height: MediaQuery.of(context).size.height * 0.13,
+                  width: MediaQuery.of(context).size.width * 0.38,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   image:FileImage(_filePost),
                   child: InkWell(
                     onTap: () {
@@ -467,7 +640,7 @@ TextButton(onPressed: (){
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://192.168.0.114:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
+             var url = "http://172.19.32.48:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -480,7 +653,7 @@ Future sendToDB(String imagePath) async {
 Future sendPostToDB(String description,String imagepost ) async 
 {
 
-             var url = "http://192.168.0.114:80/addPost/newPost?UserId=$UserId&description=$description&imagepost=$imagepost";
+             var url = "http://172.19.32.48:80/addPost/newPost?UserId=$UserId&description=$description&imagepost=$imagepost";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -489,7 +662,7 @@ Future sendPostToDB(String description,String imagepost ) async
     
           ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar( content: Text(' تم حفظ المنشور')) );
-         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,)), (route) => false);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,name:name,UrlImage:UrlImage,)), (route) => false);
 
        }
 
@@ -704,7 +877,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
   Future<List> getPostsGeneral() async {
 
-    final  url = "http://192.168.0.114:80/addPost/allPosts?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addPost/allPosts?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -717,7 +890,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
     Future<List> getPostsFollowers() async {
 
-    final  url = "http://192.168.0.114:80/addPost/getPostsFollowers?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addPost/getPostsFollowers?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -732,7 +905,7 @@ Future sendPostToDB(String description,String imagepost ) async
 
  Future <bool>AddLike(String idPost) async {
 
-    var url = await"http://192.168.0.114:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
+    var url = await"http://172.19.32.48:80/addPost/AddLike?currentUser=$UserId&PostId=$idPost";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -896,7 +1069,7 @@ var responsebody = json.decode(response.body);
 
    Future <void>GeneralPosts() async {
 
-    var url = await"http://192.168.0.114:80/addPost/GeneralPosts?currentUser=$UserId";
+    var url = await"http://172.19.32.48:80/addPost/GeneralPosts?currentUser=$UserId";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -907,7 +1080,7 @@ var responsebody = json.decode(response.body);
 
 Future <void>FollowersPosts() async {
 
-    var url = await"http://192.168.0.114:80/addPost/FollowersPosts?currentUser=$UserId";
+    var url = await"http://172.19.32.48:80/addPost/FollowersPosts?currentUser=$UserId";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -936,7 +1109,8 @@ Widget _buildButtons(String Stat) {
               onTap: () => {
 
                 GeneralPosts().then((value) =>{
-                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId)), (route) => true), })
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,name:name,UrlImage:UrlImage,)), (route) => false),
+                    })
 
               },
               child:  Container(
@@ -980,7 +1154,8 @@ Widget _buildButtons(String Stat) {
               onTap: () => {
 
                 FollowersPosts().then((value) =>{
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId)), (route) => true), })
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Post( UserId:UserId,name:name,UrlImage:UrlImage,)), (route) => false),
+                    })
 
               },
               child: Container(
@@ -1066,7 +1241,7 @@ late String downloadURL;
                        _buildButtons('general'),
                      
                    Container(
-                  height:MediaQuery.of(context).size.height * 0.75,
+                  height:470,
                 child: FutureBuilder<List>(
                                       future: getPostsGeneral(),
                                       builder: (context,snapshot){
@@ -1126,7 +1301,7 @@ late String downloadURL;
                         height: 10,
                       ),
                    Container(
-                height:MediaQuery.of(context).size.height * 0.75,
+                height:470,
                 child: FutureBuilder<List>(
                                       future: getPostsGeneral(),
                                       builder: (context,snapshot){
@@ -1184,7 +1359,7 @@ late String downloadURL;
                     
                    
                    Container(
-                  height:MediaQuery.of(context).size.height * 0.75,
+                  height:470,
                 child: FutureBuilder<List>(
                                       future: getPostsFollowers(),
                                       builder: (context,snapshot){
@@ -1244,7 +1419,7 @@ late String downloadURL;
                         height: 10,
                       ),
                    Container(
-                height:MediaQuery.of(context).size.height * 0.75,
+                height:470,
                 child: FutureBuilder<List>(
                                       future: getPostsFollowers(),
                                       builder: (context,snapshot){

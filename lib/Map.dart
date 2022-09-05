@@ -90,7 +90,7 @@ class newMap extends State<myMap> {
 
  Future SendMyPos() async {
 
-    final  url = "http://192.168.0.114:80/search/TESTSearch?LAT=$lat&LONG=$long";
+    final  url = "http://172.19.32.48:80/search/TESTSearch?LAT=$lat&LONG=$long";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) ;

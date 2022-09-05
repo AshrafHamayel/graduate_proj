@@ -79,21 +79,15 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       
       ),
     
-      appBar: AppBar(
-        // toolbarHeight: 30,
+      appBar:  AppBar(
+        elevation: 3,
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('اماكن تواجدكم '),
+          ],
+        ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-             Navigator.pop(context);
-            },
-          ),
-        ],
       ),
 
     ),
@@ -229,7 +223,7 @@ CustomInfoWindowController customInfoWindowController=CustomInfoWindowController
 
  Future <void>getPos() async {
 
-    var url = await"http://192.168.0.114:80/myProf/posCurrentFrind?frindId=$UserId&currentUser=$currentUser";
+    var url = await"http://172.19.32.48:80/myProf/posCurrentFrind?frindId=$UserId&currentUser=$currentUser";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);

@@ -71,24 +71,7 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       ),
     
       appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-
-            mapVis1=false;
-           Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
-        title: Row(
-          textDirection: TextDirection.rtl,
-          children: [
-            Text('النتائج على الخريطة'),
-          ],
-        ),
+        elevation: 3,
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
 
@@ -178,7 +161,14 @@ late String downloadURL;
                                       Container(
                                         height:MediaQuery.of(context).size.height *0.63,
                                         width: MediaQuery.of(context).size.width,
+
+
                                         child:   GoogleMap(
+                                            myLocationEnabled: true,
+                                            tiltGesturesEnabled: true,
+                                            compassEnabled: true,
+                                            scrollGesturesEnabled: true,
+                                            zoomGesturesEnabled: true,
                                            initialCameraPosition: kGooglePlex,
                                            markers: Set<Marker>.of(markers.values),
                                             onTap: (postition){ customInfoWindowController.hideInfoWindow!();},
@@ -186,6 +176,12 @@ late String downloadURL;
                                            onCameraMove:(postition){ customInfoWindowController.onCameraMove!();},
                                           
                                              ),
+
+
+
+                  
+
+
                                       ),
                                     SizedBox(height: 15 ,),
                                               CustomInfoWindow(

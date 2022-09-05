@@ -13,13 +13,31 @@ import 'home_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   UserModel user;
-  SearchScreen(this.user);
+            late final String name;
+   late final String UrlImage;
+
+
+  SearchScreen({required this.user,
+      required this.name,
+    required this.UrlImage,
+
+  });
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _SearchScreenState createState() => _SearchScreenState(name:name,
+        UrlImage:UrlImage,);
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+          late final String name;
+   late final String UrlImage;
+         _SearchScreenState
+    ({
+        required this.name,
+    required this.UrlImage,
+  
+  });
   TextEditingController searchController = TextEditingController();
   List<Map> searchResult =[];
   bool isLoading = false;
@@ -59,103 +77,12 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
     return Directionality(textDirection: TextDirection.rtl, 
     child:Scaffold(
        appBar: AppBar(
-        
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen()));
-            },
-          ),
-        ],
-      ),
-       drawer: Drawer(
-        
-          child: ListView(
-            
-            children: <Widget>[
-              
-                UserAccountsDrawerHeader(accountName: Text('أشرف حمايل',style:TextStyle(fontSize: 20),), accountEmail: Text('asrf@gmail.com'),
-                  currentAccountPicture: CircleAvatar(child:  Icon(Icons.person)),
-
-                 decoration:BoxDecoration(
-                  color: Color.fromARGB(255, 2, 20, 3),
-                  image: DecorationImage(image: NetworkImage("https://www.monkhouselaw.com/wp-content/uploads/2020/03/rights-of-workers-ontario.jpg"),fit: BoxFit.cover),
-
-                 ),
-
-                ),
-               
-                 ListTile(
-                    title: Text("تغيير نوع العمل "),
-                    leading: Icon(Icons.work),
-                    subtitle: Text("change work"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
-                 ListTile(
-                    title: Text(" تقديم شكوى "),
-                    leading: Icon(Icons.drafts_sharp),
-                    subtitle: Text(" Make a complaint"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
-              ListTile(
-                    title: Text("  موقعي "),
-                    leading: Icon(Icons.edit_location_alt_sharp),
-                    subtitle: Text(" My location"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){},
-
-                ),
-               ListTile(
-                    title: Text("الاعدادات"),
-                    leading: Icon(Icons.settings),
-                    subtitle: Text("Settings"),
-                    isThreeLine: true,
-                    dense: true,
-                    onTap: (){
-                       Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SettingsPage()));
-                    },
-                ),
-              Center(
-              child: OutlinedButton(
-                
-                onPressed: () async {
-                              out();
-                             await GoogleSignIn().signOut();
-            await FirebaseAuth.instance.signOut();
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>SignIn()), (route) => false);
-                },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0))),
-                ),
-                child: const Text("تسجيل الخروج",
-                    style: TextStyle(
-                        fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
-              ),
-            )
-
-
-            ],
-
-          ),
-
-
-      ),
+          title: Text("البحث"),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 66, 64, 64),
+         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+        ),
+     
       body: Column(
         children: [
            Row(
@@ -209,6 +136,8 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
                               friendName: searchResult[index]['name'],
                                friendImage: searchResult[index]['image'],
                                friendToken: searchResult[index]['token'],
+                                  name:name,
+                                 UrlImage:UrlImage,
                                )));
                     }, icon: Icon(Icons.wechat_outlined ,size: 35,)),
                   );

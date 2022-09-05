@@ -29,11 +29,16 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class TendersResult extends StatelessWidget {
   late final String TendersId;
     late final String currentUser;
+              late final String name;
+   late final String UrlImage;
+
 
     TendersResult
     ({
     required this.TendersId,
       required this.currentUser,
+          required this.name,
+    required this.UrlImage,
 
   });
   
@@ -49,20 +54,12 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: TendersResult_Page( TendersId:TendersId,currentUser:currentUser,
+      body: TendersResult_Page( TendersId:TendersId,currentUser:currentUser ,name:name,
+        UrlImage:UrlImage,
 ),
     
-      appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-           Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
+      appBar:   AppBar(
+        elevation: 3,
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
@@ -82,18 +79,23 @@ class TendersResult_Page extends StatefulWidget {
 
     late final String TendersId;
         late final String currentUser;
+                      late final String name;
+   late final String UrlImage;
 
     TendersResult_Page
     ({
     required this.TendersId,
     required this.currentUser,
-
+      required this.name,
+    required this.UrlImage,
   
   });
   @override
   _TendersResultPage createState() => _TendersResultPage(
     TendersId:TendersId,
     currentUser:currentUser,
+    name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -102,12 +104,15 @@ class _TendersResultPage extends State<TendersResult_Page> {
 
       late final String TendersId;
           late final String currentUser;
+                        late final String name;
+   late final String UrlImage;
 
     _TendersResultPage
     ({
     required this.TendersId,
   required this.currentUser,
-
+      required this.name,
+    required this.UrlImage,
   }); 
 
   final Storage storage=Storage();
@@ -134,7 +139,7 @@ class _TendersResultPage extends State<TendersResult_Page> {
 
   Future<List> getApplicants() async {
 
-    final  url = "http://192.168.0.114:80/addTenders/getApplicants?TendersId=$TendersId";
+    final  url = "http://172.19.32.48:80/addTenders/getApplicants?TendersId=$TendersId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -212,7 +217,8 @@ class _TendersResultPage extends State<TendersResult_Page> {
                         child: FlatButton(
                           onPressed: () {
 
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser, name:name,
+        UrlImage:UrlImage,)), (route) => true);
                           },
                           color: Color.fromARGB(255, 51, 54, 50),
                           shape: RoundedRectangleBorder(

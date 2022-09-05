@@ -95,7 +95,7 @@ showAlertDialog(String textMessage) {
 
                     else
                     { 
-                      var url = "http://192.168.0.114:80/myProf/editPassword?UserId=$UserId&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
+                      var url = "http://172.19.32.48:80/myProf/editPassword?UserId=$UserId&Opassword=$oldPass&Npassword=$NewPass&NCpassword=$ConfNewPass";
                  var response = await http.post(Uri.parse(url));
              var responsebody = json.decode(response.body);
              
@@ -138,29 +138,15 @@ showAlertDialog(String textMessage) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => SettingsPage()));
-          },
+      appBar:  AppBar(
+        elevation: 3,
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('كلمة المرور'),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.green,
-            ),
-            onPressed: () {},
-          ),
-        ],
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),

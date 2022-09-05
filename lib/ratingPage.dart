@@ -54,11 +54,11 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen()));
+                  builder: (BuildContext context) => MyApp()));
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.green,
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         title: Row(
@@ -108,7 +108,7 @@ class _RatingPage extends State<Rating_Page> {
  
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$FrindId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$FrindId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -116,9 +116,92 @@ class _RatingPage extends State<Rating_Page> {
  
 
   }
+  Future <void>setReport(String IDComit) async {
+
+    var url = await"http://172.19.32.48:80/addComit/AddReport?ComitId=$IDComit&currentUser=$UserId";
+
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+      // return await responsebody;
+
+                    if (responsebody['NT']=='done1')
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لقد وصل هذا التقييم للحد الاقضى من البلاغات')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myRating( UserId:UserId,FrindId:FrindId)), (route) => false);
+
+       }
+
+                       else if (responsebody['NT']=='done2')
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('تمت اضافة البلاغ بنجاح')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myRating( UserId:UserId,FrindId:FrindId)), (route) => false);
+
+       }
+
+                           else 
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لقد قمت بالابلاغ من قبل على هذا!')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myRating( UserId:UserId,FrindId:FrindId)), (route) => false);
+
+       }
+
+       
+
+
+ 
+
+  }
 
 
 
+Future<void> showErroe(BuildContext context,String IDComit )async{
+return await showDialog(context: context, 
+builder: (context){
+
+  
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+                  children: [
+                    Text('التقييمات التي يحصل عليها العاملين امر مهم بالنسبة لWorkBook ,اذا كنت ترى     وجود اي امر غير صحيح في هذا التقييم رجاءا قم بالابلاغ عليه.',style: TextStyle(fontSize: 19,color: Color.fromARGB(255, 56, 55, 50)),),
+                    ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: 120,
+                  height:70,
+                  image: const AssetImage('images/LO.png'),
+                ),
+              ),
+            ),
+                
+                  ],
+  )
+  
+  
+  )
+  
+  ),
+  actions:<Widget> [
+TextButton(onPressed: (){  
+             
+               setReport(IDComit);
+       }, 
+       child: Text("ابلاغ",style:const TextStyle( color: Colors.red, fontSize: 18.0,),))
+  ],
+);
+}
+
+);
+}
 
 
   final Storage storage=Storage();
@@ -279,7 +362,7 @@ return AlertDialog(
 Future sendComitToDB(String description,String imageComit ) async 
 {
 
-             var url = "http://192.168.0.114:80/addComit/newComit?UserId=$UserId&FrindId=$FrindId&description=$description&imageComit=$imageComit&rating=$rating";
+             var url = "http://172.19.32.48:80/addComit/newComit?UserId=$UserId&FrindId=$FrindId&description=$description&imageComit=$imageComit&rating=$rating";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -418,7 +501,7 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
   Future<List> getUserComits() async
    {
 
-    final  url = "http://192.168.0.114:80/addComit/youComits?FrindId=$FrindId";
+    final  url = "http://172.19.32.48:80/addComit/youComits?FrindId=$FrindId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -430,7 +513,7 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
 
 
 
-  Widget _buildStatComit(String namePost,String description,String ImageUserURL, String ImageURL ,String DatePost,String Rating0) {
+  Widget _buildStatComit(String namePost,String description,String ImageUserURL, String ImageURL ,String DatePost,String Rating0,String IDComit) {
 
 
                       return  FutureBuilder<String>(
@@ -468,9 +551,10 @@ Widget _buildProfileImage(BuildContext context ,String imagee ,String Type) {
                         title: Container(child: Text(namePost,style: TextStyle(fontSize: 18),)),
                         trailing: IconButton(
                             onPressed: () {
-                              
+                             showErroe(context,IDComit);
                             },
-                            icon: Icon(Icons.more_vert_outlined)
+                            icon: Icon(Icons.error_outline_rounded,color: Colors.red,)
+                          
                             ),
                         isThreeLine: true,
                         subtitle: Text(DatePost),
@@ -594,8 +678,8 @@ return AlertDialog(
               child: Material(
                 child: Ink.image(
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width * 0.41,
-                  height: MediaQuery.of(context).size.height * 0.14,
+                  width: MediaQuery.of(context).size.width * 0.38,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   image:FileImage(_fileComit),
                   child: InkWell(
                     onTap: () {
@@ -811,7 +895,7 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                                return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString());
+                                           return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }

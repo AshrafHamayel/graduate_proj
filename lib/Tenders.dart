@@ -28,9 +28,13 @@ import '../models/postModel.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class Tenders extends StatelessWidget {
   late final String UserId;
+                late final String name;
+   late final String UrlImage;
     Tenders
     ({
     required this.UserId,
+          required this.name,
+    required this.UrlImage,
   
   });
   
@@ -46,20 +50,12 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
-      body: Tenders_Page( UserId:UserId,),
+      body: Tenders_Page( UserId:UserId
+      ,name:name,
+        UrlImage:UrlImage,),
     
       appBar:  AppBar(
-        elevation: 1,
-        leading: IconButton(
-          onPressed: () {
-           Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-        ),
+        elevation: 3,
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
@@ -78,14 +74,20 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 class Tenders_Page extends StatefulWidget {
 
     late final String UserId;
+                  late final String name;
+   late final String UrlImage;
     Tenders_Page
     ({
     required this.UserId,
+          required this.name,
+    required this.UrlImage,
   
   });
   @override
   _TendersPage createState() => _TendersPage(
-    UserId:UserId,
+    UserId:UserId
+    ,name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -93,16 +95,20 @@ class _TendersPage extends State<Tenders_Page> {
 
 
       late final String UserId;
+                    late final String name;
+   late final String UrlImage;
     _TendersPage
     ({
     required this.UserId,
+          required this.name,
+    required this.UrlImage,
   
   }); 
 
 
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -129,7 +135,7 @@ class _TendersPage extends State<Tenders_Page> {
 
 Future sendToDB(String imagePath) async {
 
-             var url = "http://192.168.0.114:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
+             var url = "http://172.19.32.48:80/myProf/saveImage?UserId=$UserId&imagePath=$imagePath";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -182,7 +188,6 @@ late String dropdownvalueCity='اختر مدينة' ;
   'نابلس',
   'غزة',
   'أريحا',
-  'نابلس',
   'طولكرم',
   'رام الله',
   '	جنين',
@@ -276,7 +281,7 @@ late String dropdownvalueWork ='اختر مجال العمل';
 
   Future<List> getTenders() async {
 
-    final  url = "http://192.168.0.114:80/addTenders/myTenders?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addTenders/myTenders?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -288,7 +293,7 @@ late String dropdownvalueWork ='اختر مجال العمل';
 
     Future<List> getTendersForWorker() async {
 
-    final  url = "http://192.168.0.114:80/addTenders/getTendersForWorker?UserId=$UserId";
+    final  url = "http://172.19.32.48:80/addTenders/getTendersForWorker?UserId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -439,7 +444,7 @@ return AlertDialog(
 Future sendComitToDB(String description,String imageComit ) async 
 {
 
-             var url = "http://192.168.0.114:80/addTenders/newtenders?UserId=$UserId&description=$description&imageComplaint=$imageComit&sectionTenders=$dropdownvalueWork&CityTenders=$dropdownvalueCity";
+             var url = "http://172.19.32.48:80/addTenders/newtenders?UserId=$UserId&description=$description&imageComplaint=$imageComit&sectionTenders=$dropdownvalueWork&CityTenders=$dropdownvalueCity";
             var response = await http.post(Uri.parse(url));
             var responsebody = json.decode(response.body);
 
@@ -582,7 +587,8 @@ Row(
                                       onTap: () {
                                         
 
-                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TendersResult( TendersId:_idTen,currentUser:UserId)), (route) => false);
+                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TendersResult( TendersId:_idTen,currentUser:UserId ,name:name,
+        UrlImage:UrlImage,)), (route) => false);
 
                                       },
                                       child: Container(
@@ -666,7 +672,7 @@ Row(
  Future <void>AddToApplicants(String Tid) async
   {
 
-    var url = await"http://192.168.0.114:80/addTenders/AddToApplicants?TendersId=$Tid&currentUser=$UserId";
+    var url = await"http://172.19.32.48:80/addTenders/AddToApplicants?TendersId=$Tid&currentUser=$UserId";
 
     var response = await http.post(Uri.parse(url));
 var responsebody = json.decode(response.body);
@@ -777,7 +783,8 @@ var responsebody = json.decode(response.body);
                                     child: InkWell(
                                       onTap: () {
             AddToApplicants(_idTen).then((value) =>{
-                   Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId))),
+                   Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId,name:name,
+        UrlImage:UrlImage,))),
                       });
                                       },
                                       child: Container(
@@ -1054,7 +1061,8 @@ Widget _buildButtons() {
        sendComitToDB(MyTenders.text,imageName).then((value) =>
        {
 
-    Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId))),
+    Navigator.of(context).push(MaterialPageRoute( builder: (BuildContext context) => Tenders(UserId:UserId,name:name,
+        UrlImage:UrlImage,))),
 
 
         })

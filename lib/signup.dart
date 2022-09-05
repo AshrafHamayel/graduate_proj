@@ -101,7 +101,7 @@ else{
 
           final fbm = await FirebaseMessaging.instance.getToken();
           String T=AccountTypy.toString();
-       var url = "http://192.168.0.114:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword&fbm=$fbm&userType=$T";
+       var url = "http://172.19.32.48:80/signUp/signUp?email=$email&name=$name&password=$password&confPassword=$confPassword&fbm=$fbm&userType=$T";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -219,22 +219,15 @@ else{
   Widget build(BuildContext context) {
     return Scaffold(
 
-      appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-       elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-
-            Navigator.pop(context,
-              MaterialPageRoute(builder: (context) => SignIn()));
-          },
+      appBar:  AppBar(
+        elevation: 3,
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('انشاء حساب'),
+          ],
         ),
-       
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -244,14 +237,14 @@ else{
           },
           child: ListView(
             children: [
-              const Text(
-                " انشاء حساب جديد  ",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.end,
-              ),
+              // const Text(
+              //   " انشاء حساب جديد  ",
+              //   style: TextStyle(
+              //     fontSize: 25,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              //   textAlign: TextAlign.end,
+              // ),
               const SizedBox(
                 height: 15,
               ),

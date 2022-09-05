@@ -100,7 +100,7 @@ showAlertDialog(String textMessage) {
 
                     {
 
-        var url = "http://192.168.0.114:80/login/login?email=$email&password=$password";
+        var url = "http://172.19.32.48:80/login/login?email=$email&password=$password";
         var response =await http.post(Uri.parse(url));
           var responsebody= jsonDecode(response.body) ;
      
@@ -199,7 +199,7 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
  Future CreatUser(String? email, String? name,String? imge)async {
            final fbm = FirebaseMessaging.instance.getToken();
                   
-       var url = "http://192.168.0.114:80/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge&fbm=$fbm";
+       var url = "http://172.19.32.48:80/signUp/addUserFromGoogleOrFacebook?email=$email&name=$name&image=$imge&fbm=$fbm";
        var response =await http.post(Uri.parse(url));
       var responsebody= jsonDecode(response.body) ;
 
@@ -250,21 +250,14 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 248, 248, 248),
       appBar: AppBar(
-        // toolbarHeight: 30,
-      backgroundColor: const Color.fromARGB(255, 37, 35, 36),
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          },
+        elevation: 3,
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('تسجيل الدخول'),
+          ],
         ),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),

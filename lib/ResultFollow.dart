@@ -19,6 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userInfo.dart';
 import 'mainPage.dart';
+import 'myProfile.dart';
 import 'signIn.dart';
 import 'storage_sercice.dart';
 import 'package:firebase_storage/firebase_storage.dart'as firebase_storage;
@@ -30,13 +31,16 @@ class FollowResult extends StatelessWidget {
   late final String UserId;
     late final String Type;
      late final String CurrentUser;
-
+              late final String name;
+   late final String UrlImage;
 
     FollowResult
     ({
     required this.UserId,
       required this.Type,
     required this.CurrentUser,
+          required this.name,
+    required this.UrlImage,
 
   });
   
@@ -46,33 +50,38 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
 
 
   }
-  
+    
+
   @override
-  
+ 
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl, 
     child: Scaffold(
       body: FollowResult_Page(UserId:UserId,
     Type:Type,
         CurrentUser:CurrentUser,
+        name:name,
+        UrlImage:UrlImage,
 
 ),
     
-      appBar:  AppBar(
+      appBar: AppBar(
         elevation: 1,
         leading: IconButton(
           onPressed: () {
-           Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,name:name,
+        UrlImage:UrlImage,)), (route) => false);
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.green,
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
+        
         title: Row(
           textDirection: TextDirection.rtl,
           children: [
-            Text('الاشخاص'),
+            Text('المتابعون'),
           ],
         ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
@@ -89,17 +98,23 @@ class FollowResult_Page extends StatefulWidget {
     late final String UserId;
     late final String Type;
      late final String CurrentUser;
+                   late final String name;
+   late final String UrlImage;
     FollowResult_Page
     ({
    required this.UserId,
       required this.Type,
     required this.CurrentUser,
+          required this.name,
+    required this.UrlImage,
   });
   @override
   _FollowResultPage createState() => _FollowResultPage(
     UserId:UserId,
     Type:Type,
     CurrentUser:CurrentUser,
+    name:name,
+        UrlImage:UrlImage,
   );
 }
 
@@ -109,12 +124,16 @@ class _FollowResultPage extends State<FollowResult_Page> {
   late final String UserId;
     late final String Type;
      late final String CurrentUser;
+                   late final String name;
+   late final String UrlImage;
     _FollowResultPage
     ({
      required this.UserId,
       required this.Type,
     required this.CurrentUser,
 
+      required this.name,
+    required this.UrlImage,
   });
 
   final Storage storage=Storage();
@@ -139,7 +158,7 @@ class _FollowResultPage extends State<FollowResult_Page> {
 
 Future<List> getFollow() async {
 
-    final  url = "http://192.168.0.114:80/myProf/getFollow?UserId=$UserId&Type=$Type";
+    final  url = "http://172.19.32.48:80/myProf/getFollow?UserId=$UserId&Type=$Type";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -217,7 +236,8 @@ Future<List> getFollow() async {
                         child: FlatButton(
                           onPressed: () {
 
-                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,)), (route) => true);
+                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>workerProfile( UserId:UserId , CurrentUser:currentUser,name:name,
+        UrlImage:UrlImage,)), (route) => true);
                           },
                           color: Color.fromARGB(255, 51, 54, 50),
                           shape: RoundedRectangleBorder(
@@ -277,7 +297,7 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                 return  _buildStatApplicants(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['image'].toString(),snapshot.data![index]['_id'].toString(),CurrentUser);
+                                 return  _buildStatApplicants(snapshot.data![index]['name'].toString(),snapshot.data![index]['work'].toString(),snapshot.data![index]['image'].toString(),snapshot.data![index]['_id'].toString(),CurrentUser);
                                                   },
                                                 );
                                          }

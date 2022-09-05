@@ -49,19 +49,14 @@ SharedPreferences preferences = await SharedPreferences.getInstance();
       body: Ratings_Page( UserId:UserId,),
     
       appBar: AppBar(
+        elevation: 3,
+        title: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text('التقييم'),
+          ],
+        ),
         backgroundColor: const Color.fromARGB(255, 66, 64, 64),
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.green,
-            ),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>myProfile( UserId:UserId,)), (route) => false);
-            },
-          ),
-        ],
       ),
 
       
@@ -97,7 +92,7 @@ class _RatingsPage extends State<Ratings_Page> {
  
   Future <void>getInfo() async {
 
-    var url = await"http://192.168.0.114:80/myProf/myProf?UserId=$UserId";
+    var url = await"http://172.19.32.48:80/myProf/myProf?UserId=$UserId";
 
     var response = await http.get(Uri.parse(url));
     var responsebody = json.decode(response.body);
@@ -132,7 +127,7 @@ class _RatingsPage extends State<Ratings_Page> {
   Future<List> getUserComits() async
    {
 
-    final  url = "http://192.168.0.114:80/addComit/youComits?FrindId=$UserId";
+    final  url = "http://172.19.32.48:80/addComit/youComits?FrindId=$UserId";
 
     final  response = await http.get(Uri.parse(url));
     final  responsebody = json.decode(response.body) as List<dynamic>;
@@ -142,9 +137,95 @@ class _RatingsPage extends State<Ratings_Page> {
 
   }
 
+Future<void> showErroe(BuildContext context,String IDComit )async{
+return await showDialog(context: context, 
+builder: (context){
+
+  
+return AlertDialog(
+  content: Form(child: Directionality(textDirection: TextDirection.rtl,
+   child: Column(
+    mainAxisSize:MainAxisSize.min,
+                  children: [
+                    Text('التقييمات التي يحصل عليها العاملين امر مهم بالنسبة لWorkBook ,اذا كنت ترى     وجود اي امر غير صحيح في هذا التقييم رجاءا قم بالابلاغ عليه.',style: TextStyle(fontSize: 19,color: Color.fromARGB(255, 56, 55, 50)),),
+                    ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Material(
+                child: Ink.image(
+                  fit: BoxFit.fill,
+                  width: 120,
+                  height:70,
+                  image: const AssetImage('images/LO.png'),
+                ),
+              ),
+            ),
+                
+                  ],
+  )
+  
+  
+  )
+  
+  ),
+  actions:<Widget> [
+TextButton(onPressed: (){  
+             
+               setReport(IDComit);
+       }, 
+       child: Text("ابلاغ",style:const TextStyle( color: Colors.red, fontSize: 18.0,),))
+  ],
+);
+}
+
+);
+}
 
 
-  Widget _buildStatComit(String namePost,String description,String ImageUserURL, String ImageURL ,String DatePost,String Rating0) {
+  Future <void>setReport(String IDComit) async {
+
+    var url = await"http://172.19.32.48:80/addComit/AddReport?ComitId=$IDComit&currentUser=$UserId";
+
+    var response = await http.post(Uri.parse(url));
+    var responsebody = json.decode(response.body);
+      // return await responsebody;
+
+                    if (responsebody['NT']=='done1')
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لقد وصل هذا التقييم للحد الاقضى من البلاغات')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings( UserId:UserId,)), (route) => false);
+
+       }
+
+                       else if (responsebody['NT']=='done2')
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('تمت اضافة البلاغ بنجاح')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings( UserId:UserId,)), (route) => false);
+
+       }
+
+                           else 
+       {
+    
+          ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar( content: Text('لقد قمت بالابلاغ من قبل على هذا!')) );
+         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Ratings( UserId:UserId,)), (route) => false);
+
+       }
+
+       
+
+
+ 
+
+  }
+
+
+
+  Widget _buildStatComit(String namePost,String description,String ImageUserURL, String ImageURL ,String DatePost,String Rating0,String IDComit) {
 
 
                       return  FutureBuilder<String>(
@@ -182,9 +263,10 @@ class _RatingsPage extends State<Ratings_Page> {
                         title: Container(child: Text(namePost,style: TextStyle(fontSize: 18),)),
                         trailing: IconButton(
                             onPressed: () {
-                              
+                             showErroe(context,IDComit);
                             },
-                            icon: Icon(Icons.more_vert_outlined)
+                            icon: Icon(Icons.error_outline_rounded,color: Colors.red,)
+                          
                             ),
                         isThreeLine: true,
                         subtitle: Text(DatePost),
@@ -225,7 +307,7 @@ class _RatingsPage extends State<Ratings_Page> {
               child: InkWell(
                 onTap: () {
                        
-
+                     
                 },
               ),
              width: MediaQuery.of(context).size.width * 0.65,
@@ -349,7 +431,7 @@ late String downloadURL;
                                                   itemBuilder: (context, index)
                                                   {
                                      
-                                           return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString());
+                                           return _buildStatComit(snapshot.data![index]['name'].toString(),snapshot.data![index]['description'].toString(),snapshot.data![index]['imageuser'].toString(),snapshot.data![index]['imagecomit'].toString(),snapshot.data![index]['date'].toString(),snapshot.data![index]['rating'].toString(),snapshot.data![index]['_id'].toString());
                                                   },
                                                 );
                                          }

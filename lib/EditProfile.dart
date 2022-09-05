@@ -30,28 +30,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // toolbarHeight: 30,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => SettingsPage()));
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.green,
-            ),
-            onPressed: () {},
-          ),
-        ],
+        elevation: 3,
+        title: Text('تعديل الملف الشخصي'),
+        backgroundColor: const Color.fromARGB(255, 66, 64, 64),
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -61,14 +42,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           },
           child: ListView(
             children: [
-              const Text(
-                "تعديل الملف الشخصي",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.end,
-              ),
+              // const Text(
+              //   "تعديل الملف الشخصي",
+              //   style: TextStyle(
+              //     fontSize: 25,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              //   textAlign: TextAlign.end,
+              // ),
               const SizedBox(
                 height: 15,
               ),
